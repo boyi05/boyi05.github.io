@@ -1074,7 +1074,7 @@ async function delRecur(i){const r=recs[i];if(!await ask(`<h3>刪除「${esc(r.n
 // 家人
 async function loadMembers(){try{mems=await call('listMembers')}catch(e){return toast(errMsg(e),1)}
   $('#setBody').innerHTML=`<div class="card"><div class="mu">每個人用自己的 QR code 打開。爸媽改小孩的暱稱和頭像不受每天一次的限制。</div>${mems.map((m,i)=>`<div class="it"><div class="ic" onclick="famBox(${i})">${avatar({photo:m.photo,icon:m.avatar},38)}</div>
-   <div class="t"><b>${esc(m.nick)}</b> <span class="mu">${esc(m.name)}</span><div class="mu">${S.parents.includes(m.name)?'爸媽・全部功能':'小孩'}</div></div>
+   <div class="t"><b>${esc(m.nick)}</b> <span class="mu">${esc(m.name)}</span><div class="mu">${S.parents.includes(m.name)?'爸媽・全部功能':m.test?'🧪 測試帳號・不影響任何紀錄':'小孩'}</div></div>
    <button class="sbtn" onclick="famBox(${i})">資料</button><button class="sbtn" onclick="showQR(${i})">QR</button></div>`).join('')}</div>`;loadImgs(mems.map(m=>m.photo))}
 async function famBox(i){const m=mems[i];
   await ask(`<h3>${esc(m.name)} 的資料</h3><label>暱稱</label><input id="fb_n" value="${esc(m.nick)}"><button class="btn" onclick="famNick('${esc(m.name)}')">儲存暱稱</button>
