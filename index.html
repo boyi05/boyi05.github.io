@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>海底有星星</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="海底有星星">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#ffffff">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="manifest" href="manifest.json">
+<style>
+html,body{margin:0;height:100%;background:#fff;overflow:hidden}
+#app{position:fixed;inset:0;width:100%;height:100%;border:0;display:block;
+  top:env(safe-area-inset-top);height:calc(100% - env(safe-area-inset-top))}
+#msg{display:none;font:700 18px -apple-system,"PingFang TC",sans-serif;color:#4a3b2a;text-align:center;padding:90px 24px;line-height:1.7}
+#msg img{width:96px;height:96px;border-radius:22px;display:block;margin:0 auto 16px}
+</style>
+</head>
+<body>
+<iframe id="app" title="海底有星星" allow="clipboard-write"></iframe>
+<div id="msg"><img src="icon-512.png" alt="">請用你的專屬連結<br>打開海底有星星</div>
+<script>
+// 網頁 App 位址（正式啟用時只要改這一行）
+var APP='https://script.google.com/macros/s/AKfycbxgGwIHA6iBF5JALi0U5yiB6WEhMQDc39H5nNd34So/exec';
+// 每個人的通行碼放在網址後面（?k=...），網頁本身不存任何人的通行碼
+var k=new URLSearchParams(location.search).get('k')||(location.hash.match(/k=([\w-]+)/)||[])[1]||'';
+if(!k){try{k=localStorage.getItem('k')||''}catch(e){}}
+if(k){try{localStorage.setItem('k',k)}catch(e){}document.getElementById('app').src=APP+'?k='+encodeURIComponent(k);}
+else{document.getElementById('app').style.display='none';document.getElementById('msg').style.display='block';}
+</script>
+</body>
+</html>
