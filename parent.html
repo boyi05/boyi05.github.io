@@ -276,6 +276,7 @@ function petEgg(sp,o,u){const C=(PETPAL[sp]||PETPAL.fire)[0],O=C.o,st=sp==='star
  if(sp==='bunny')pat=[[46,56,5],[70,50,3],[74,72,6],[50,82,4],[64,96,4.5],[38,70,2.6],[84,88,3]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${C.a}" opacity=".55"/>`).join('');
  if(sp==='kitty')pat=`<g fill="none" stroke="${C.m}" stroke-width="5" stroke-linecap="round"><path d="M30 58 q10 4 16 0"/><path d="M28 72 q12 5 18 0"/><path d="M30 88 q10 4 16 0"/><path d="M90 58 q-10 4 -16 0"/><path d="M92 72 q-12 5 -18 0"/><path d="M90 88 q-10 4 -16 0"/><path d="M54 32 v10 M60 30 v12 M66 32 v10"/></g>`;
  if(st)pat=[[44,60,1.2],[70,48,1],[66,74,1.6],[50,90,1],[80,86,1.2],[40,78,.8],[58,40,.9],[76,64,.8]].map(([x,y,r],i)=>`<circle class="${i%2?'twk':''}" cx="${x}" cy="${y}" r="${r}" fill="#fff"/>`).join('')+pStar(58,66,9,'#ffd23f','#9a6a00')+`<ellipse cx="66" cy="84" rx="16" ry="8" fill="#ff7ad9" opacity=".25"/>`;
+ if(!pat)pat=eggPat2(sp,C);
  const crack=o.crack?`<path d="M34 70 l8 -6 l6 7 l8 -8 l7 6 l8 -5 l6 6 l8 -4" fill="none" stroke="#fff6c2" stroke-width="5" stroke-linejoin="round" opacity=".9"/><path d="M34 70 l8 -6 l6 7 l8 -8 l7 6 l8 -5 l6 6 l8 -4" fill="none" stroke="${O}" stroke-width="2.2" stroke-linejoin="round"/>`:'';
  return `<defs>${defs}</defs><circle cx="60" cy="70" r="${st?52:44}" fill="url(#${u}gl)"/>
  <path d="M18 104 Q60 90 102 104 Q106 113 60 117 Q14 113 18 104Z" fill="url(#${u}cu)" stroke="#5a1020" stroke-width="1.6"/><path d="M22 104 Q60 93 98 104" fill="none" stroke="#f2c14e" stroke-width="1.6" stroke-dasharray="3 2"/><circle cx="18" cy="106" r="3" fill="#f2c14e" stroke="#9a6a00"/><circle cx="102" cy="106" r="3" fill="#f2c14e" stroke="#9a6a00"/>
@@ -283,7 +284,7 @@ function petEgg(sp,o,u){const C=(PETPAL[sp]||PETPAL.fire)[0],O=C.o,st=sp==='star
  <ellipse cx="47" cy="50" rx="7" ry="13" fill="#fff" opacity=".65" transform="rotate(-22 47 50)"/><circle cx="44" cy="70" r="2.4" fill="#fff" opacity=".6"/>${crack}</g>
  ${spk(92,40,6,st?'#fff3b0':'#fff',0)}${spk(26,56,4,'#fff',.8)}${st?spk(96,78,4,'#fff3b0',1.4):''}`}
 
-function petG(sp,stage,o){o=o||{};const u=artId();if(!stage)return petEgg(sp,o,u);
+function petG(sp,stage,o){o=o||{};const u=artId();if(PXSP[sp])return stage?pxPet(sp,stage,o,u):pxEgg(sp,o,u);if(!stage)return petEgg(sp,o,u);if(SHAPE2[sp])return petShape(sp,stage,o,u);
  const C=(PETPAL[sp]||PETPAL.fire)[o.shiny?1:0],O=C.o,sw='2.4',sh=!!o.shiny;
  const s=[0,.62,.74,.86,.97,1.06][stage],mood=o.mood==null?80:o.mood,sick=!!o.sick;
  let defs=rad(u+'b',.36,.26,.9,[[0,mix(C.l,C.m,.3)],[.5,C.m],[1,C.d]])+rad(u+'w',.5,.3,.75,[[0,'#ffffff'],[1,C.l]])
@@ -457,7 +458,7 @@ function memoItem(sp,shiny,size){const u=artId(),G=MEMO_GRAD[sp]||MEMO_GRAD.fire
  ${shiny?spk(14,16,5,'#fff3b0',0)+spk(66,22,4,'#fff',.6)+spk(64,56,3.4,'#bff3ff',1.2)+spk(16,52,3,'#fff',1.8):spk(64,18,3,'#fff',.4)}
  <path d="M6 10 L20 2" stroke="#fff" stroke-width="3" opacity=".25" stroke-linecap="round"/><rect x="1" y="1" width="78" height="78" rx="9.5" fill="none" stroke="${shiny?'#ffd94a':'#c9a24a'}" stroke-width="2"/></svg>`}
 // 合照背景（寵物的故鄉）
-function scene(sp,u){const S={
+function scene(sp,u){if(SCENE2[sp]){const [d,b]=SCENE2[sp](u).split('|');return {d,b}}const S={
  fire:`${lin(u+'s',0,0,0,1,[[0,'#ff9f5a'],[1,'#ffe3b0']])}|<rect width="120" height="120" fill="url(#${u}s)"/><circle cx="92" cy="26" r="10" fill="#fff3b0" opacity=".9"/><path d="M18 84 L44 40 H58 L84 84Z" fill="#6a3a2a"/><path d="M44 40 H58 L54 50 L50 46 L46 52Z" fill="#ff5a1a"/><circle cx="46" cy="30" r="7" fill="#d8d0c8" opacity=".9"/><circle cx="56" cy="22" r="9" fill="#e8e2dc" opacity=".9"/><rect y="84" width="120" height="36" fill="#3a9ad0"/><path d="M0 92 q15 -4 30 0 t30 0 t30 0 t30 0" stroke="#fff" stroke-width="1.5" fill="none" opacity=".5"/><ellipse cx="60" cy="110" rx="56" ry="10" fill="#f5d59a"/>`,
  water:`${lin(u+'s',0,0,0,1,[[0,'#7fd8f0'],[1,'#1a6ab0']])}|<rect width="120" height="120" fill="url(#${u}s)"/><path d="M20 0 L36 0 L60 120 H40Z M70 0 H80 L96 120 H86Z" fill="#fff" opacity=".12"/><path d="M8 110 C6 90 14 84 12 70 M14 110 C18 94 26 92 24 78" stroke="#2fae55" stroke-width="4" fill="none" stroke-linecap="round"/><g fill="#ff7aa8"><circle cx="98" cy="96" r="7"/><circle cx="106" cy="88" r="5"/><circle cx="92" cy="86" r="4.4"/></g><circle cx="30" cy="30" r="3" fill="none" stroke="#fff" opacity=".7"/><circle cx="90" cy="40" r="2" fill="none" stroke="#fff" opacity=".7"/><ellipse cx="60" cy="114" rx="64" ry="12" fill="#f0d79a"/>`,
  leaf:`${lin(u+'s',0,0,0,1,[[0,'#bfeaff'],[1,'#e8fbd8']])}|<rect width="120" height="120" fill="url(#${u}s)"/><circle cx="14" cy="50" r="22" fill="#3fa952"/><circle cx="34" cy="38" r="18" fill="#58c05a"/><circle cx="96" cy="44" r="24" fill="#3fa952"/><circle cx="110" cy="62" r="16" fill="#58c05a"/><rect x="12" y="60" width="6" height="40" fill="#8a5a30"/><rect x="98" y="62" width="6" height="40" fill="#8a5a30"/><ellipse cx="60" cy="112" rx="70" ry="18" fill="#6fcf5a"/><g fill="#fff"><circle cx="26" cy="104" r="2"/><circle cx="94" cy="108" r="2"/></g><g fill="#ffd23f"><circle cx="26" cy="104" r=".9"/><circle cx="94" cy="108" r=".9"/></g>`,
@@ -499,6 +500,300 @@ const ART_CSS=`
 .memo .mn{font-size:12px}
 `;
 (function(){const c=document.createElement('style');c.textContent=ART_CSS;document.head.appendChild(c)})();
+// ===== 新寵物：造型寵物（柯基、暴暴龍、星角鯨）＋像素寵物（像素炎龍、雷光狼、機甲鯊） =====
+const PETPAL2={
+ corgi:[{m:'#f2a04e',l:'#fffaf0',d:'#c46a22',a:'#e5484d',o:'#5a2f10',e:'#4a2a12'},{m:'#3a3550',l:'#fffaf0',d:'#1c1a2a',a:'#ffcc33',o:'#120f1c',e:'#7a4a20'}],
+ dino:[{m:'#6fd36a',l:'#f4ffd8',d:'#2f9a44',a:'#ff9a3c',o:'#174f22',e:'#2a8a3a'},{m:'#a07aff',l:'#f4ecff',d:'#5a36c4',a:'#ffd23f',o:'#2a1660',e:'#d04dff'}],
+ narwhal:[{m:'#5aa8ff',l:'#e8f6ff',d:'#2a5fc4',a:'#ffe27a',o:'#14306e',e:'#2a7aff'},{m:'#ff9ccf',l:'#fff0f8',d:'#d4508e',a:'#9ff3ff',o:'#6a1a44',e:'#ff4fa0'}],
+ pxdragon:[{m:'#e8452e',l:'#ffd36a',d:'#9a1c1c',a:'#ffb020',o:'#1a0a10',e:'#fff36a',w:'#ff8a3c',x:'#b8321e',g:'#ff7a1a'},{m:'#2a2a3a',l:'#c8a0ff',d:'#121220',a:'#b06aff',o:'#05040a',e:'#7affff',w:'#6a4ac8',x:'#3a2a7a',g:'#a46aff'}],
+ pxwolf:[{m:'#5a8ad8',l:'#e8f2ff',d:'#2a4a9a',a:'#ffe23a',o:'#0e1430',e:'#7affff',w:'#ffffff',x:'#9ac0ff',g:'#ffe23a'},{m:'#2a2a30',l:'#ffd0d0',d:'#121216',a:'#ff3a4a',o:'#050506',e:'#ff4a4a',w:'#ffffff',x:'#5a5a66',g:'#ff3a4a'}],
+ pxshark:[{m:'#8a9ab0',l:'#e8eef6',d:'#4a5a72',a:'#2affe0',o:'#10141c',e:'#2affe0',w:'#ffffff',x:'#ff6a2a',g:'#2affe0'},{m:'#e8b830',l:'#fff6c8',d:'#9a6a10',a:'#ff3aa0',o:'#2a1a04',e:'#ff3aa0',w:'#ffffff',x:'#7a4aff',g:'#ff3aa0'}]};
+Object.assign(PETPAL,PETPAL2);
+Object.assign(PEMO,{corgi:'🦴',dino:'🦖',narwhal:'🦄',pxdragon:'🔥',pxwolf:'⚡',pxshark:'🤖'});
+Object.keys(PETPAL2).forEach(k=>{const a=PETPAL[k][0],b=PETPAL[k][1];PCOL[k]=[a.m,a.l,a.d,b.m,b.d,b.l]});
+const PXSP={pxdragon:1,pxwolf:1,pxshark:1};
+
+// 共用：漸層定義、臉
+function petDefs(u,C,sh){let d=rad(u+'b',.36,.26,.9,[[0,mix(C.l,C.m,.3)],[.5,C.m],[1,C.d]])+rad(u+'w',.5,.3,.75,[[0,'#ffffff'],[1,C.l]])
+  +lin(u+'e',0,0,0,1,[[0,'#1b1020'],[.5,mix('#1b1020',C.e,.45)],[1,C.e]])+rad(u+'k',.5,.5,.5,[[0,'#ff6f93',.85],[1,'#ff6f93',0]])
+  +rad(u+'g',.5,.5,.5,[[0,'#000',.3],[1,'#000',0]])+lin(u+'cr',0,0,0,1,[[0,'#fff3a8'],[.5,'#ffc91f'],[1,'#d98a00']])+lin(u+'pk',0,0,0,1,[[0,'#ffd0de'],[1,'#ff8fb0']]);
+ if(sh)d+=`<linearGradient id="${u}h" x1="0" y1="0" x2="1" y2="1">${stp([[0,'#ff9ad5',0],[.3,'#ff9ad5',.5],[.45,'#fff6a0',.6],[.6,'#8ff0ff',.5],[.8,'#b59cff',0]])}<animateTransform attributeName="gradientTransform" type="translate" values="-1 -1;1 1" dur="3s" repeatCount="indefinite"/></linearGradient>`;
+ return d}
+function petFace(u,O,o,extra){const mood=o.mood==null?80:o.mood,sick=!!o.sick,dl=(_U%5)*.7;
+ const eye=x=>`<g class="blink" style="animation-delay:${dl}s"><ellipse cx="${x}" cy="-34" rx="6.4" ry="7.8" fill="#1b1020"/><ellipse cx="${x}" cy="-32.2" rx="5.1" ry="5.6" fill="url(#${u}e)"/><ellipse cx="${x-2}" cy="-37.4" rx="2.6" ry="3" fill="#fff"/><circle cx="${x+2.4}" cy="-30.4" r="1.4" fill="#fff" opacity=".9"/></g>`;
+ let s;
+ if(sick)s=[-11,11].map(x=>`<path d="M${x} -34 m-5 0 a5 5 0 1 1 5 5 a3.6 3.6 0 1 1 -3.6 -3.6 a2 2 0 1 1 2 2" fill="none" stroke="${O}" stroke-width="1.8" stroke-linecap="round"/>`).join('')+`<path d="M-6 -22 q3 -4 6 0 q3 4 6 0" fill="none" stroke="${O}" stroke-width="2" stroke-linecap="round"/>`;
+ else if(mood<30)s=eye(-11)+eye(11)+`<path d="M-18 -46 l8 3 M18 -46 l-8 3" stroke="${O}" stroke-width="2.2" stroke-linecap="round"/><path class="drip" d="M-17 -28 q-3 5 0 7 q3 -2 0 -7z" fill="#8fd3ff" stroke="#3a8ad0" stroke-width=".8"/><path d="M-5 -22 q5 -5 10 0" fill="none" stroke="${O}" stroke-width="2.2" stroke-linecap="round"/>`;
+ else if(mood>=70)s=eye(-11)+eye(11)+`<path d="M-6.5 -26.5 Q0 -16.5 6.5 -26.5 Z" fill="#8a2236" stroke="${O}" stroke-width="1.8" stroke-linejoin="round"/><path d="M-3.6 -21.6 Q0 -18.6 3.6 -21.6 Q0 -24.4 -3.6 -21.6Z" fill="#ff8aa0"/>`;
+ else s=eye(-11)+eye(11)+`<path d="M-6 -25.5 q3 4 6 0 q3 4 6 0" fill="none" stroke="${O}" stroke-width="2.2" stroke-linecap="round"/>`;
+ return (extra||'')+s+`<ellipse cx="-22" cy="-26" rx="7" ry="4.6" fill="url(#${u}k)"/><ellipse cx="22" cy="-26" rx="7" ry="4.6" fill="url(#${u}k)"/>`}
+const faceAt=(x,y,k,f)=>`<g transform="translate(${x} ${y}) scale(${k}) translate(0 30)">${f}</g>`;
+function petPoo(n){let p='';for(let i=0;i<Math.min(n||0,4);i++){const x=[14,106,26,94][i];p+=`<g transform="translate(${x} 112)"><path d="M-10 0 Q-12 -6 -6 -7 Q-8 -12 -2 -13 Q-3 -18 2 -19 Q4 -15 3 -13 Q9 -12 7 -7 Q12 -6 10 0Z" fill="#a8692e" stroke="#4a2a10" stroke-width="1.4"/><ellipse cx="-4" cy="-9" rx="1.6" ry="1" fill="#fff" opacity=".6"/><path class="stink" d="M-4 -22 q-3 -3 0 -6 q3 -3 0 -6 M4 -22 q-3 -3 0 -6 q3 -3 0 -6" stroke="#8ab84a" stroke-width="1.4" fill="none" stroke-linecap="round"/></g>`}return p}
+function petAura(u,C){return `<g transform="translate(60 66)"><circle r="58" fill="url(#${u}au)"/><g class="spin">${Array.from({length:12},(_,i)=>{const a=i*30*Math.PI/180,b=.09;return `<path d="M0 0 L${(64*Math.cos(a-b)).toFixed(1)} ${(64*Math.sin(a-b)).toFixed(1)} L${(64*Math.cos(a+b)).toFixed(1)} ${(64*Math.sin(a+b)).toFixed(1)}Z" fill="${C.a}" opacity=".22"/>`}).join('')}</g></g>`}
+function sickBits(O,x,y){return `<g transform="translate(${x} ${y}) rotate(35)"><rect x="-11" y="-3.4" width="22" height="6.8" rx="3.4" fill="#fff" stroke="${O}" stroke-width="1.4"/><rect x="-11" y="-3.4" width="8" height="6.8" rx="3.4" fill="#ff5a5a"/></g>`}
+
+// ---------- 造型寵物 ----------
+function petShape(sp,stage,o,u){
+ const C=PETPAL[sp][o.shiny?1:0],O=C.o,sh=!!o.shiny,sw='2.4',B=`url(#${u}b)`;
+ const s=[0,.66,.78,.88,.98,1.06][stage];
+ let defs=petDefs(u,C,sh),aura='',back='',mid='',front='',fx='',lift=0,crownAt=null;
+ const sheen=d=>sh?`<path d="${d}" fill="url(#${u}h)"/>`:'';
+ if(sp==='corgi'){
+  const eh=[0,12,16,19,21,22][stage];
+  const BD='M-36 -28 C-38 -14 -32 -7 -20 -7 H12 C24 -7 30 -14 29 -27 C28 -40 -32 -42 -36 -28Z';
+  const HD='M16 -64 C30 -64 38 -54 38 -44 C38 -32 28 -25 16 -25 C4 -25 -6 -32 -6 -44 C-6 -54 2 -64 16 -64Z';
+  const leg=(x,f)=>`<rect x="${x-5}" y="-13" width="10" height="13" rx="4" fill="${B}" stroke="${O}" stroke-width="${sw}"/><ellipse cx="${x}" cy="-2.5" rx="5" ry="3" fill="${C.l}"/>${f?'':''}`;
+  if(stage>=4){defs+=lin(u+'cp',0,0,1,1,[[0,'#ff5a6a'],[1,'#a01a2a']]);back+=`<g class="cape"><path d="M-6 -36 C-24 -40 -44 -36 -54 -22 C-48 -22 -46 -18 -44 -14 C-38 -18 -34 -16 -30 -12 C-24 -18 -12 -22 0 -28Z" fill="url(#${u}cp)" stroke="${O}" stroke-width="2" stroke-linejoin="round"/>${pStar(-34,-26,4,'#ffd23f')}</g>`}
+  back+=leg(-26)+leg(-14)+`<path d="M-38 -30 q-10 -6 -8 -14 q6 2 10 8z" fill="${B}" stroke="${O}" stroke-width="2" stroke-linejoin="round"/>`;
+  mid+=`<path d="${BD}" fill="${B}" stroke="${O}" stroke-width="${sw}"/><circle cx="-34" cy="-24" r="8" fill="${C.l}"/><circle cx="-31" cy="-19" r="6" fill="${C.l}"/><ellipse cx="-6" cy="-11" rx="20" ry="4.5" fill="${C.l}"/>${sheen(BD)}<path d="M-28 -36 q16 -6 34 -4" stroke="#fff" stroke-width="2.4" opacity=".35" fill="none" stroke-linecap="round"/>`;
+  mid+=leg(4)+leg(18)+`<ellipse cx="14" cy="-22" rx="11" ry="10" fill="${C.l}"/>`;
+  const ear=(x,dir)=>`<path d="M${x-7*dir} -56 L${x+2*dir} ${-60-eh} L${x+11*dir} -58Z" fill="${B}" stroke="${O}" stroke-width="${sw}" stroke-linejoin="round"/><path d="M${x-3*dir} -57 L${x+2*dir} ${-58-eh*.75} L${x+7*dir} -58Z" fill="url(#${u}pk)"/>`;
+  front+=ear(6,-1)+ear(26,1)+`<path d="${HD}" fill="${B}" stroke="${O}" stroke-width="${sw}"/>${sheen(HD)}<path d="M16 -60 C13 -52 12 -46 12 -40 H20 C20 -46 19 -52 16 -60Z" fill="${C.l}"/><ellipse cx="16" cy="-33" rx="13" ry="8.5" fill="${C.l}"/><ellipse cx="7" cy="-57" rx="5" ry="2.6" fill="#fff" opacity=".45" transform="rotate(-25 7 -57)"/>`;
+  if(stage>=3)front+=`<path d="M2 -27 Q16 -19 30 -27 L28 -21 Q16 -14 4 -21Z" fill="${C.a}" stroke="${O}" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 -20 L16 -11 L20 -20Z" fill="${C.a}" stroke="${O}" stroke-width="1.6" stroke-linejoin="round"/><circle cx="10" cy="-23" r="1.2" fill="#fff"/><circle cx="22" cy="-23" r="1.2" fill="#fff"/>`;
+  front+=faceAt(16,-42,.72,petFace(u,O,o,`<ellipse cx="0" cy="-29.5" rx="3.8" ry="2.6" fill="#2a1a12"/><ellipse cx="-1" cy="-30.4" rx="1.3" ry=".7" fill="#fff" opacity=".8"/>`));
+  crownAt=[16,-66,0,.62];
+ }
+ if(sp==='dino'){
+  const k=[0,.6,.8,1,1.15,1.3][stage];
+  defs+=lin(u+'sp',0,0,0,1,[[0,mix('#ffffff',C.a,.5)],[1,C.a]]);
+  const spike=(x,y,r)=>`<g transform="translate(${x} ${y}) rotate(${r}) scale(${k})"><path d="M-5 2 L0 -9 L5 2Z" fill="url(#${u}sp)" stroke="${O}" stroke-width="1.6" stroke-linejoin="round" ${stage>=4?'class="glowp"':''}/></g>`;
+  const TL='M-14 -24 C-26 -22 -40 -16 -56 -4 C-50 -2 -44 -2 -38 -4 C-30 -6 -22 -8 -12 -10Z';
+  back+=spike(-48,-9,-110)+spike(-36,-16,-100)+spike(-24,-24,-80)+`<path d="${TL}" fill="${B}" stroke="${O}" stroke-width="${sw}" stroke-linejoin="round"/>`;
+  back+=`<ellipse cx="-11" cy="-5" rx="8" ry="6" fill="${B}" stroke="${O}" stroke-width="${sw}"/>`;
+  const BD='M-20 -24 C-20 -38 -10 -42 0 -42 C12 -42 20 -34 20 -22 C20 -10 12 -6 0 -6 C-12 -6 -20 -12 -20 -24Z';
+  mid+=spike(-21,-34,-60)+`<path d="${BD}" fill="${B}" stroke="${O}" stroke-width="${sw}"/>${sheen(BD)}<ellipse cx="3" cy="-20" rx="11" ry="12" fill="${C.l}"/><path d="M-6 -24 h18 M-7 -18 h20 M-5 -12 h16" stroke="${C.d}" stroke-width="1.2" opacity=".35"/>`;
+  mid+=`<ellipse cx="10" cy="-5" rx="8.5" ry="6" fill="${B}" stroke="${O}" stroke-width="${sw}"/><path d="M5 -2 v-3 M10 -1 v-3 M15 -2 v-3" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>`;
+  const HD='M6 -70 C22 -70 32 -60 32 -48 C32 -36 22 -30 8 -30 C-8 -30 -18 -36 -18 -48 C-18 -60 -10 -70 6 -70Z';
+  front+=spike(-12,-62,-55)+spike(-1,-70,-25)+spike(12,-70,8)+`<path d="${HD}" fill="${B}" stroke="${O}" stroke-width="${sw}"/>${sheen(HD)}<ellipse cx="-6" cy="-62" rx="6" ry="3" fill="#fff" opacity=".45" transform="rotate(-25 -6 -62)"/><circle cx="26" cy="-44" r="1.3" fill="${O}" opacity=".5"/><circle cx="29" cy="-46" r="1.3" fill="${O}" opacity=".5"/>`;
+  front+=`<ellipse cx="18" cy="-25" rx="3.6" ry="6" fill="${B}" stroke="${O}" stroke-width="2" transform="rotate(-40 18 -25)"/>`;
+  front+=faceAt(7,-50,.8,petFace(u,O,o));
+  if(stage>=4){defs+=lin(u+'fb',1,0,0,0,[[0,'#fff6b0'],[.5,'#ffb020'],[1,'#ff4a1a',0]]);fx+=`<g class="breath"><path d="M24 -40 C38 -48 54 -42 62 -46 C56 -38 62 -32 68 -32 C56 -28 40 -32 24 -36Z" fill="url(#${u}fb)"/></g>`}
+  crownAt=[6,-72,0,.66];
+ }
+ if(sp==='narwhal'){
+  lift=8;const L=[0,8,13,18,23,28][stage];
+  defs+=lin(u+'hn',0,1,1,0,[[0,'#fffbe8'],[1,C.a]]);
+  const BD='M30 -32 C30 -48 16 -56 0 -56 C-18 -56 -30 -46 -34 -34 C-38 -26 -46 -24 -52 -30 C-50 -22 -46 -18 -40 -16 C-30 -10 -14 -8 4 -8 C22 -8 30 -18 30 -32Z';
+  back+=`<g class="fluke"><path d="M-48 -26 C-56 -40 -66 -40 -70 -34 C-62 -32 -58 -28 -54 -22Z M-48 -24 C-58 -18 -64 -10 -62 -4 C-56 -10 -50 -14 -46 -18Z" fill="${B}" stroke="${O}" stroke-width="2" stroke-linejoin="round"/></g>`;
+  mid+=`<path d="${BD}" fill="${B}" stroke="${O}" stroke-width="${sw}"/>${sheen(BD)}<path d="M-30 -20 C-16 -10 14 -10 28 -22 C26 -12 16 -8 4 -8 C-14 -8 -26 -12 -30 -20Z" fill="${C.l}"/>`;
+  mid+=[[-16,-46,2.6],[-6,-50,1.8],[-22,-36,2],[4,-52,1.4]].map(([x,y,r])=>pStar(x,y,r*1.6,C.l)).join('')+`<ellipse cx="-4" cy="-50" rx="9" ry="3.6" fill="#fff" opacity=".45" transform="rotate(-12 -4 -50)"/>`;
+  mid+=`<path d="M-14 -14 C-12 -6 -4 -2 0 -4 C0 -10 -6 -14 -14 -14Z" fill="${C.m}" stroke="${O}" stroke-width="1.6" stroke-linejoin="round"/>`;
+  const hx=18,hy=-50;front+=`<g transform="translate(${hx} ${hy}) rotate(28)"><path d="M-4 0 L0 ${-L} L4 0Z" fill="url(#${u}hn)" stroke="${O}" stroke-width="1.6" stroke-linejoin="round"/>${Array.from({length:Math.floor(L/5)},(_,i)=>`<path d="M${-3+i*.6} ${-3-i*5} l${6-i*1.2} -2.4" stroke="${O}" stroke-width="1" opacity=".5"/>`).join('')}${stage>=3?spk(0,-L-2,4,'#fff3b0',.3):''}</g>`;
+  front+=faceAt(10,-32,.78,petFace(u,O,o));
+  if(stage>=3)fx+=`<g class="spout"><path d="M-8 -56 C-10 -66 -16 -70 -20 -68 M-8 -56 C-8 -68 -6 -74 -4 -76 M-8 -56 C-4 -66 2 -70 6 -68" stroke="#bfefff" stroke-width="3" fill="none" stroke-linecap="round"/>${[[-20,-70],[-4,-78],[6,-70]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="2.4" fill="#e8faff"/>`).join('')}</g>`;
+  fx+=[[-44,-60,3.6,0],[40,-62,2.8,.9],[-30,-74,2.2,1.6]].map(([x,y,r,d])=>`<g class="bub" style="animation-delay:${d}s"><circle cx="${x}" cy="${y}" r="${r}" fill="${C.a}" fill-opacity=".2" stroke="#bfefff" stroke-width="1.3"/></g>`).join('');
+  if(stage>=4)aura+=`<ellipse cx="60" cy="100" rx="50" ry="10" fill="none" stroke="${C.a}" stroke-width="2.4" opacity=".6"/><ellipse cx="60" cy="100" rx="40" ry="7" fill="none" stroke="#fff" stroke-width="1.2" opacity=".6" stroke-dasharray="4 5"/>`;
+  crownAt=[-6,-58,-14,.6];
+ }
+ if(stage>=5&&!o.photo){defs+=rad(u+'au',.5,.5,.5,[[0,C.a,.55],[.6,C.a,.18],[1,C.a,0]]);aura=petAura(u,C)+aura}
+ if(stage>=5&&crownAt)fx+=crown(u,...crownAt);
+ if(sh)fx+=[[-46,-62,6,0],[46,-54,7,.5],[-44,-14,5,1],[48,-18,5,1.5],[0,-92,6,.8]].map(([x,y,r,d])=>spk(x,y,r,'#ffe066',d)).join('');
+ const sick=o.sick?sickBits(O,26,-62):'';
+ return `<defs>${defs}</defs>${aura}<ellipse cx="60" cy="108" rx="${36*s}" ry="6" fill="url(#${u}g)"/>${petPoo(o.poops)}<g transform="translate(60 ${106-lift}) scale(${s})"><g class="${lift?'floaty':'bob'}">${back}${mid}${front}${sick}${fx}</g></g>`}
+
+// ---------- 像素寵物 ----------
+// 字元：o 描邊 m 主色 d 暗 l 亮 a 點綴 e 眼睛（會發光） w 白 x 次要色 g 發光
+const PXS={
+ pxdragon:[
+`....oo..oo....
+...oaao.oao....
+...oaaoooaoo...
+..ommmmmmmmo...
+.ommwemmmwemo..
+.ommoemmmoemo..
+.omlmmmmmmmlmo.
+.omllmmoommllo.
+..ommmmmmmmmo..
+.oommllllmmooo.
+ommmllllllmmmo.
+.ommlllllllmo..
+..omdmmmmdmo...
+..oddo..oddo...
+..ooo....ooo...`,
+`...........oo.......
+..........oao.......
+....oo...oaao.oo....
+...owwo..oaaoooao...
+..owxxwo.ommmmmao...
+..owxxxwoommmmmmo...
+.owxxxxwommwemmmmo..
+.owxxxxwommoemmllloo
+owxxxxwwommmmmllooo.
+owxxxwwoommmmmmo....
+owxxwwoomllmmmmo....
+.oxwwo.omllmmmmo....
+.oxwo..omllmmmdo....
+..oo...omllmmmdo....
+..ooo..omllmmmdo....
+.oaamo.omllmmddo....
+..ommoomlllmmddo....
+...ommmmmmmmddoo....
+....oomdoooomdo.....
+.....omdo..omdo.....
+.....oooo..oooo.....`],
+ pxwolf:[
+`..oo......oo...
+.omao....oamo..
+.ommmooooommo..
+.ommmmmmmmmmo..
+ommwemmmmwemmo.
+ommoemmmmoemmo.
+omllmmmmmmllmo.
+.omlllooollmo..
+..omllwwllmo...
+.ommmlllllmmo..
+ommmmlllllmmmo.
+.ommmmmmmmmmo..
+.omdmo..omdmo..
+.oooo....oooo..`,
+`..........oo...oo....
+.........omao.oamo...
+.........ommmoommo...
+.........ommmmmmmo...
+........ommwemmwemo..
+....oo..ommoemmoemmo.
+...oxxo.omllmmmmllmoo
+..oxaxo.ollllmmmlllwo
+..oxxao..olllooolllo.
+...oxxo..olllwwwllo..
+....oxo.ommllllllmo..
+.....ooommmmllllmmo..
+......ommmmmllllmmo..
+.....ommmmmmlllmmmo..
+.....ommmmmmmmmmmdo..
+.....odmmmmmmmmmddo..
+......ommdo..ommdo...
+......omdo...omddo...
+......owwo...owwo....
+......oooo...oooo....`],
+ pxshark:[
+`......oo.......
+.....omo.......
+....ommmo......
+..oommmmmooo...
+.ommmmmmmmmmo..
+ommaaaaammmmmo.
+omaeeaeeammmmmo
+ommaaaaammmmmmo
+omllllllllmmmo.
+.olwowowowlmo..
+..ollllllllo...
+...oxoo..oxo...
+...oxo...oxo...
+...ooo...ooo...`,
+`..........oo..........
+.........omo..........
+........ommo..........
+.......ommmo.......oo.
+.....oommmmooo....omo.
+...oommmmmmmmmoo.ommo.
+..ommmmmmmmmmmmmoommo.
+.ommaaaaaammmmmmmmmo..
+ommaeeeaeeammmmmmmo...
+omaaaaaaaaammmmmmmmo..
+ommlllllllllmmmmmommo.
+omlwowowowowlmmmmo.omo
+.olllllllllllmmmo...oo
+..ollllllllllmmo......
+...oomdoooomdoo.......
+....oxxo..oxxo........
+....oxo...oxo.........
+...oggo..oggo.........
+....oo....oo..........`]};
+function pxRects(rows,pal,c,ox,oy,only){let s='';rows.forEach((r,y)=>{let x=0;while(x<r.length){const ch=r[x];if(ch==='.'){x++;continue}let e=x;while(e<r.length&&r[e]===ch)e++;
+  const col=only||pal[ch]||pal.m;s+=`<rect x="${(ox+x*c).toFixed(2)}" y="${(oy+y*c).toFixed(2)}" width="${((e-x)*c+.15).toFixed(2)}" height="${(c+.15).toFixed(2)}" fill="${col}"${ch==='e'&&!only?' class="pxeye"':''}/>`;x=e}});return s}
+function pxPet(sp,stage,o,u){const C=PETPAL[sp][o.shiny?1:0],sh=!!o.shiny,sick=!!o.sick,mood=o.mood==null?80:o.mood;
+ const big=stage>=3,rows0=PXS[sp][big?1:0].split('\n'),W=Math.max(...rows0.map(r=>r.length)),H=rows0.length;
+ const pal={o:C.o,m:C.m,d:C.d,l:C.l,a:C.a,e:sick?'#9a7ab0':C.e,w:C.w,x:C.x,g:C.g};
+ const rows=rows0.map(r=>sick?r.replace(/e/g,'o'):r);
+ const target=[0,56,64,82,90,98][stage],c=target/Math.max(W,H*1.05),wpx=W*c,hpx=H*c;
+ const ox=60-wpx/2,oy=106-hpx;
+ let defs=rad(u+'g',.5,.5,.5,[[0,'#000',.35],[1,'#000',0]])+rad(u+'gl',.5,.5,.5,[[0,C.g,.55],[1,C.g,0]])+lin(u+'cr',0,0,0,1,[[0,'#fff3a8'],[.5,'#ffc91f'],[1,'#d98a00']]);
+ if(sh)defs+=`<linearGradient id="${u}h" x1="0" y1="0" x2="1" y2="1">${stp([[0,'#fff',0],[.4,'#fff',.0],[.5,'#fff',.55],[.6,'#fff',0],[1,'#fff',0]])}<animateTransform attributeName="gradientTransform" type="translate" values="-1 -1;1 1" dur="2.4s" repeatCount="indefinite"/></linearGradient>`;
+ let aura='',fx='';
+ const q=(x,y,s,col,cls,dl)=>`<rect class="${cls||''}" style="animation-delay:${dl||0}s" x="${x}" y="${y}" width="${s}" height="${s}" fill="${col}"/>`;
+ // 光暈
+ aura+=`<ellipse cx="60" cy="${106-hpx*.5}" rx="${wpx*.75}" ry="${hpx*.7}" fill="url(#${u}gl)" class="pxpulse"/>`;
+ if(stage>=4){aura+=`<g transform="translate(60 ${106-hpx*.5})"><g class="spin">${Array.from({length:8},(_,i)=>{const a=i*Math.PI/4;return `<rect x="${(52*Math.cos(a)-3).toFixed(1)}" y="${(52*Math.sin(a)-3).toFixed(1)}" width="6" height="6" fill="${C.g}" opacity=".75" transform="rotate(45 ${(52*Math.cos(a)).toFixed(1)} ${(52*Math.sin(a)).toFixed(1)})"/>`}).join('')}</g></g>`}
+ if(stage>=5&&!o.photo){defs+=rad(u+'au',.5,.5,.5,[[0,C.g,.5],[.6,C.g,.15],[1,C.g,0]]);aura=petAura(u,{a:C.g})+aura}
+ // 方塊粒子
+ const parts=[[-40,-20,0],[38,-34,.6],[-30,-60,1.2],[44,-70,1.8],[0,-hpx-10,.9],[-48,-46,1.5]];
+ fx+=parts.slice(0,stage>=3?6:3).map(([x,y,d],i)=>q(60+x,106+y,i%2?3:4,i%2?C.a:C.g,'pxfly',d)).join('');
+ if(sp==='pxdragon'&&big&&!sick){fx+=`<g class="breath">${q(ox+wpx+2,oy+hpx*.36,5,C.a)}${q(ox+wpx+8,oy+hpx*.33,6,C.g)}${q(ox+wpx+15,oy+hpx*.3,5,C.l)}${q(ox+wpx+9,oy+hpx*.42,4,C.a)}</g>`}
+ if(sp==='pxwolf'&&stage>=2){const bolt=(x,y,k,d)=>`<g transform="translate(${x} ${y}) scale(${k})"><path class="zap" style="animation-delay:${d}s" d="M2 -14 L-6 1 H0 L-3 14 L7 -3 H1 L5 -14Z" fill="${C.a}" stroke="${C.o}" stroke-width="1.2" stroke-linejoin="round"/></g>`;fx+=bolt(ox-6,oy+hpx*.3,1,0)+bolt(ox+wpx+4,oy+hpx*.15,.8,.5)+(stage>=4?bolt(60,oy-10,1.1,.9):'')}
+ if(sp==='pxshark'&&big){fx+=`<g class="jet">${q(ox+c*4,106-1,c*.9,C.x)}${q(ox+c*10,106-1,c*.9,C.x)}${q(ox+c*4.2,106+c*.8,c*.6,'#ffd23f')}${q(ox+c*10.2,106+c*.8,c*.6,'#ffd23f')}</g>`;if(stage>=4)fx+=`<rect class="laser" x="${ox-38}" y="${oy+c*8.2}" width="40" height="${c*.6}" fill="${C.a}" opacity=".8"/>`}
+ if(stage>=5)fx+=crown(u,60-wpx*.08,oy-6,-12,.7);
+ if(sh)fx+=[[-46,-62,6,0],[46,-54,7,.5],[-44,-14,5,1],[48,-18,5,1.5]].map(([x,y,r,d])=>spk(60+x,106+y,r,'#fff',d)).join('');
+ if(!sick&&mood<30)fx+=q(ox+wpx*.62,oy+hpx*.38,c*.8,'#8fd3ff','drip');
+ if(sick)fx+=`<g transform="translate(${ox+wpx*.5} ${oy-4})">${[0,1,2].map(i=>`<circle class="dizzy" style="animation-delay:${i*.4}s" cx="${(i-1)*8}" cy="0" r="2.4" fill="#ffd23f" stroke="${C.o}" stroke-width=".8"/>`).join('')}</g>`;
+ const ex=Math.max(1.6,c*.4);
+ const body=`<g opacity=".55">${pxRects(rows,pal,c,ox+ex,oy+ex,C.o)}</g>${pxRects(rows,pal,c,ox,oy)}`;
+ const shine=sh?`<rect x="${ox}" y="${oy}" width="${wpx}" height="${hpx}" fill="url(#${u}h)" style="mix-blend-mode:screen"/>`:'';
+ return `<defs>${defs}</defs>${aura}<ellipse cx="60" cy="108" rx="${wpx*.45}" ry="5" fill="url(#${u}g)"/>${petPoo(o.poops)}<g class="pxbob" shape-rendering="crispEdges">${body}${shine}</g>${fx}`}
+// 像素蛋
+function pxEgg(sp,o,u){const C=PETPAL[sp][0];
+ const E=`....oooo....
+..oolllloo..
+.olllllaaao.
+.olllaaaamo.
+olllmmmmmmlo
+ollmmaammllo
+olmmaaaammlo
+olmmmaammmmo
+ommmmmmmmmmo
+ommddmmddmmo
+.ommddddmmo.
+.oommmmmmoo.
+...oooooo...`.split('\n').map(r=>r.replace(/l/g,'w'));
+ const pal={o:C.o,w:'#fffaf0',m:C.m,a:C.a,d:C.d},c=6.4,ox=60-6*c,oy=104-13*c;
+ const crack=o.crack?`<path d="M${ox+c} ${oy+c*6} l${c} -${c} l${c} ${c} l${c} -${c} l${c} ${c} l${c} -${c} l${c} ${c} l${c} -${c} l${c} ${c} l${c} -${c}" fill="none" stroke="#fff6c2" stroke-width="3"/>`:'';
+ return `<defs>${rad(u+'gl',.5,.5,.5,[[0,C.g,.6],[1,C.g,0]])}</defs><circle cx="60" cy="66" r="50" fill="url(#${u}gl)" class="pxpulse"/>
+ <path d="M18 104 Q60 90 102 104 Q106 113 60 117 Q14 113 18 104Z" fill="#3a3a4a" stroke="#14141c" stroke-width="1.6"/>${[24,40,56,72,88].map(x=>`<rect x="${x}" y="103" width="8" height="5" fill="${C.g}" opacity=".8"/>`).join('')}
+ <g class="${o.wobble?'wob':''}" shape-rendering="crispEdges"><g opacity=".5">${pxRects(E,pal,c,ox+2.6,oy+2.6,C.o)}</g>${pxRects(E,pal,c,ox,oy)}${crack}</g>
+ <rect class="pxfly" x="96" y="44" width="5" height="5" fill="${C.g}"/><rect class="pxfly" style="animation-delay:.8s" x="22" y="56" width="4" height="4" fill="${C.a}"/>`}
+
+// ---------- 造型寵物的蛋花紋 ----------
+function eggPat2(sp,C){
+ if(sp==='corgi')return `<path d="M28 96 Q60 84 92 96 V120 H28Z" fill="${C.l}"/><path d="M26 60 Q40 50 50 62 Q44 76 30 74Z" fill="${C.m}"/><path d="M94 66 Q80 56 70 68 Q76 80 92 80Z" fill="${C.m}"/><path d="M52 96 a3 3 0 1 1 3 4 h8 a3 3 0 1 1 3 -4 a3 3 0 1 1 -3 -4 h-8 a3 3 0 1 1 -3 4z" fill="${C.a}"/>`;
+ if(sp==='dino')return [[44,52,7],[72,46,5],[78,70,8],[46,80,6],[64,96,7],[36,66,4]].map(([x,y,r])=>`<ellipse cx="${x}" cy="${y}" rx="${r}" ry="${r*.8}" fill="${C.m}" stroke="${C.d}" stroke-width="1.2"/>`).join('')+`<path d="M60 30 l6 10 h-12z M44 34 l5 9 h-10z M76 34 l5 9 h-10z" fill="${C.a}" stroke="${C.o}" stroke-width="1"/>`;
+ if(sp==='narwhal')return `<path d="M24 76 q9 -8 18 0 t18 0 t18 0 t18 0 v44 h-72z" fill="${C.m}" opacity=".85"/>${pStar(48,54,6,C.a)}${pStar(72,62,4,C.a)}${pStar(62,96,5,'#fff')}<path d="M56 34 L60 18 L64 34Z" fill="${C.a}" stroke="${C.o}" stroke-width="1"/>`;
+ return ''}
+
+// ---------- 紀念品、故鄉 ----------
+Object.assign(MEMO_ART,{
+ corgi:u=>`<g transform="rotate(-30)"><path d="M-14 -4 a5 5 0 1 1 3 -6 h22 a5 5 0 1 1 3 6 a5 5 0 1 1 -3 6 h-22 a5 5 0 1 1 -3 -6z" fill="url(#${u}it)" stroke="#8a5a20" stroke-width="1.6"/><path d="M-10 -6 h20" stroke="#fff" stroke-width="2" opacity=".6" stroke-linecap="round"/></g><path d="M-8 14 Q0 20 8 14" stroke="#e5484d" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,
+ dino:u=>`<path d="M-14 16 C-18 0 -12 -16 0 -20 C12 -16 18 0 14 16Z" fill="url(#${u}it)" stroke="#174f22" stroke-width="1.6"/><path d="M-8 10 l4 -7 l4 7 M0 0 l4 -7 l4 7" stroke="#174f22" stroke-width="1.3" fill="none" opacity=".6"/><ellipse cx="-5" cy="-8" rx="3" ry="6" fill="#fff" opacity=".5" transform="rotate(-15 -5 -8)"/>`,
+ narwhal:u=>`<g transform="rotate(30)"><path d="M-4 20 L0 -24 L4 20Z" fill="url(#${u}it)" stroke="#8a6a10" stroke-width="1.4" stroke-linejoin="round"/>${[14,6,-2,-10,-18].map((y,i)=>`<path d="M${-3+i*.5} ${y} l${6-i} -2" stroke="#8a6a10" stroke-width="1" opacity=".6"/>`).join('')}</g>${spk(10,-14,4,'#fff',.3)}`,
+ pxdragon:u=>`<g shape-rendering="crispEdges">${pxRects(['..oo..','.oaao.','oaaaao','oalaao','.oaao.','..oo..'],{o:'#5a0a0a',a:'url(#'+u+'it)',l:'#fff6c0'},5,-15,-15)}</g>`,
+ pxwolf:u=>`<g shape-rendering="crispEdges">${pxRects(['...oo.','..oao.','.oaao.','oaaaoo','ooaao.','.oaao.','.oao..','.oo...'],{o:'#0e1430',a:'url(#'+u+'it)'},5,-15,-20)}</g>`,
+ pxshark:u=>`<g shape-rendering="crispEdges">${pxRects(['.oooo.','oaaaao','oaggao','oaggao','oaaaao','.oooo.'],{o:'#10141c',a:'url(#'+u+'it)',g:'#2affe0'},5,-15,-15)}</g><circle cx="0" cy="0" r="18" fill="none" stroke="#2affe0" stroke-width="1" opacity=".5" class="twk"/>`});
+Object.assign(MEMO_GRAD,{corgi:[['#fffaf0'],['#e8c690']],dino:[['#c8ffb0'],['#2f9a44']],narwhal:[['#fffbe8'],['#ffd23f']],pxdragon:[['#ffd36a'],['#e8452e']],pxwolf:[['#fff6a0'],['#ffc800']],pxshark:[['#e8eef6'],['#6a7a92']]});
+const SCENE2={
+ corgi:u=>`${lin(u+'s',0,0,0,1,[[0,'#9ad8ff'],[1,'#fff0d0']])}|<rect width="120" height="120" fill="url(#${u}s)"/><ellipse cx="26" cy="24" rx="14" ry="6" fill="#fff"/><path d="M0 80 Q30 66 60 78 T120 74 V120 H0Z" fill="#8fd36a"/><rect x="84" y="62" width="26" height="22" fill="#e8c890" stroke="#7a4a1a"/><path d="M80 64 L97 50 L114 64Z" fill="#4d8de6"/><circle cx="20" cy="96" r="5" fill="#ffd23f" stroke="#c88a00"/><ellipse cx="60" cy="112" rx="70" ry="16" fill="#6fc05a"/>`,
+ dino:u=>`${lin(u+'s',0,0,0,1,[[0,'#ffcf8a'],[1,'#ffe9c8']])}|<rect width="120" height="120" fill="url(#${u}s)"/><path d="M0 76 L22 46 L40 76Z" fill="#a0603a"/><path d="M80 78 L104 40 L124 78Z" fill="#8a4a2a"/><path d="M100 46 l4 -6 l4 6z" fill="#ff5a1a"/><path d="M14 92 C10 70 26 64 28 52 C34 64 44 70 40 92" fill="#3fae5a"/><ellipse cx="60" cy="112" rx="70" ry="18" fill="#c8a060"/>`,
+ narwhal:u=>`${lin(u+'s',0,0,0,1,[[0,'#1a3a8a'],[1,'#4ab0f0']])}|<rect width="120" height="120" fill="url(#${u}s)"/>${Array.from({length:12},(_,i)=>`<circle cx="${(i*41)%118}" cy="${(i*29)%50+4}" r="${i%3?.7:1.2}" fill="#fff"/>`).join('')}<path d="M10 62 L30 54 L40 62Z M84 58 L100 48 L114 58Z" fill="#fff" opacity=".9"/><rect y="62" width="120" height="58" fill="#2a7ad0"/><path d="M0 68 q15 -4 30 0 t30 0 t30 0 t30 0" stroke="#fff" stroke-width="1.5" fill="none" opacity=".5"/>`,
+ pxdragon:u=>`|<rect width="120" height="120" fill="#2a0a14"/>${[[0,96,120,24,'#5a1a1a'],[0,88,40,8,'#7a2a1a'],[70,84,50,12,'#7a2a1a'],[30,70,8,8,'#ff7a1a'],[86,60,6,6,'#ffb020'],[14,40,4,4,'#ff7a1a'],[100,30,4,4,'#ffd36a']].map(([x,y,w,h,c])=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`).join('')}`,
+ pxwolf:u=>`|<rect width="120" height="120" fill="#0e1430"/>${[[90,14,16,16,'#fff6c8'],[0,90,120,30,'#2a3a6a'],[10,80,30,10,'#3a4a8a'],[70,76,40,14,'#3a4a8a'],[20,20,3,3,'#fff'],[50,10,3,3,'#fff'],[66,34,3,3,'#fff']].map(([x,y,w,h,c])=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`).join('')}<path d="M40 0 L30 30 H38 L28 58" stroke="#ffe23a" stroke-width="3" fill="none"/>`,
+ pxshark:u=>`|<rect width="120" height="120" fill="#081a2a"/>${Array.from({length:8},(_,i)=>`<rect x="0" y="${i*15}" width="120" height="1" fill="#2affe0" opacity=".15"/><rect x="${i*15}" y="0" width="1" height="120" fill="#2affe0" opacity=".15"/>`).join('')}<rect y="96" width="120" height="24" fill="#1a2a3a"/><rect x="10" y="40" width="8" height="8" fill="#2affe0" opacity=".6"/><rect x="96" y="30" width="6" height="6" fill="#ff3aa0" opacity=".6"/>`};
+const ART_CSS2=`
+.floaty{animation:floaty 3s ease-in-out infinite}@keyframes floaty{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
+.cape{transform-box:fill-box;transform-origin:100% 0;animation:cape 1.4s ease-in-out infinite}@keyframes cape{50%{transform:skewY(-6deg) scaleX(1.06)}}
+.fluke{transform-box:fill-box;transform-origin:100% 50%;animation:fluke 1.6s ease-in-out infinite}@keyframes fluke{50%{transform:rotate(10deg)}}
+.glowp{animation:glowp 1.2s ease-in-out infinite}@keyframes glowp{50%{filter:brightness(1.5) drop-shadow(0 0 3px #ffb020)}}
+.breath{transform-box:fill-box;transform-origin:0 50%;animation:breath 1.1s ease-in-out infinite}@keyframes breath{0%,100%{transform:scaleX(.6);opacity:.6}50%{transform:scaleX(1.15);opacity:1}}
+.spout{animation:spout 1.6s ease-out infinite}@keyframes spout{0%{opacity:0;transform:translateY(6px)}40%{opacity:1}100%{opacity:0;transform:translateY(-4px)}}
+.pxbob{animation:pxbob 1s steps(2) infinite}@keyframes pxbob{50%{transform:translateY(-3px)}}
+.pxpulse{animation:pxpulse 1.6s ease-in-out infinite}@keyframes pxpulse{50%{opacity:.45}}
+.pxeye{animation:pxeye 1.2s steps(2) infinite}@keyframes pxeye{50%{filter:brightness(1.6)}}
+.pxfly{animation:pxfly 2.2s steps(6) infinite}@keyframes pxfly{0%{transform:translateY(8px);opacity:0}30%{opacity:1}100%{transform:translateY(-22px);opacity:0}}
+.zap{animation:zap .9s steps(2) infinite}@keyframes zap{50%{opacity:.15}}
+.jet{animation:zap .25s steps(2) infinite}
+.laser{animation:laser 1.4s steps(4) infinite}@keyframes laser{0%,60%{opacity:0}70%,90%{opacity:.9}}
+.dizzy{transform-box:fill-box;animation:dizzy 1.2s linear infinite}@keyframes dizzy{50%{transform:translateY(-4px)}}
+`;
+const SHAPE2={corgi:1,dino:1,narwhal:1};
+(function(){const c=document.createElement('style');c.textContent=ART_CSS2;document.head.appendChild(c)})();
+
 
 // ===== 徽章、紀念品、排行榜 =====
 (function(){const c=document.createElement('style');c.textContent=`
