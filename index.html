@@ -26,7 +26,7 @@ html,body{margin:0;background:#fff;font:700 17px -apple-system,"PingFang TC","No
 <script>
 (function(){
 // 入口：用網址後面的專屬通行碼（?k=…）向 Apps Script 拿資料，再換成小孩或爸媽的畫面
-var API="https://script.google.com/macros/s/AKfycbxgGwIHA6iBF5JALi0U5yiB6WEhMQDc39H5nNd34So/exec";
+var API="https://script.google.com/macros/s/AKfycbxuBaNwtSbUeN8Orm5bwUJU-BUXgLyJMR7O6EGc7NPX7ONjg5AWxkOqiwPBdQokXwn7/exec";
 var k=new URLSearchParams(location.search).get('k')||'';
 try{if(k)localStorage.setItem('k',k);else k=localStorage.getItem('k')||''}catch(e){}
 var T=document.getElementById('t');

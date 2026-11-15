@@ -7,7 +7,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="favicon.png"><link rel="manifest" href="manifest.json">
 <script>
 // 把 google.script.run 換成呼叫 Apps Script 的 API
-(function(){var API="https://script.google.com/macros/s/AKfycbxgGwIHA6iBF5JALi0U5yiB6WEhMQDc39H5nNd34So/exec";
+(function(){var API="https://script.google.com/macros/s/AKfycbxuBaNwtSbUeN8Orm5bwUJU-BUXgLyJMR7O6EGc7NPX7ONjg5AWxkOqiwPBdQokXwn7/exec";
 function rpc(fn,args){return fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn:fn,args:args}),redirect:'follow'})
  .then(function(r){if(!r.ok)throw new Error('連線失敗（'+r.status+'），請再試一次');return r.json()})
  .then(function(j){if(!j.ok)throw new Error(j.err);return j.v})
