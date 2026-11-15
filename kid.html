@@ -62,6 +62,7 @@ h3{margin:0 0 8px;font-size:17px}
 .p24c{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:380px;margin:0 auto 14px}.pcard{position:relative;border:4px solid #fff;border-radius:18px;background:linear-gradient(160deg,#fffaf0,#ffe7c2);box-shadow:0 6px 0 #c98b52;aspect-ratio:3/2;font:inherit;font-size:44px;font-weight:900;color:var(--wood2)}.pcard.fr{font-size:30px}.pcard i{position:absolute;left:8px;top:4px;font-size:16px;font-style:normal}.pcard i.b{left:auto;top:auto;right:8px;bottom:4px;transform:rotate(180deg)}.pcard.on{background:linear-gradient(160deg,#fff6b0,#ffd23f);transform:translateY(-4px);box-shadow:0 10px 0 #c98b52}
 .p24o{display:flex;gap:10px;justify-content:center;margin-bottom:10px}.p24o button{width:62px;height:62px;border:0;border-radius:50%;background:#4d8de6;color:#fff;font:inherit;font-size:30px;font-weight:900;box-shadow:0 4px 0 #2f6ab8}.p24o button.on{background:#ff8a3c;box-shadow:0 4px 0 #c45a14}
 .tips p{margin:0 0 12px;line-height:1.6;font-size:15px}.tipc{display:inline-block;min-width:26px;padding:1px 6px;margin:0 2px;border-radius:6px;background:#fff3d6;border:2px solid #c98b52;text-align:center}
+.ansbox{background:#fff8e0;border:3px solid #ffb347;border-radius:14px;padding:10px 12px;color:var(--ink)}.ansbox b{display:block;font-size:26px;margin:4px 0;color:#c45a14}.ansbox small{color:var(--mu);font-weight:600}.nextq{margin-top:12px!important;background:#2fae6a!important;box-shadow:0 4px 0 #1f7a48!important}
 .p24m{text-align:center;font-weight:800;min-height:26px;margin:6px 0 10px;color:var(--wood2)}.p24b{display:flex;gap:8px;justify-content:center}.p24b button{border:0;border-radius:12px;background:rgba(255,255,255,.8);padding:8px 14px;font:inherit;font-weight:800;color:var(--ink)}
 .pzcard{text-align:center}.pzq{display:flex;justify-content:center;gap:14px;align-items:center;flex-wrap:wrap}.pzq.two>div{display:flex;flex-direction:column;align-items:center;gap:4px}.pzt{font-weight:800;font-size:17px;margin:10px 0}.pzt.big{font-size:26px}
 .frc{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.05;font-weight:900;margin:0 2px}.frc i{font-style:normal;padding:0 4px}.frc i:first-child{border-bottom:2.5px solid currentColor}
@@ -1176,7 +1177,10 @@ function p24Tap(i){const M=GM;if(!M||M.lock)return;if(M.sel<0||!M.op){M.sel=(M.s
 function p24Op(o){const M=GM;if(!M||M.lock)return;if(M.sel<0)return p24Draw('先點一張牌');M.op=o;p24Draw()}
 function p24Undo(){const M=GM;if(!M||M.lock||!M.hist.length)return;M.cards=M.hist.pop();M.sel=-1;M.op='';p24Draw()}
 function p24Reset(){const M=GM;if(!M||M.lock||!M.hist.length)return;M.cards=M.hist[0];M.hist=[];M.sel=-1;M.op='';p24Draw()}
-function p24Skip(){const M=GM;if(!M||M.lock)return;M.w++;M.q++;M.lock=true;p24Draw('答案：'+M.P.sol.replace(/-/g,'−')+' = 24');setTimeout(()=>{if(GM===M&&!M.dead)p24Next()},2600)}
+function gmNextBtn(fn){return `<button class="go wide nextq" onclick="${fn}">下一題 ›</button>`}
+function p24Skip(){const M=GM;if(!M||M.lock)return;M.w++;M.lock=true;p24Draw();M.q++;
+  $('#p24m').innerHTML=`<div class="ansbox">💡 答案<b>${M.P.sol.replace(/-/g,'−')} = 24</b><small>看懂了再按下一題</small></div>`;$('.p24b').innerHTML=gmNextBtn('p24Go()')}
+function p24Go(){const M=GM;if(M&&!M.dead)p24Next()}
 
 // ----- 分數披薩 -----
 function pizzaSvg(n,k,size){const R=44,cx=50,cy=50;let s='';
@@ -1211,7 +1215,8 @@ function pzNext(){const M=GM;if(M.q>=10)return gmEnd('pizza',M.lv,M.c,M.w,0,`<di
   <div class="pzo">${M.Q.opts.map((o,i)=>`<button onclick="pzPick(this,${i})">${o.includes('/')?frH(...o.split('/')):o}</button>`).join('')}</div></div>`}
 function pzPick(btn,i){const M=GM;if(!M||M.lock)return;M.lock=true;const o=M.Q.opts[i],ok=o===M.Q.ans;
   btn.classList.add(ok?'ok':'ng');if(!ok){[...btn.parentNode.children].forEach((b,j)=>{if(M.Q.opts[j]===M.Q.ans)b.classList.add('ok')})}
-  if(ok)M.c++;else M.w++;M.q++;setTimeout(()=>{if(GM===M&&!M.dead)pzNext()},ok?700:1500)}
+  if(ok)M.c++;else M.w++;M.q++;if(ok)setTimeout(()=>{if(GM===M&&!M.dead)pzNext()},700);else btn.closest('.pzcard').insertAdjacentHTML('beforeend',`<div class="mu" style="margin-top:10px">綠色的是正確答案</div>`+gmNextBtn('pzGo()'))}
+function pzGo(){const M=GM;if(M&&!M.dead)pzNext()}
 
 // ----- 英文單字拼拼看 -----
 const WDS={1:'cat🐱貓,dog🐶狗,pig🐷豬,cow🐮牛,bee🐝蜜蜂,ant🐜螞蟻,sun☀️太陽,egg🥚蛋,cup☕杯子,hat🎩帽子,bus🚌公車,car🚗汽車,bed🛏️床,box📦箱子,key🔑鑰匙,pen🖊️原子筆,fox🦊狐狸,owl🦉貓頭鷹,ice🧊冰,map🗺️地圖,toy🧸玩具,leg🦵腿,eye👁️眼睛,ear👂耳朵,bat🦇蝙蝠,pie🥧派,bow🎀蝴蝶結,web🕸️蜘蛛網,zoo🦁動物園,van🚐廂型車',
@@ -1230,8 +1235,9 @@ function wdDraw(state){const M=GM,W=M.W;
   ${state==='ng'?`<div class="wdans">正確是 <b>${W.w}</b></div>`:''}
   <div class="wdt">${M.tiles.map((t,i)=>`<button class="${t.used?'used':''}" onclick="wdTap(${i})">${t.ch}</button>`).join('')}</div></div>`}
 function wdTap(i){const M=GM;if(!M||M.lock||M.tiles[i].used)return;const k=M.slots.indexOf(null);if(k<0)return;M.slots[k]=i;M.tiles[i].used=true;
-  if(M.slots.indexOf(null)<0){M.lock=true;const got=M.slots.map(t=>M.tiles[t].ch).join(''),ok=got===M.W.w;if(ok)M.c++;else M.w++;M.q++;wdDraw(ok?'ok':'ng');say(M.W.w);setTimeout(()=>{if(GM===M&&!M.dead)wdNext()},ok?1000:2000)}
+  if(M.slots.indexOf(null)<0){M.lock=true;const got=M.slots.map(t=>M.tiles[t].ch).join(''),ok=got===M.W.w;if(ok)M.c++;else M.w++;wdDraw(ok?'ok':'ng');M.q++;say(M.W.w);if(ok)setTimeout(()=>{if(GM===M&&!M.dead)wdNext()},1000);else $('.wdcard').insertAdjacentHTML('beforeend',gmNextBtn('wdGo()'))}
   else wdDraw()}
+function wdGo(){const M=GM;if(M&&!M.dead)wdNext()}
 function wdBack(k){const M=GM;if(!M||M.lock||M.slots[k]==null)return;M.tiles[M.slots[k]].used=false;M.slots[k]=null;wdDraw()}
 function petMini(v){if(!v)return `<div class="card" onclick="go('pet')" style="cursor:pointer;display:flex;align-items:center;gap:10px">${petSvg('shiba',0,{},56)}<div style="flex:1"><b>還沒有寵物</b><div class="mu">去領養一顆蛋，把牠養大吧！</div></div><span class="mu">›</span></div>`;
   const warn=v.ready?'💝 長大了，去說再見':v.sick?'🤒 生病了！':v.poops>=2?'💩 要清大便了':v.full<30?'🍙 肚子餓了':v.mood<30?'😢 想要玩':'';
