@@ -1061,7 +1061,7 @@ async function mathQuit(){if(MG&&MG.end&&!await ask('<h3>要離開嗎？</h3>這
 async function mathEnd(){if(!MG||MG.done)return;MG.done=true;MG.end=0;const g=MG;
   $('#pg-math').innerHTML=`<div class="card" style="text-align:center"><div style="font-size:48px">⏰</div><h3>時間到！</h3><div class="mu">送出成績中…</div></div>`;
   let r=null;try{r=await call('submitMath',{lv:g.lv,correct:g.correct,wrong:g.wrong})}catch(e){toast(errMsg(e),1)}
-  if(r&&G.math){G.math.left=r.left;G.math.best[g.lv]=r.best}if(r){const x=GI();x.left.math=r.left;(x.best.math=x.best.math||{})[g.lv]=r.best;if(r.coinsLeft!=null)x.coinsToday=x.coinCap-r.coinsLeft}
+  if(r&&G.math){G.math.left=r.left;G.math.best[g.lv]=r.best}if(r){const x=GI();x.left.math=r.left;(x.best.math=x.best.math||{})[g.lv]=r.best;x.coinsToday+=r.coins||0}
   const acc=g.correct+g.wrong?Math.round(g.correct/(g.correct+g.wrong)*100):0;
   $('#pg-math').innerHTML=`<div class="card" style="text-align:center;position:relative;overflow:hidden">${r&&r.newBest&&g.correct?confetti():''}<div style="font-size:52px">${g.correct>=20?'🏆':g.correct>=10?'🌟':'💪'}</div><h3>Lv${g.lv} ${MLV[g.lv][0]}</h3>
    <div class="mbig">${g.correct}<small> 題</small></div><div class="mu">答錯 ${g.wrong} 題・正確率 ${acc}%・分數 ${g.correct*g.lv}</div>
@@ -1084,24 +1084,24 @@ const GHELP={sudoku:'每一橫排、每一直排、每一個粗框裡，每個�
  pizza:'看披薩回答分數問題，一場 10 題。',
  word:'看圖片和中文，點字母拼出英文單字，一場 10 個字。按 🔊 可以聽發音。'};
 let GM=null;
-function GI(){const x=G.games||{};x.left=x.left||{};x.best=x.best||{};if(x.daily==null)x.daily=3;if(x.coinCap==null)x.coinCap=30;x.coinsToday=x.coinsToday||0;G.games=x;return x}
+function GI(){const x=G.games||{};x.left=x.left||{};x.best=x.best||{};if(x.daily==null)x.daily=3;x.dailyBy=x.dailyBy||{};if(x.coinCap==null)x.coinCap=0;x.coinsToday=x.coinsToday||0;G.games=x;return x}
 function shuf(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function fmtT(s){s=Math.round(s);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
-function playMini(){const x=GI(),left=Math.max(0,x.coinCap-x.coinsToday);return `<div class="card mcard" onclick="go('play')"><div class="mico" style="background:linear-gradient(135deg,#8fd3ff,#b07aff)">🎡</div><div style="flex:1"><b>遊樂區</b><div class="mu">${left?`心算、數獨、24 點…今天還可以拿 <b class="gold">${left}</b> 金幣`:'今天的金幣拿完了，還可以練習破紀錄'}</div></div><span class="go">去玩 ›</span></div>`}
+function playMini(){const x=GI(),left=x.coinCap?Math.max(0,x.coinCap-x.coinsToday):-1;return `<div class="card mcard" onclick="go('play')"><div class="mico" style="background:linear-gradient(135deg,#8fd3ff,#b07aff)">🎡</div><div style="flex:1"><b>遊樂區</b><div class="mu">${left<0?`心算、數獨、24 點、英文單字…${x.coinsToday?`今天已拿 <b class="gold">${x.coinsToday}</b> 金幣`:'玩遊戲賺金幣！'}`:left?`心算、數獨、24 點…今天還可以拿 <b class="gold">${left}</b> 金幣`:'今天的金幣拿完了，還可以練習破紀錄'}</div></div><span class="go">去玩 ›</span></div>`}
 function drawPlay(){MG=null;GM=null;const x=GI();
-  $('#pg-play').innerHTML=`<div class="sign"><h3>🎡 遊樂區</h3></div><div class="card"><div class="mu">每個遊戲每天前 ${x.daily} 場有金幣和經驗，全部加起來一天最多 ${x.coinCap} 金幣（今天已拿 <b class="gold">${x.coinsToday}</b>）。</div></div>
-  <div class="pgrid">${GMS.map(g=>`<button class="ptile" style="--c:${g[4]}" onclick="${g[0]==='math'?"go('math')":`gmLevels('${g[0]}')`}"><div class="pi">${g[1]}</div><b>${g[2]}</b><small>${g[3]}</small><span class="pl">${x.left[g[0]]==null||x.left[g[0]]?`還有 ${x.left[g[0]]==null?x.daily:x.left[g[0]]} 場有獎勵`:'今天獎勵拿完了'}</span></button>`).join('')}</div>`}
+  $('#pg-play').innerHTML=`<div class="sign"><h3>🎡 遊樂區</h3></div><div class="card"><div class="mu">每天前幾場有金幣和經驗：英文單字 ${x.dailyBy.word||x.daily} 場，其他遊戲各 ${x.daily} 場${x.coinCap?`，全部加起來一天最多 ${x.coinCap} 金幣`:''}。今天已拿 <b class="gold">${x.coinsToday}</b> 金幣。</div></div>
+  <div class="pgrid">${GMS.map(g=>`<button class="ptile" style="--c:${g[4]}" onclick="${g[0]==='math'?"go('math')":`gmLevels('${g[0]}')`}"><div class="pi">${g[1]}</div><b>${g[2]}</b><small>${g[3]}</small><span class="pl">${x.left[g[0]]==null||x.left[g[0]]?`還有 ${x.left[g[0]]==null?(x.dailyBy[g[0]]||x.daily):x.left[g[0]]} 場有獎勵`:'今天獎勵拿完了'}</span></button>`).join('')}</div>`}
 const backBtn=()=>`<button class="back" onclick="gmQuit()">‹ 遊樂區</button>`;
 async function gmQuit(){if(GM&&GM.live&&!await ask('<h3>要離開嗎？</h3>這一場不會算成績喔。','離開'))return;if(GM)GM.dead=true;GM=null;go('play')}
 function gmLevels(g){if(GM)GM.dead=true;GM=null;const info=GMS.find(x=>x[0]===g),x=GI(),b=x.best[g]||{};
-  $('#pg-gm').innerHTML=`${backBtn()}<div class="sign"><h3>${info[1]} ${info[2]}</h3></div><div class="card"><div class="mu">${GHELP[g]} 今天還有 <b class="gold">${x.left[g]==null?x.daily:x.left[g]}</b> 場有獎勵。</div>${g==='p24'?'<button class="go wide" style="margin-top:10px;background:#ffb347;box-shadow:0 4px 0 #c47a1a" onclick="p24Tips()">📖 24 點小技巧（先看這個！）</button>':''}</div>
+  $('#pg-gm').innerHTML=`${backBtn()}<div class="sign"><h3>${info[1]} ${info[2]}</h3></div><div class="card"><div class="mu">${GHELP[g]} 今天還有 <b class="gold">${x.left[g]==null?(x.dailyBy[g]||x.daily):x.left[g]}</b> 場有獎勵。</div>${g==='p24'?'<button class="go wide" style="margin-top:10px;background:#ffb347;box-shadow:0 4px 0 #c47a1a" onclick="p24Tips()">📖 24 點小技巧（先看這個！）</button>':''}</div>
   <div class="mlv">${GLV[g].map((l,i)=>`<button class="mlb" onclick="gmStart('${g}',${i+1})"><b>Lv${i+1}</b><span>${l[0]}</span><small>${l[1]}${b[i+1]?'・最佳 '+(g==='sudoku'?fmtT(b[i+1]):b[i+1]+(g==='p24'?' / 5':' / 10')):''}</small></button>`).join('')}</div>`;
   if(st.tab!=='gm')go('gm');window.scrollTo(0,0)}
 function gmStart(g,lv){if(GM)GM.dead=true;({sudoku:sdStart,p24:p24Start,pizza:pzStart,word:wdStart})[g](lv);window.scrollTo(0,0)}
 async function gmEnd(g,lv,c,w,t,line){if(!GM||GM.done)return;GM.done=true;GM.live=false;
   $('#pg-gm').innerHTML=`<div class="card" style="text-align:center"><div style="font-size:48px">⏳</div><h3>送出成績中…</h3></div>`;
   let r=null;try{r=await call('submitGame',{game:g,lv,correct:c,wrong:w,time:t})}catch(e){toast(errMsg(e),1)}
-  const x=GI();if(r){x.left[g]=r.left;(x.best[g]=x.best[g]||{})[lv]=r.best;x.coinsToday=x.coinCap-r.coinsLeft}
+  const x=GI();if(r){x.left[g]=r.left;(x.best[g]=x.best[g]||{})[lv]=r.best;x.coinsToday+=r.coins||0}
   const info=GMS.find(z=>z[0]===g);
   $('#pg-gm').innerHTML=`<div class="card" style="text-align:center;position:relative;overflow:hidden">${r&&r.newBest&&c?confetti():''}<div style="font-size:52px">${info[1]}</div><h3>${info[2]} Lv${lv}</h3>${line}
    ${r?`${r.newBest&&c?'<div class="mnew">🎉 破紀錄了！</div>':''}${r.coins||r.exp?`<div class="mrw">🪙 +${r.coins} 金幣　⭐ +${r.exp} 經驗</div>`:`<div class="mu" style="margin-top:6px">${c?(r.left?'今天的金幣上限到了，經驗也拿完囉':'今天這個遊戲的獎勵拿完了，明天再來喔！'):'再試一次吧！'}</div>`}`:''}

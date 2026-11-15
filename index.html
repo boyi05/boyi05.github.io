@@ -140,7 +140,7 @@ var k=new URLSearchParams(location.search).get('k')||'';
 try{if(k)localStorage.setItem('k',k);else k=localStorage.getItem('k')||''}catch(e){}
 var guess='';try{guess=localStorage.getItem('role')||''}catch(e){}
 var TIPS=guess==='parent'?['小提示：在「郗芝炘團隊」可以看每個孩子的台幣存摺和排行榜。','小提示：⚙️ 定存設定可以調利率和最低存款金額。','小提示：孩子回報的任務會出現在收件匣，記得審核喔！','小提示：在廣場發文可以附上照片，最多 4 張。']
- :['小提示：完成任務可以拿到金幣和經驗喔！','小提示：遊樂區每個遊戲每天前 10 場有獎勵。','小提示：寵物肚子餓了要記得餵牠！','小提示：錢放定存會長利息，想用時可以隨時解約。','小提示：三個人一起完成合作任務，商店會降價！','小提示：在廣場許願，說不定會實現喔 ✨','小提示：數獨越快完成，紀錄越厲害！'];
+ :['小提示：完成任務可以拿到金幣和經驗喔！','小提示：遊樂區的遊戲每天前幾場有金幣獎勵，英文單字有 10 場！','小提示：寵物肚子餓了要記得餵牠！','小提示：錢放定存會長利息，想用時可以隨時解約。','小提示：三個人一起完成合作任務，商店會降價！','小提示：在廣場許願，說不定會實現喔 ✨','小提示：數獨越快完成，紀錄越厲害！'];
 function tips(){var n=Math.floor(Math.random()*TIPS.length);tipT=setTimeout(function(){say(TIPS[n%TIPS.length],function(){tipT=setTimeout(tips,2600)})},1400)}
 function fail(msg){clearTimeout(tipT);clearInterval(pt);document.getElementById('bar').style.display='none';
   say('哎呀！'+msg,function(){var c=document.getElementById('cur');if(c)c.remove();T.innerHTML+='<br>'+'<small>如果一直這樣，請截圖給爸爸</small><br><button onclick="location.reload()">重新整理</button>'})}
