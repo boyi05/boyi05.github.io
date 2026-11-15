@@ -61,6 +61,7 @@ h3{margin:0 0 8px;font-size:17px}
 .sdpad{display:grid;gap:8px;max-width:440px;margin:0 auto}.sdpad button{border:0;border-radius:14px;background:var(--cream);box-shadow:0 4px 0 #7cbf9c;font:inherit;font-size:24px;font-weight:900;padding:10px 0;color:var(--ink)}.sdpad button:active{transform:translateY(3px);box-shadow:0 1px 0 #7cbf9c}
 .p24c{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:380px;margin:0 auto 14px}.pcard{position:relative;border:4px solid #fff;border-radius:18px;background:linear-gradient(160deg,#fffaf0,#ffe7c2);box-shadow:0 6px 0 #c98b52;aspect-ratio:3/2;font:inherit;font-size:44px;font-weight:900;color:var(--wood2)}.pcard.fr{font-size:30px}.pcard i{position:absolute;left:8px;top:4px;font-size:16px;font-style:normal}.pcard i.b{left:auto;top:auto;right:8px;bottom:4px;transform:rotate(180deg)}.pcard.on{background:linear-gradient(160deg,#fff6b0,#ffd23f);transform:translateY(-4px);box-shadow:0 10px 0 #c98b52}
 .p24o{display:flex;gap:10px;justify-content:center;margin-bottom:10px}.p24o button{width:62px;height:62px;border:0;border-radius:50%;background:#4d8de6;color:#fff;font:inherit;font-size:30px;font-weight:900;box-shadow:0 4px 0 #2f6ab8}.p24o button.on{background:#ff8a3c;box-shadow:0 4px 0 #c45a14}
+.tips p{margin:0 0 12px;line-height:1.6;font-size:15px}.tipc{display:inline-block;min-width:26px;padding:1px 6px;margin:0 2px;border-radius:6px;background:#fff3d6;border:2px solid #c98b52;text-align:center}
 .p24m{text-align:center;font-weight:800;min-height:26px;margin:6px 0 10px;color:var(--wood2)}.p24b{display:flex;gap:8px;justify-content:center}.p24b button{border:0;border-radius:12px;background:rgba(255,255,255,.8);padding:8px 14px;font:inherit;font-weight:800;color:var(--ink)}
 .pzcard{text-align:center}.pzq{display:flex;justify-content:center;gap:14px;align-items:center;flex-wrap:wrap}.pzq.two>div{display:flex;flex-direction:column;align-items:center;gap:4px}.pzt{font-weight:800;font-size:17px;margin:10px 0}.pzt.big{font-size:26px}
 .frc{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.05;font-weight:900;margin:0 2px}.frc i{font-style:normal;padding:0 4px}.frc i:first-child{border-bottom:2.5px solid currentColor}
@@ -1074,11 +1075,11 @@ const GMS=[
  ['pizza','🍕','分數披薩','看披薩學分數','#ff8a3c'],
  ['word','🔤','英文單字拼拼看','看圖拼出英文單字','#4d8de6']];
 const GLV={sudoku:[['4×4 圖案','一年級起'],['6×6 數字','二年級起'],['9×9 簡單','三年級起'],['9×9 挑戰','高手']],
- p24:[['數字 1～9','三年級起'],['數字 1～13','高手']],
+ p24:[['入門・數字 1～6','二年級起'],['數字 1～9','三年級起'],['數字 1～13','高手']],
  pizza:[['認識分數','二年級起'],['比大小・等值分數','三年級起'],['分數加減','四年級起']],
  word:[['3 個字母','一年級起'],['4～5 個字母','二年級起'],['6 個字母以上','高年級']]};
 const GHELP={sudoku:'每一橫排、每一直排、每一個粗框裡，每個圖案（數字）只能出現一次。完成就有獎勵，越快越好！',
- p24:'每題 4 張數字牌，用 ＋ − × ÷ 把 4 張全部用上算出 24。先點一張牌、點符號、再點另一張牌。一場 5 題。',
+ p24:'每題 4 張數字牌，用 ＋ − × ÷ 把 4 張全部用上算出 24。先點一張牌、點符號、再點另一張牌。一場 5 題。入門只要用 ＋ − × 就能解。',
  pizza:'看披薩回答分數問題，一場 10 題。',
  word:'看圖片和中文，點字母拼出英文單字，一場 10 個字。按 🔊 可以聽發音。'};
 let GM=null;
@@ -1092,7 +1093,7 @@ function drawPlay(){MG=null;GM=null;const x=GI();
 const backBtn=()=>`<button class="back" onclick="gmQuit()">‹ 遊樂區</button>`;
 async function gmQuit(){if(GM&&GM.live&&!await ask('<h3>要離開嗎？</h3>這一場不會算成績喔。','離開'))return;if(GM)GM.dead=true;GM=null;go('play')}
 function gmLevels(g){if(GM)GM.dead=true;GM=null;const info=GMS.find(x=>x[0]===g),x=GI(),b=x.best[g]||{};
-  $('#pg-gm').innerHTML=`${backBtn()}<div class="sign"><h3>${info[1]} ${info[2]}</h3></div><div class="card"><div class="mu">${GHELP[g]} 今天還有 <b class="gold">${x.left[g]==null?x.daily:x.left[g]}</b> 場有獎勵。</div></div>
+  $('#pg-gm').innerHTML=`${backBtn()}<div class="sign"><h3>${info[1]} ${info[2]}</h3></div><div class="card"><div class="mu">${GHELP[g]} 今天還有 <b class="gold">${x.left[g]==null?x.daily:x.left[g]}</b> 場有獎勵。</div>${g==='p24'?'<button class="go wide" style="margin-top:10px;background:#ffb347;box-shadow:0 4px 0 #c47a1a" onclick="p24Tips()">📖 24 點小技巧（先看這個！）</button>':''}</div>
   <div class="mlv">${GLV[g].map((l,i)=>`<button class="mlb" onclick="gmStart('${g}',${i+1})"><b>Lv${i+1}</b><span>${l[0]}</span><small>${l[1]}${b[i+1]?'・最佳 '+(g==='sudoku'?fmtT(b[i+1]):b[i+1]+(g==='p24'?' / 5':' / 10')):''}</small></button>`).join('')}</div>`;
   if(st.tab!=='gm')go('gm');window.scrollTo(0,0)}
 function gmStart(g,lv){if(GM)GM.dead=true;({sudoku:sdStart,p24:p24Start,pizza:pzStart,word:wdStart})[g](lv);window.scrollTo(0,0)}
@@ -1144,20 +1145,29 @@ function sdPut(v){const M=GM;if(!M||M.done||M.over||M.sel<0||M.giv[M.sel])return
 const FR=(n,d=1)=>{if(d<0){n=-n;d=-d}const g=(a,b)=>b?g(b,a%b):Math.abs(a);const k=g(n,d)||1;return [n/k,d/k]};
 const frS=f=>f[1]===1?String(f[0]):f[0]+'/'+f[1];
 function frOp(a,o,b){if(o==='+')return FR(a[0]*b[1]+b[0]*a[1],a[1]*b[1]);if(o==='-')return FR(a[0]*b[1]-b[0]*a[1],a[1]*b[1]);if(o==='×')return FR(a[0]*b[0],a[1]*b[1]);if(!b[0])return null;return FR(a[0]*b[1],a[1]*b[0])}
-function p24Solve(L){if(L.length===1)return L[0].v[0]===24&&L[0].v[1]===1?L[0].e:null;
+function p24Tips(){const c=(...n)=>n.map(x=>`<b class="tipc">${x}</b>`).join('');
+  ask(`<h3>📖 24 點小技巧</h3><div class="tips">
+  <p><b>① 先背「24 的好朋友」</b><br>3×8、4×6、2×12、1×24，還有 20+4、30−6。解題就是想辦法湊出其中一組！</p>
+  <p><b>② 找一張關鍵牌，湊它的另一半</b><br>有 6 就湊 4，有 8 就湊 3，有 3 就湊 8，有 4 就湊 6。<br>${c(3,4,5,6)} → 先看 6，再用 3、4、5 湊出 4：(3+5)−4=4，4×6=24</p>
+  <p><b>③ 兩張一組</b><br>${c(2,2,3,3)} → (2+2)×(3+3)=24</p>
+  <p><b>④ 用不到的牌把它消掉</b><br>乘 1 不會變；兩張一樣的牌相減＝0、相除＝1。<br>${c(1,1,3,8)} → 3×8=24，再 ×1×1</p>
+  <p><b>⑤ 全部加加看</b><br>${c(9,8,6,1)} → 9+8+6+1=24，有時候就這麼簡單！</p>
+  <p><b>⑥ 卡住了就按「跳過」</b><br>會告訴你答案，看懂一種解法就多學會一招 💪</p>
+  <p class="mu">金幣：入門每題 3、Lv2 每題 4、Lv3 每題 5（一場 5 題）</p></div>`,null,'知道了')}
+function p24Solve(L,ops,st){if(L.length===1)return L[0].v[0]===24&&L[0].v[1]===1?L[0].e:null;
   for(let i=0;i<L.length;i++)for(let j=0;j<L.length;j++){if(i===j)continue;const rest=L.filter((_,k)=>k!==i&&k!==j);
-    for(const o of ['+','-','×','÷']){if((o==='+'||o==='×')&&j<i)continue;const v=frOp(L[i].v,o,L[j].v);if(!v)continue;
-      const r=p24Solve(rest.concat([{v,e:'('+L[i].e+' '+o+' '+L[j].e+')'}]));if(r)return r}}return null}
-function p24Make(lv){const hi=lv===1?9:13;for(;;){const ns=[0,0,0,0].map(()=>RI(1,hi));const s=p24Solve(ns.map(x=>({v:[x,1],e:String(x)})));if(s)return {ns,sol:s.slice(1,-1)}}}
+    for(const o of (ops||['+','-','×','÷'])){if((o==='+'||o==='×')&&j<i)continue;const v=frOp(L[i].v,o,L[j].v);if(!v||((ops||st)&&v[0]<0)||(st&&v[1]!==1))continue;
+      const r=p24Solve(rest.concat([{v,e:'('+L[i].e+' '+o+' '+L[j].e+')'}]),ops,st);if(r)return r}}return null}
+function p24Make(lv){const hi=[0,6,9,13][lv]||9,ops=lv===1?['+','-','×']:null;for(;;){const ns=[0,0,0,0].map(()=>RI(1,hi));const C=ns.map(x=>({v:[x,1],e:String(x)})),s=p24Solve(C,ops,1)||p24Solve(C,ops);if(s)return {ns,sol:s.slice(1,-1)}}}
 function p24Start(lv){GM={g:'p24',lv,live:true,q:0,c:0,w:0};p24Next()}
 function p24Next(){const M=GM;if(M.q>=5)return gmEnd('p24',M.lv,M.c,M.w,0,`<div class="mbig">${M.c}<small> / 5 題</small></div><div class="mu">跳過 ${M.w} 題</div>`);
   const P=p24Make(M.lv);M.P=P;M.cards=P.ns.map((x,i)=>({id:i,v:[x,1]}));M.hist=[];M.sel=-1;M.op='';M.lock=false;p24Draw()}
 function p24Draw(msg){const M=GM;
   $('#pg-gm').innerHTML=`${backBtn()}<div class="gtop"><b>🃏 24 點 Lv${M.lv}</b><span>第 ${M.q+1} / 5 題　✅ ${M.c}</span></div>
   <div class="p24c">${M.cards.map((c,i)=>`<button class="pcard ${i===M.sel?'on':''} ${c.v[1]!==1?'fr':''}" onclick="p24Tap(${i})"><i>🐚</i>${frS(c.v)}<i class="b">🐚</i></button>`).join('')}</div>
-  <div class="p24o">${['+','-','×','÷'].map(o=>`<button class="${M.op===o?'on':''}" onclick="p24Op('${o}')">${o==='-'?'−':o}</button>`).join('')}</div>
+  <div class="p24o">${(M.lv===1?['+','-','×']:['+','-','×','÷']).map(o=>`<button class="${M.op===o?'on':''}" onclick="p24Op('${o}')">${o==='-'?'−':o}</button>`).join('')}</div>
   <div class="p24m" id="p24m">${msg||(M.sel<0?'點一張牌開始':M.op?'再點另一張牌':'點一個符號')}</div>
-  <div class="p24b"><button onclick="p24Undo()">↶ 上一步</button><button onclick="p24Reset()">↺ 重來</button><button onclick="p24Skip()">跳過</button></div>`}
+  <div class="p24b"><button onclick="p24Undo()">↶ 上一步</button><button onclick="p24Reset()">↺ 重來</button><button onclick="p24Skip()">跳過</button><button onclick="p24Tips()">📖 技巧</button></div>`}
 function p24Tap(i){const M=GM;if(!M||M.lock)return;if(M.sel<0||!M.op){M.sel=(M.sel===i?-1:i);return p24Draw()}
   if(i===M.sel)return;const a=M.cards[M.sel],b=M.cards[i],v=frOp(a.v,M.op,b.v);if(!v){M.op='';return p24Draw('不能除以 0 喔')}
   M.hist.push(M.cards.map(c=>({...c})));const nc=M.cards.filter((_,k)=>k!==M.sel&&k!==i);nc.splice(Math.min(i,M.sel),0,{id:Date.now(),v});M.cards=nc;M.sel=-1;M.op='';
