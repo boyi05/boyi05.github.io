@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>海底有星星</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -13,24 +13,43 @@
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="manifest" href="manifest.json">
 <style>
-html,body{margin:0;height:100%;background:#fff;overflow:hidden}
-#app{position:fixed;inset:0;width:100%;height:100%;border:0;display:block;
-  top:env(safe-area-inset-top);height:calc(100% - env(safe-area-inset-top))}
-#msg{display:none;font:700 18px -apple-system,"PingFang TC",sans-serif;color:#4a3b2a;text-align:center;padding:90px 24px;line-height:1.7}
-#msg img{width:96px;height:96px;border-radius:22px;display:block;margin:0 auto 16px}
+html,body{margin:0;background:#fff;font:700 17px -apple-system,"PingFang TC","Noto Sans TC",sans-serif;color:#4a3b2a}
+#s{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px}
+#s img{width:96px;height:96px;border-radius:22px;box-shadow:0 6px 18px rgba(10,47,115,.25);animation:b 1.6s ease-in-out infinite}
+@keyframes b{50%{transform:translateY(-6px)}}
+#s small{color:#9a8670;font-weight:500}
+#s button{border:0;border-radius:14px;background:#2f6fe4;color:#fff;font:inherit;padding:10px 22px}
 </style>
 </head>
 <body>
-<iframe id="app" title="海底有星星" allow="clipboard-write"></iframe>
-<div id="msg"><img src="icon-512.png" alt="">請用你的專屬連結<br>打開海底有星星</div>
+<div id="s"><img src="icon-512.png" alt=""><div id="t">讀取中…</div></div>
 <script>
-// 網頁 App 位址（正式啟用時只要改這一行）
-var APP='https://script.google.com/macros/s/AKfycbxgGwIHA6iBF5JALi0U5yiB6WEhMQDc39H5nNd34So/exec';
-// 每個人的通行碼放在網址後面（?k=...），網頁本身不存任何人的通行碼
-var k=new URLSearchParams(location.search).get('k')||(location.hash.match(/k=([\w-]+)/)||[])[1]||'';
-if(!k){try{k=localStorage.getItem('k')||''}catch(e){}}
-if(k){try{localStorage.setItem('k',k)}catch(e){}document.getElementById('app').src=APP+'?k='+encodeURIComponent(k);}
-else{document.getElementById('app').style.display='none';document.getElementById('msg').style.display='block';}
+(function(){
+// 入口：用網址後面的專屬通行碼（?k=…）向 Apps Script 拿資料，再換成小孩或爸媽的畫面
+var API="https://script.google.com/macros/s/AKfycbxgGwIHA6iBF5JALi0U5yiB6WEhMQDc39H5nNd34So/exec";
+var k=new URLSearchParams(location.search).get('k')||'';
+try{if(k)localStorage.setItem('k',k);else k=localStorage.getItem('k')||''}catch(e){}
+var T=document.getElementById('t');
+function fail(msg){T.innerHTML=msg+'<br><small>如果一直這樣，請截圖給爸爸</small><br><br><button onclick="location.reload()">重新整理</button>'}
+if(!k){T.innerHTML='請用你的專屬連結<br>打開海底有星星'}
+else{
+  var pages={};function page(r){return pages[r]||(pages[r]=fetch(r+'.html',{cache:'no-cache'}).then(function(x){if(!x.ok)throw new Error('畫面載入失敗');return x.text()}))}
+  var guess='';try{guess=localStorage.getItem('role')||''}catch(e){}
+  if(guess==='kid'||guess==='parent')page(guess);
+  fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn:'boot',args:[k]}),redirect:'follow'})
+  .then(function(r){if(!r.ok)throw new Error('連線失敗（'+r.status+'）');return r.json()})
+  .then(function(j){
+    if(!j.ok)throw new Error(j.err);
+    var b=j.v;try{localStorage.setItem('role',b.role)}catch(e){}
+    return page(b.role).then(function(html){
+      var data=JSON.stringify(b).replace(/</g,'\\x3c');
+      html=html.replace('<?!= boot ?>',function(){return data});
+      document.open();document.write(html);document.close();
+    });
+  })
+  .catch(function(e){fail(/fetch|Load failed|NetworkError/i.test(e.message)?'網路好像斷了':e.message)});
+}
+})();
 </script>
 </body>
 </html>

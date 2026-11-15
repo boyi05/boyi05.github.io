@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>海底有星星</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="海底有星星"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="favicon.png"><link rel="manifest" href="manifest.json">
+<script>
+// 把 google.script.run 換成呼叫 Apps Script 的 API
+(function(){var API="https://script.google.com/macros/s/AKfycbxgGwIHA6iBF5JALi0U5yiB6WEhMQDc39H5nNd34So/exec";
+function rpc(fn,args){return fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn:fn,args:args}),redirect:'follow'})
+ .then(function(r){if(!r.ok)throw new Error('連線失敗（'+r.status+'），請再試一次');return r.json()})
+ .then(function(j){if(!j.ok)throw new Error(j.err);return j.v})
+ .catch(function(e){if(e&&/fetch|Load failed|NetworkError/i.test(e.message))throw new Error('網路好像斷了，請再試一次');throw e})}
+function mk(s,f){return new Proxy({},{get:function(t,p){if(p==='withSuccessHandler')return function(x){return mk(x,f)};if(p==='withFailureHandler')return function(x){return mk(s,x)};
+ return function(){var a=[].slice.call(arguments);rpc(p,a).then(function(v){if(s)s(v)},function(e){if(f)f(e)})}}})}
+window.google={script:{run:mk(null,null)}};})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<style>
+:root{--ink:#1c2433;--mu:#7b8494;--line:#eceff3;--blue:#2f6fe4;--green:#16a34a;--red:#e5484d;--gold:#d98a00;--bg:#f5f7fa}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 16px/1.45 system-ui,-apple-system,"PingFang TC","Microsoft JhengHei","Noto Sans TC",sans-serif;padding-bottom:96px}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:560px;margin:0 auto}
+.page{display:none}.page.on{display:block}
+.top{background:var(--blue);color:#fff;padding:20px 18px 64px}.top .row{display:flex;justify-content:space-between;align-items:center}
+.top small{opacity:.85;font-size:13px}.hi{font-size:15px;opacity:.95;display:flex;align-items:center;gap:8px}.bal{font-size:36px;font-weight:700;margin-top:2px}
+.pad{padding:0 14px}.pull{margin-top:-46px}
+.ptitle{padding:18px 16px 6px;font-size:22px;font-weight:700}
+.card{background:#fff;border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px #0000000f}
+h3{margin:0 0 8px;font-size:15px;font-weight:700;display:flex;align-items:center;gap:6px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.quick{display:grid;grid-template-columns:repeat(3,1fr);text-align:center;font-size:12px;color:var(--mu)}
+.quick>div{cursor:pointer}.quick b{display:flex;align-items:center;justify-content:center;width:46px;height:46px;margin:0 auto 6px;border-radius:14px;background:#eef3ff;font-size:22px}
+.it{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.it:last-child{border:0}
+.ic{width:38px;height:38px;border-radius:12px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:19px;flex:none;overflow:hidden}
+.t{flex:1;min-width:0}.mu{font-size:12px;color:var(--mu);font-weight:400}
+.acts{display:flex;flex-direction:column;gap:4px}.acts button{border:0;border-radius:10px;padding:6px 12px;font-weight:700}
+.ok{background:var(--green);color:#fff}.no{background:var(--line);color:var(--ink)}
+.pill{background:var(--red);color:#fff;border-radius:99px;padding:0 8px;font-size:12px}
+.gold{color:var(--gold)}.plus{color:var(--green)}.red{color:var(--red)}
+.empty{text-align:center;color:var(--mu);padding:16px 0}
+.btn{display:block;width:100%;border:0;border-radius:12px;padding:12px;font-weight:700;background:var(--blue);color:#fff;margin:8px 0 12px}
+.btn.red{background:var(--red)}.btn:disabled{opacity:.5}
+.sbtn{border:0;background:#eef3ff;color:var(--blue);border-radius:10px;padding:6px 10px;font-weight:700;white-space:nowrap}
+.del{border:0;background:none;font-size:16px;padding:4px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:block;margin:12px 0 6px;color:var(--mu);font-size:13px}
+input,select{width:100%;padding:11px 12px;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;outline:none;-webkit-appearance:none}
+input:focus{border-color:var(--blue);background:#fff}
+input.amt{font-size:24px;font-weight:700;text-align:right}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{flex:1 0 auto;min-width:64px;padding:8px 6px;border:1px solid var(--line);background:#fff;border-radius:12px;color:var(--ink);font-size:14px}
+.chip.on{background:#eef3ff;border-color:var(--blue);color:var(--blue);font-weight:700}
+.cats .chip{flex:0 0 calc(25% - 5px);min-width:0;font-size:12px}.cats .chip b{display:block;font-size:20px}
+.seg{display:flex;gap:6px;margin:12px 0}
+.toggle{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:14px}
+.sw{width:46px;height:28px;border-radius:99px;background:#d6dbe3;border:0;position:relative;padding:0}.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:left .15s}
+.sw.on{background:var(--green)}.sw.on::after{left:21px}
+.hero2{background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff}.hero2 .mu{color:#e7ffe9}.bal2{font-size:30px;font-weight:700}
+.prog{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin:6px 0 4px}.prog i{display:block;height:100%;background:var(--blue)}
+.dep{padding:8px 0;border-bottom:1px solid var(--line)}.dep:last-child{border:0}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.thumb{width:38px;height:38px;object-fit:cover}.ava{border-radius:50%;object-fit:cover;vertical-align:middle}.spr{vertical-align:middle}
+.pbimg{width:140px;height:140px;margin:6px auto;border-radius:14px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:40px;overflow:hidden}.pbimg .big{width:100%;height:100%;object-fit:cover}
+.pick{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:8px}.pick button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:3px}
+.qr{width:220px;margin:8px auto;background:#fff;padding:8px;border:1px solid var(--line);border-radius:12px}.qr svg{width:100%;height:auto;display:block}
+#dock{position:fixed;left:0;right:0;bottom:0;display:flex;background:#fff;border-top:1px solid var(--line);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:6}
+#dock>div{flex:1;min-width:0;white-space:nowrap;letter-spacing:-.3px;text-align:center;font-size:11px;color:#9aa3b2;position:relative;cursor:pointer}#dock b{display:block;font-size:20px;filter:grayscale(1);opacity:.55;font-weight:400}
+#dock .on{color:var(--blue)}#dock .on b{filter:none;opacity:1}
+.badge{position:absolute;top:-2px;left:55%;background:var(--red);color:#fff;border-radius:99px;font-size:10px;font-style:normal;padding:0 5px}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(30px);opacity:0;background:var(--ink);color:#fff;border-radius:12px;padding:10px 16px;font-size:14px;z-index:30;max-width:90vw;transition:all .2s}
+#toast.show{opacity:1;transform:translateX(-50%)}#toast.err{background:var(--red)}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.45);display:flex;align-items:flex-end;justify-content:center;z-index:20}
+.modal .box{background:#fff;border-radius:20px 20px 0 0;padding:18px 16px calc(16px + env(safe-area-inset-bottom));width:100%;max-width:560px;max-height:90vh;overflow:auto}
+.modal .btns{display:flex;gap:10px;margin-top:14px}.modal .btns button{flex:1;border:0;border-radius:12px;padding:12px;font-weight:700}
+#mNo{background:var(--line)}#mYes{background:var(--blue);color:#fff}
+.hidden{display:none!important}
+</style></head><body>
+<div class="wrap">
+<section id="pg-home" class="page on"><div class="top" id="homeTop"></div><div class="pad pull" id="homeBody"><div class="card empty">讀取中…</div></div></section>
+<section id="pg-rec" class="page"><div class="ptitle">記帳</div><div class="pad">
+ <div class="seg" id="recSeg"></div>
+ <div id="recP"><div class="card"><label>金額</label><input id="pAmt" class="amt" type="number" inputmode="numeric" placeholder="0">
+  <label>分類</label><div class="chips cats" id="pCats"></div><label>誰付的</label><div class="chips" id="pPayer"></div><div class="two"><div><label>日期</label><input id="pDate" type="date"></div><div><label>備註</label><input id="pNote" placeholder="例如：午餐"></div></div>
+  <button class="btn" onclick="sendParent(this)">記一筆支出</button></div>
+  <div class="card"><div class="row"><h3>最近 50 筆</h3><button class="sbtn" onclick="loadRecent()">重新整理</button></div><div id="recentList"></div></div></div>
+ <div id="recR" class="hidden"></div>
+ <div id="recK" class="hidden"><div class="card"><label>小孩</label><div class="chips" id="kKids"></div><label>類型</label><div class="chips" id="kType"></div>
+  <label>金額（台幣）</label><input id="kAmt" class="amt" type="number" inputmode="numeric" placeholder="0">
+  <div id="kSpend"><label>分類</label><div class="chips cats" id="kCats"></div><div class="toggle"><span>爸媽帳本也記一筆支出</span><button type="button" class="sw on" onclick="st.sync=!st.sync;this.classList.toggle('on',st.sync)"></button></div></div>
+  <div class="two"><div><label>日期</label><input id="kDate" type="date"></div><div><label>備註</label><input id="kNote" placeholder="例如：考試 100 分"></div></div>
+  <button class="btn" id="kBtn" onclick="sendKid(this)">送出</button><div class="mu">這裡是真的錢（台幣）。要發遊戲金幣，請到「郗芝炘團隊」→ 小島。</div></div></div>
+</div></section>
+<section id="pg-kids" class="page"><div class="ptitle">郗芝炘團隊</div><div class="pad"><div class="chips" id="kidSel"></div><div class="seg" id="kidSeg"></div><div id="kidBody"></div></div></section>
+<section id="pg-forum" class="page"><div class="ptitle">家庭廣場</div><div class="pad" id="foBody"></div></section>
+<section id="pg-stat" class="page"><div class="ptitle">統計</div><div class="pad"><div class="card">
+ <label>看誰的帳</label><div class="chips" id="sBook"></div><div id="sPayBox"><label>誰付的</label><div class="chips" id="sPayer"></div></div><label>期間</label><div class="chips" id="sQuick"></div>
+ <div class="two" style="margin-top:8px"><input id="sFrom" type="date"><input id="sTo" type="date"></div>
+ <div class="toggle" id="sFixedBox"><span>不算每月固定支出</span><button type="button" class="sw" onclick="st.noFixed=!st.noFixed;this.classList.toggle('on',st.noFixed);loadStats()"></button></div>
+ <button class="btn" onclick="st.range='';drawQuick();loadStats()">查詢</button></div><div id="statBody"></div></div></section>
+<section id="pg-set" class="page"><div class="ptitle">設定</div><div class="pad"><div class="seg" id="setSeg"></div><div id="setBody"></div></div></section>
+</div>
+<nav id="dock"></nav>
+<div id="toast"></div>
+<div id="modal" class="modal hidden"><div class="box"><div id="mBody"></div><div class="btns"><button id="mNo">取消</button><button id="mYes">確定</button></div></div></div>
+<script>window.__BOOT=<?!= boot ?>;window.onerror=function(m,s,l,c){var d=document.createElement("pre");d.style.cssText="position:fixed;z-index:99;left:0;right:0;top:"+(window.__en=(window.__en||0)+1)*46+"px;margin:0;padding:8px;background:#fee;color:#900;font-size:12px;white-space:pre-wrap";d.textContent="錯誤："+m+" (第"+l+"行:"+c+")";(document.body||document.documentElement).appendChild(d)};</script>
+<script>
+const BOOT=window.__BOOT||{};
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const n=x=>Number(x||0).toLocaleString('en-US');
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const errMsg=e=>String((e&&e.message)||e).replace(/^(Error|Exception|錯誤)[:：]\s{0,9}/,'');
+function call(fn,arg){return new Promise((ok,no)=>{const r=google.script.run.withSuccessHandler(ok).withFailureHandler(no);arg===undefined?r[fn](BOOT.token):r[fn](BOOT.token,arg)})}
+let tT;function toast(m,err){const t=$('#toast');t.innerHTML=(err?'⚠️ ':'')+esc(m);t.className='';void t.offsetWidth;t.className='show'+(err?' err':'');clearTimeout(tT);tT=setTimeout(()=>t.className='',err?3500:2400)}
+async function run(btn,fn,arg){if(btn)btn.disabled=true;try{const m=await call(fn,arg);if(typeof m==='string')toast(m);else if(m&&m.msg)toast(m.msg);return m}catch(e){toast(errMsg(e),1);return null}finally{if(btn)btn.disabled=false}}
+function ask(html,yes,noLabel,onOpen){return new Promise(ok=>{$('#mBody').innerHTML=html;if(onOpen)onOpen();$('#mYes').textContent=yes||'確定';$('#mNo').textContent=noLabel||'取消';
+  $('#mYes').classList.toggle('hidden',yes===null);$('#modal').classList.remove('hidden');
+  $('#mYes').onclick=()=>{$('#modal').classList.add('hidden');ok(true)};$('#mNo').onclick=()=>{$('#modal').classList.add('hidden');ok(false)}})}
+function chips(el,items,cur,pick,lab){el.innerHTML='';items.forEach(v=>{const b=document.createElement('button');b.type='button';
+  b.className='chip'+(v===cur?' on':'');b.innerHTML=lab?lab(v):esc(v);b.onclick=()=>pick(v);el.appendChild(b)})}
+function addMonths(s,m){const p=s.split('-').map(Number);const last=new Date(p[0],p[1]-1+m+1,0).getDate();const d=new Date(p[0],p[1]-1+m,Math.min(p[2],last));
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+const EMO={'飲食':'🍔','日常':'🧻','交通':'🚌','娛樂':'🎮','學費':'📚','醫療':'💊','通訊':'📱','其他':'📦'};
+const em=c=>EMO[c]||'🔹';
+const TYPE={'獎金':'🎁','花錢':'🛒','存定存':'📦','領定存':'🔓','利息':'✨'};
+const PAL={"K": "#16182e", "W": "#f4f4f4", "B": "#a0522d", "R": "#e63946", "S": "#c9d1dc", "O": "#ff8c2b", "P": "#ff9fb8", "G": "#9aa0aa", "Y": "#ffd23f", "T": "#d9a066", "L": "#cdb8ff"};
+const SPR={"城堡": ["#5fb8ff", "................/..K.K.K..K.K.K../..KWKWK..KWKWK../..KWWWK..KWWWK../..KWWWKKKKWWWK../..KWWWWWWWWWWK../..KWWKWWWWKWWK../..KWWKWWWWKWWK../..KWWWWWWWWWWK../..KWWWWKKWWWWK../..KWWWKBBKWWWK../..KWWKBBBBKWWK../..KWWKBBBBKWWK../..KKKKKKKKKKKK../................/................"], "騎士": ["#ff6b5e", ".......RR......./......RRRR....../.......RR......./.....KKKKKK...../....KSSSSSSK..../...KSSSSSSSSK.../...KSSSSSSSSK.../...KKKKKKKKKK.../...KSKKKKKKSK.../...KSSSSSSSSK.../...KSSKSSKSSK.../...KSSKSSKSSK.../...KSSSSSSSSK.../....KSSSSSSK..../.....KKKKKK...../................"], "狐狸": ["#58c45a", "................/..KK........KK../..KOK......KOK../..KOOK....KOOK../..KOOOKKKKOOOK../..KOOOOOOOOOOK../.KOOOOOOOOOOOOK./.KOOKKOOOOKKOOK./.KOOOOOOOOOOOOK./.KWWOOOOOOOOWWK./..KWWWOOOOWWWK../...KWWWKKWWWK.../....KWWWWWWK..../.....KKWWKK...../.......KK......./................"], "兔子": ["#ffd43b", "....KK....KK..../...KWK....KWK.../...KPK....KPK.../...KPK....KPK.../...KPK....KPK.../...KWK....KWK.../..KKWWKKKKWWKK../.KWWWWWWWWWWWWK./.KWWWWWWWWWWWWK./.KWWKKWWWWKKWWK./.KWWWWWWWWWWWWK./.KPPWWWKKWWWPPK./.KWWWWWKKWWWWWK./..KWWWWWWWWWWK../...KKKKKKKKKK.../................"], "熊貓": ["#ff9ecb", "................/..KKK......KKK../.KKKKKKKKKKKKKK./.KKKWWWWWWWWKKK./..KWWWWWWWWWWK../.KWWKKWWWWKKWWK./.KWKKKKWWKKKKWK./.KWKWKKWWKKWKWK./.KWWKKWWWWKKWWK./.KWWWWWKKWWWWWK./.KWWWWWKKWWWWWK./.KWWWWKWWKWWWWK./..KWWWWWWWWWWK../...KKWWWWWWKK.../.....KKKKKK...../................"], "貓咪": ["#5fb8ff", "................/..K..........K../..KK........KK../..KGK......KGK../..KGGKKKKKKGGK../..KGGGGGGGGGGK../.KGGGGGGGGGGGGK./.KGGKKGGGGKKGGK./.KGGKYGGGGKYGGK./.KGGGGGGGGGGGGK./.KGGGGGKKGGGGGK./KKKGGGGGGGGGGKKK/.KGGGKGGGGKGGGK./..KGGGKKKKGGGK../...KKKKKKKKKK.../................"], "寶箱": ["#ff6b5e", "................/................/...KKKKKKKKKK.../..KBBBBBBBBBBK../.KBBBBBBBBBBBBK./.KBBBBBBBBBBBBK./.KKKKKKKKKKKKKK./.KYYYYYKKYYYYYK./.KBBBBKYYKBBBBK./.KBBBBKYYKBBBBK./.KBBBBBKKBBBBBK./.KBBBBBBBBBBBBK./.KYYYYYYYYYYYYK./.KKKKKKKKKKKKKK./................/................"], "錢袋": ["#58c45a", "................/......KKKK....../.....KTTTTK...../......KTTK....../.....KKKKKK...../....KTTTTTTK..../...KTTTTTTTTK.../..KTTTTYYTTTTK../..KTTTYYYYTTTK../.KTTTTYYTTTTTTK./.KTTTTTYYTTTTTK./.KTTTYYYYTTTTTK./.KTTTTYYTTTTTTK./..KTTTTTTTTTTK../...KKKKKKKKKK.../................"], "柴犬": ["#ffd43b", "................/..KK........KK../.KOOK......KOOK./.KOWOK....KOWOK./.KOOOOKKKKOOOOK./.KOOOOOOOOOOOOK./KOOOOOOOOOOOOOOK/KOOKKOOOOOOKKOOK/KOOOOOOOOOOOOOOK/KOWWWWOKKOWWWWOK/.KWWWWWWWWWWWWK./.KWWWWKWWKWWWWK./..KWWWWKKWWWWK../...KKWWWWWWKK.../.....KKKKKK...../................"], "柯基": ["#5fb8ff", ".KK..........KK./.KOK........KOK./.KOOK......KOOK./.KOPOK....KOPOK./.KOOOOKKKKOOOOK./.KOOOOOWWOOOOOK./KOOOOOOWWOOOOOOK/KOOKKOOWWOOKKOOK/KOOOOOWWWWOOOOOK/KOOWWWWKKWWWWOOK/.KWWWWWWWWWWWWK./.KWWWWKWWKWWWWK./..KWWWWKKWWWWK../...KKWWWWWWKK.../.....KKKKKK...../................"], "小白狗": ["#ff8f8f", "................/....KKKKKKKK..../...KWWWWWWWWK.../.KKWWWWWWWWWWKK./KBBKWWWWWWWWKBBK/KBBKWWWWWWWWKBBK/KBBKWKKWWKKWKBBK/KBBKWKKWWKKWKBBK/KBBKWWWWWWWWKBBK/.KKWWPWKKWPWWKK./...KWWWKKWWWK.../...KWWKWWKWWK.../....KWWWWWWK..../.....KKPPKK...../......KPPK....../.......KK......."], "倉鼠": ["#9fe08f", "................/...KKK....KKK.../..KPOOK..KOOPK../..KOOOKKKKOOOK../...KOOOOOOOOK.../..KOOOOOOOOOOK../.KOOKKOOOOKKOOK./.KOOKKOOOOKKOOK./.KWWOOOKKOOOWWK./.KWPPWWWWWWPPWK./.KWWWWWKKWWWWWK./..KWWWWWWWWWWK../..KWKWWWWWWKWK../...KKKKKKKKKK.../................/................"], "小雞": ["#ff9ecb", "................/.......KK......./......KYYK....../....KKKYYKKK..../...KYYYYYYYYK.../..KYYYYYYYYYYK../..KYYKKYYKKYYK../.KYYYKKYYKKYYYK./.KYPYYYOOYYYPYK./.KYYYYOOOOYYYYK./.KYYYYYOOYYYYYK./.KYYYYYYYYYYYYK./..KYYYYYYYYYYK../...KKKKKKKKKK.../.....KO..OK...../....KOO..OOK...."], "雲朵怪": ["#5fb8ff", "................/................/.....KKKK......./....KWWWWK.KK.../..KKWWWWWWKWWK../.KWWWWWWWWWWWWK./KWWWWWWWWWWWWWWK/KWWWKKWWWWKKWWWK/KWWWKKWWWWKKWWWK/KWPPWWWKKWWWPPWK/KWWWWWWWWWWWWWWK/.KWWWWWWWWWWWWK./..KKWWKKKKWWKK../....KK....KK..../................/................"], "小幽靈": ["#ffd43b", "................/.....KKKKKK...../....KLLLLLLK..../...KLLLLLLLLK.../..KLLLLLLLLLLK../..KLLKKLLKKLLK../..KLLKKLLKKLLK../..KLPLLLLLLPLK../..KLLLLKKLLLLK../..KLLLLLLLLLLK../..KLLLLLLLLLLK../..KLLLLLLLLLLK../..KLKLLKKLLKLK../..KK.KK..KK.KK../................/................"], "杯子蛋糕": ["#7fd6ff", ".......RR......./......KRRK....../.....KPPPPK...../....KPPWPPPK..../...KPPPPPPWPK.../..KPWPPPPPPPPK../..KPPPPPWPPPPK../..KKKKKKKKKKKK../...KTBTBTBTBK.../...KTBTBTBTBK.../....KTBTBTBTK.../....KTBTBTBTK.../.....KKKKKKK..../................/................/................"]};
+function sprite(name,size){const d=SPR[name]||SPR['柴犬'];const rows=d[1].split('/');let r='';
+  rows.forEach((row,y)=>{for(let x=0;x<16;x++){const c=row[x];if(c&&c!=='.')r+=`<rect x="${x}" y="${y}" width="1.02" height="1.02" fill="${PAL[c]}"/>`}});
+  return `<svg class="spr" viewBox="-1 -1 18 18" width="${size}" height="${size}" shape-rendering="crispEdges" style="background:${d[0]};border-radius:${size/4}px">${r}</svg>`}
+/* ---------- 照片：快取＋縮圖上傳 ---------- */
+const IMG={};
+// 照片的編號不會變，看過一次就存在手機裡，下次不用再下載
+const BLANK='data:image/gif;base64,R0lGODlhAQABAAAAACw=';
+function imgSrc(id){if(!id)return BLANK;if(IMG[id])return IMG[id];try{const v=localStorage.getItem('img_'+id);if(v)return IMG[id]=v}catch(e){}return BLANK}
+async function loadImgs(ids){ids=[...new Set(ids.filter(Boolean))];const need=ids.filter(i=>imgSrc(i)===BLANK);
+  if(need.length){try{const got=await call('getImages',need);Object.assign(IMG,got);for(const k in got){try{localStorage.setItem('img_'+k,got[k])}catch(e){}}}catch(e){}}
+  ids.forEach(i=>$$(`img[data-img="${i}"]`).forEach(el=>{if(IMG[i]&&el.src!==IMG[i])el.src=IMG[i]}))}
+const imgTag=(id,cls)=>`<img class="${cls||''}" data-img="${id}" src="${imgSrc(id)}" alt="">`;
+// 頭像：有照片用照片，沒有就用角色圖示
+function avatar(p,size){if(p&&p.photo)return `<img class="ava" data-img="${p.photo}" src="${imgSrc(p.photo)}" style="width:${size}px;height:${size}px">`;return sprite((p&&p.icon)||'柴犬',size)}
+// 選照片→縮小→轉成 data URL（自動壓到 48KB 以內）
+function pickPhoto(max,lim){lim=lim||48000;return new Promise((ok,no)=>{const inp=document.createElement('input');inp.type='file';inp.accept='image/'+'*';
+  inp.onchange=()=>{const f=inp.files[0];if(!f)return no(new Error('沒有選照片'));const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{
+    let w=im.width,h=im.height,s=Math.min(1,max/Math.max(w,h));const cv=document.createElement('canvas');
+    for(let q=.82,tries=0;tries<8;tries++){cv.width=Math.round(w*s);cv.height=Math.round(h*s);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);
+      const u=cv.toDataURL('image/jpeg',q);if(u.length<lim)return ok(u);if(q>.5)q-=.1;else s*=.8}
+    no(new Error('照片太大，請換一張'))};im.onerror=()=>no(new Error('讀不到這張照片'));im.src=fr.result};fr.readAsDataURL(f)};inp.click()})}
+/* ---------- 等級 ---------- */
+const ERAS=[['🏕️','荒島期',1,'#ffb04a',['荒島探險家','營火小隊長','椰子樹好朋友','荒島開拓者','荒島小島主']],
+ ['🌾','農村期',51,'#6cc26a',['小屋主人','菜園小農夫','果樹守護者','狗狗好朋友','農村小村長']],
+ ['⛵','港口期',101,'#5b8def',['見習水手','碼頭小管家','燈塔守護者','小船長','港口大船長']],
+ ['🏘️','小鎮期',151,'#b388ff',['小鎮居民','市集小老闆','風車守護者','橋樑建築師','小鎮鎮長']],
+ ['🏰','王國期',201,'#ff8fb1',['見習騎士','城堡守衛','王國騎士','王國大臣','小島國王']],
+ ['☁️','天空期',251,'#7fd6ff',['雲朵旅人','熱氣球駕駛','飛船船長','天空探險家','浮空島主']],
+ ['🐠','海底期',301,'#2fb5b0',['潛水新手','珊瑚守護者','潛水艇艦長','海底探險家','深海之王']],
+ ['🔭','星空期',351,'#5a5fd6',['觀星學徒','流星獵人','天文學家','星星燈塔主','星空領主']],
+ ['🌈','彩虹期',401,'#f06292',['彩虹旅人','彩虹橋建造者','雲朵城堡主','七彩魔法師','彩虹守護神']],
+ ['👑','傳說期',451,'#f0a020',['傳說新星','寶藏獵人','黃金島主','傳說英雄','傳說之王']]];
+function eraOf(lv){let e=ERAS[0];ERAS.forEach(x=>{if(lv>=x[2])e=x});return e}
+function titleOf(lv){const e=eraOf(lv);const i=Math.min(4,Math.floor((lv-e[2])/10));return e[4][i]}
+/* ---------- 圓餅圖 ---------- */
+const COL=['#ffb020','#4cc9f0','#ff6f8f','#3ddc84','#b388ff','#ff9f43','#00b8b8','#9aa3b2','#f368e0','#54a0ff'];
+function pie(cats,total,bg){if(!total)return '<div class="empty">這段期間沒有支出 🎉</div>';const R=90,C=100;let a=-Math.PI/2,out='';
+  cats.forEach((c,i)=>{const f=c.sum/total,col=COL[i%COL.length];
+    if(f>=0.9999){out+=`<circle cx="${C}" cy="${C}" r="${R}" fill="${col}" onclick="showCat(${i})"/>`;return}
+    const b=a+f*2*Math.PI,x1=C+R*Math.cos(a),y1=C+R*Math.sin(a),x2=C+R*Math.cos(b),y2=C+R*Math.sin(b);
+    out+=`<path d="M${C},${C} L${x1.toFixed(2)},${y1.toFixed(2)} A${R},${R} 0 ${f>0.5?1:0} 1 ${x2.toFixed(2)},${y2.toFixed(2)} Z" fill="${col}" stroke="${bg}" stroke-width="2" onclick="showCat(${i})"/>`;a=b});
+  return `<svg viewBox="0 0 200 200" style="width:100%;max-width:240px;display:block;margin:4px auto">${out}<circle cx="100" cy="100" r="54" fill="${bg}"/>
+    <text x="100" y="94" text-anchor="middle" fill="#7b8494" font-size="12">總支出</text><text x="100" y="118" text-anchor="middle" fill="#1c2433" font-size="20" font-weight="700">${n(total)}</text></svg>`}
+// ========== 家庭廣場（公告、許願、聊天，每篇都可以回應） ==========
+let FO=null,foFilter='',FP={};
+let PINS=((BOOT.forum||{}).pins)||[];
+const FTYPE={'公告':['📢','#e5484d'],'許願':['🌠','#8a5cf6'],'聊天':['💬','#2f9e55']};
+(function(){const c=document.createElement('style');c.textContent=`
+.post.pin{box-shadow:0 0 0 3px #ffcf40 inset}
+.ph{display:flex;align-items:center;gap:8px}.ph .who{flex:1;min-width:0}
+.tag{display:inline-block;color:#fff;border-radius:99px;padding:0 8px;font-size:11px;font-weight:700;margin-left:6px;vertical-align:middle}
+.pimgs{display:grid;gap:4px;margin:8px 0 6px;border-radius:12px;overflow:hidden}.pimgs.n2,.pimgs.n4{grid-template-columns:1fr 1fr}.pimgs.n3{grid-template-columns:1fr 1fr 1fr}.pimgs img{width:100%;display:block;object-fit:cover;background:#eee}.pimgs.n1 img{max-height:420px}.pimgs:not(.n1) img{aspect-ratio:1}
+.fpp{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.fpi{position:relative}.fpi img{width:64px;height:64px;object-fit:cover;border-radius:10px;display:block}.fpi button{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:0;background:#333;color:#fff;font-size:12px;padding:0}.fpadd{width:64px;height:64px;border-radius:10px;border:2px dashed #ccc;background:#fafafa;font-size:12px;color:#888;line-height:1.3}
+.ptxt{white-space:pre-wrap;word-break:break-word;margin:8px 0 6px;font-size:15px;line-height:1.6;font-weight:500}
+.reps{background:rgba(0,0,0,.04);border-radius:12px;padding:4px 10px;margin-top:6px}
+.rep{display:flex;gap:8px;padding:6px 0;font-size:14px;align-items:flex-start;font-weight:500}.rep+.rep{border-top:1px dashed rgba(0,0,0,.1)}
+.rep .rt{flex:1;min-width:0;white-space:pre-wrap;word-break:break-word}
+.pacts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.pacts button,.rep button{border:0;background:rgba(0,0,0,.06);border-radius:10px;padding:6px 10px;font-size:13px;font-weight:700;color:inherit}
+.fo-ta{width:100%;min-height:120px;margin-top:10px;padding:12px;font:inherit;font-size:16px;border:2px solid #e2e2e2;border-radius:14px;resize:vertical;-webkit-appearance:none}
+.donebadge{color:#d98a00;font-weight:700;font-size:14px}
+.pinc{border-left:5px solid #ffcf40;cursor:pointer}.pinc .it{cursor:pointer}
+.fbadge{position:absolute;top:0;right:22%;width:10px;height:10px;border-radius:50%;background:#e5484d;border:2px solid #fff}
+`;document.head.appendChild(c)})();
+const isPar=()=>S.role==='parent';
+const fWho=n=>(FO&&FO.people[n])||(S.profiles||{})[n]||{nick:n};
+const fBig=()=>isPar()?'btn':'go wide';
+function pinsHtml(){if(!PINS.length)return '';const ph=p=>p.photo||(p.photos||[])[0]||'';setTimeout(()=>loadImgs(PINS.map(ph)),0);return `<div class="card pinc" onclick="go('forum')"><h3>📢 公告</h3>${PINS.map(p=>`<div class="it"><div class="t" style="flex:1;white-space:pre-wrap;word-break:break-word">${esc(p.text)||'📷 照片'}<div class="mu">${esc((fWho(p.author).nick)||p.author)}・${p.time.slice(5)}</div></div>${ph(p)?`<img data-img="${ph(p)}" src="${imgSrc(ph(p))}" style="width:54px;height:54px;object-fit:cover;border-radius:10px;flex:none">`:''}</div>`).join('')}</div>`}
+async function loadForum(){if(!FO)$('#foBody').innerHTML='<div class="card empty">⏳ 讀取中…</div>';
+  try{FO=await call('getForum')}catch(e){return toast(errMsg(e),1)}
+  PINS=FO.posts.filter(p=>p.pin).slice(0,3);drawForum();foSeen()}
+function foLatest(){let t='';(FO?FO.posts:[]).forEach(p=>{if(p.time>t)t=p.time;p.replies.forEach(r=>{if(r.time>t)t=r.time})});return t||((BOOT.forum||{}).latest)||''}
+function foSeen(){try{localStorage.setItem('fo_seen_'+S.me,foLatest())}catch(e){}foBadge(false)}
+function foBadge(on){const d=document.querySelector('#dock [data-p="forum"]');if(!d)return;d.style.position='relative';let b=d.querySelector('.fbadge');if(on&&!b){b=document.createElement('span');b.className='fbadge';d.appendChild(b)}if(!on&&b)b.remove()}
+function foCheck(){const l=((BOOT.forum||{}).latest)||'';let seen='';try{seen=localStorage.getItem('fo_seen_'+S.me)||''}catch(e){}foBadge(!!l&&l>seen)}
+function drawForum(){const ps=FO.posts.filter(p=>!foFilter||p.type===foFilter);
+  $('#foBody').innerHTML=`<div class="chips" id="foF"></div><button class="${fBig()}" onclick="postBox()">✏️ 我要發文</button>
+  ${ps.map(postHtml).join('')||'<div class="card empty">還沒有文章，來發第一篇吧！</div>'}`;
+  chips($('#foF'),['','公告','許願','聊天'],foFilter,v=>{foFilter=v;drawForum()},v=>v?FTYPE[v][0]+' '+v:'全部');
+  loadImgs(Object.values(FO.people).map(p=>p.photo).concat(...ps.map(p=>p.photos||[])))}
+function bigImg(id){ask(`<img src="${imgSrc(id)}" style="width:100%;border-radius:12px;display:block">`,null,'關閉')}
+function postHtml(p){const t=FTYPE[p.type]||['💬','#888'],pp=fWho(p.author),par=isPar();
+  return `<div class="card post ${p.pin?'pin':''}"><div class="ph">${avatar(pp,38)}<div class="who"><b>${esc(pp.nick)}</b>${p.pin?' 📌':''}<span class="tag" style="background:${t[1]}">${t[0]} ${p.type}</span><div class="mu">${p.time.slice(5)}${p.edited?'・已編輯':''}</div></div></div>
+  ${p.text?`<div class="ptxt">${esc(p.text)}</div>`:''}${(p.photos||[]).length?`<div class="pimgs n${Math.min(p.photos.length,4)}">${p.photos.map(id=>`<img data-img="${id}" src="${imgSrc(id)}" onclick="bigImg('${id}')" alt="">`).join('')}</div>`:''}${p.type==='許願'&&p.done?'<div class="donebadge">✨ 願望實現了！</div>':''}
+  ${p.replies.length?`<div class="reps">${p.replies.map(r=>{const rp=fWho(r.author);return `<div class="rep">${avatar(rp,24)}<div class="rt"><b>${esc(rp.nick)}</b>　${esc(r.text)}<div class="mu">${r.time.slice(5)}${r.edited?'・已編輯':''}</div></div>${r.author===S.me?`<button onclick="editBox('${r.id}')">✏️</button>`:''}${par||r.author===S.me?`<button onclick="foAct('${r.id}','del')">🗑️</button>`:''}</div>`}).join('')}</div>`:''}
+  <div class="pacts"><button onclick="replyBox('${p.id}')">💬 回應</button>${p.author===S.me?`<button onclick="editBox('${p.id}')">✏️ 編輯</button>`:''}${!par&&p.author===S.me?`<button onclick="foAct('${p.id}','del')">🗑️ 刪除</button>`:''}${par?`<button onclick="foAct('${p.id}','${p.pin?'unpin':'pin'}')">${p.pin?'取消置頂':'📌 置頂'}</button>${p.type==='許願'?`<button onclick="foAct('${p.id}','${p.done?'undone':'done'}')">${p.done?'改回許願中':'✨ 實現了'}</button>`:''}<button onclick="foAct('${p.id}','del')">🗑️ 刪除</button>`:''}</div></div>`}
+async function postBox(type){const par=isPar(),types=par?['公告','許願','聊天']:['許願','聊天'];FP={type:type||types[0],photos:[]};
+  const ok=await ask(`<h3>✏️ 發文</h3><div class="chips" id="fpT"></div><textarea id="fpX" class="fo-ta" maxlength="500" placeholder="想說什麼呢？"></textarea>${par?'<div id="fpP" class="fpp"></div>':''}`,'發表',undefined,()=>{drawFP(types);if(par)drawFPP()});
+  if(!ok)return;const x=$('#fpX').value.trim();if(!x&&!FP.photos.length)return toast('請輸入內容',1);
+  if(FP.photos.length)toast('上傳照片中…');
+  if(await run(null,'postForum',{type:FP.type,text:x,photos:FP.photos})!==null){foFilter='';loadForum()}}
+// 編輯自己的文章／回應
+function foFind(id){for(const p of FO.posts){if(p.id===id)return p;const r=p.replies.find(x=>x.id===id);if(r)return r}return null}
+async function editBox(id){const p=foFind(id);if(!p)return;const ph=isPar()&&!p.parent;FP={type:p.type,photos:[],keep:(p.photos||[]).slice()};
+  const ok=await ask(`<h3>✏️ 編輯</h3><textarea id="feX" class="fo-ta" maxlength="500">${esc(p.text)}</textarea>${ph?'<div id="fpP" class="fpp"></div>':''}`,'儲存',undefined,()=>{if(ph)drawFPP()});
+  if(!ok)return;const x=$('#feX').value.trim();if(!x&&!(ph&&(FP.keep.length||FP.photos.length)))return toast('請輸入內容',1);
+  if(FP.photos.length)toast('上傳照片中…');
+  if(await run(null,'forumEdit',ph?{id,text:x,keep:FP.keep,photos:FP.photos}:{id,text:x})!==null)loadForum()}
+function drawFPP(){const el=$('#fpP');if(!el)return;const K=FP.keep||[];el.innerHTML=K.map((id,i)=>`<div class="fpi"><img src="${imgSrc(id)}"><button type="button" onclick="FP.keep.splice(${i},1);drawFPP()">✕</button></div>`).join('')+FP.photos.map((u,i)=>`<div class="fpi"><img src="${u}"><button type="button" onclick="FP.photos.splice(${i},1);drawFPP()">✕</button></div>`).join('')+(K.length+FP.photos.length<4?'<button type="button" class="fpadd" onclick="addFPP()">📷<br>加照片</button>':'')}
+async function addFPP(){try{FP.photos.push(await pickPhoto(1280,170000));drawFPP()}catch(e){toast(errMsg(e),1)}}
+function drawFP(types){chips($('#fpT'),types,FP.type,v=>{FP.type=v;drawFP(types)},v=>FTYPE[v][0]+' '+v)}
+async function replyBox(id){const p=FO.posts.find(x=>x.id===id);
+  const ok=await ask(`<h3>💬 回應</h3><div class="mu" style="white-space:pre-wrap">${esc(p.text.slice(0,80))}</div><textarea id="frX" class="fo-ta" maxlength="500" placeholder="回應些什麼…"></textarea>`,'送出');
+  if(!ok)return;const x=$('#frX').value.trim();if(!x)return toast('請輸入內容',1);
+  if(await run(null,'postForum',{parent:id,text:x})!==null)loadForum()}
+async function foAct(id,act){if(act==='del'&&!await ask('<h3>確定要刪除嗎？</h3>文章下面的回應也會一起刪掉。','刪除'))return;
+  if(await run(null,'forumAct',{id,act})!==null)loadForum()}
+// ===== 寵物、徽章、紀念品美術 v2（全部原創，用程式畫） =====
+let _U=0;const artId=()=>'q'+(++_U)+Math.random().toString(36).slice(2,5);
+function hx(c){c=c.replace('#','');if(c.length===3)c=c.split('').map(x=>x+x).join('');return [0,2,4].map(i=>parseInt(c.substr(i,2),16))}
+function mix(a,b,t){const A=hx(a),B=hx(b);return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('')}
+function stp(S){return S.map(s=>`<stop offset="${s[0]}" stop-color="${s[1]}"${s[2]!=null?` stop-opacity="${s[2]}"`:''}/>`).join('')}
+function lin(id,x1,y1,x2,y2,S){return `<linearGradient id="${id}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}">${stp(S)}</linearGradient>`}
+function rad(id,cx,cy,r,S){return `<radialGradient id="${id}" cx="${cx}" cy="${cy}" r="${r}">${stp(S)}</radialGradient>`}
+function pStar(x,y,r,c,st){let d='';for(let i=0;i<10;i++){const a=Math.PI/5*i-Math.PI/2,rr=i%2?r*.45:r;d+=(i?'L':'M')+(x+rr*Math.cos(a)).toFixed(1)+' '+(y+rr*Math.sin(a)).toFixed(1)}return `<path d="${d}Z" fill="${c}"${st?` stroke="${st}" stroke-width="1.2" stroke-linejoin="round"`:''}/>`}
+function spk(x,y,r,c,dl){return `<g transform="translate(${x} ${y})"><path class="twk" style="animation-delay:${dl||0}s" d="M0 ${-r} Q0 0 ${r} 0 Q0 0 0 ${r} Q0 0 ${-r} 0 Q0 0 0 ${-r}Z" fill="${c||'#fff'}"/></g>`}
+
+// 顏色：[一般, 閃亮]  m 主色 l 亮色 d 暗色 a 點綴 o 描邊 e 眼睛
+const PETPAL={
+ fire:[{m:'#ff7a45',l:'#ffd9b5',d:'#d63c22',a:'#ffc53d',o:'#6e2410',e:'#ff8a1f'},{m:'#ffc94a',l:'#fff4c9',d:'#ec8f12',a:'#ff6fb0',o:'#6e420c',e:'#ff4f9a'}],
+ water:[{m:'#4cb6f2',l:'#dcf5ff',d:'#2468c4',a:'#8fe6ff',o:'#123a70',e:'#1d8cff'},{m:'#ae96ff',l:'#f2edff',d:'#6f4ee6',a:'#ffc6f1',o:'#33206e',e:'#c44dff'}],
+ leaf:[{m:'#7bd389',l:'#ecfce3',d:'#3a9448',a:'#ff9ec6',o:'#1d552a',e:'#2fae55'},{m:'#ffb0d0',l:'#fff1f7',d:'#de5f97',a:'#fff27a',o:'#712648',e:'#ff4f95'}],
+ shiba:[{m:'#f3a457',l:'#fff8ee',d:'#c9712a',a:'#e5484d',o:'#5e3412',e:'#4a2a12'},{m:'#55536a',l:'#fff8ee',d:'#2a2936',a:'#ffcc33',o:'#17161f',e:'#3a2410'}],
+ bunny:[{m:'#ffffff',l:'#ffffff',d:'#f3c6d6',a:'#ff8db4',o:'#86475c',e:'#ff5f9e'},{m:'#ffe28c',l:'#fffbe6',d:'#f0bd45',a:'#ff8db4',o:'#7a5612',e:'#ff8a00'}],
+ kitty:[{m:'#aeb8cb',l:'#f6f8fb',d:'#6c7891',a:'#ffd23f',o:'#353d52',e:'#3cc48a'},{m:'#ffb672',l:'#fff5ea',d:'#e2782a',a:'#ffd23f',o:'#62300c',e:'#3aa0ff'}],
+ star:[{m:'#4b50cc',l:'#c7caff',d:'#1f1f66',a:'#ffd23f',o:'#16164a',e:'#ffd23f'},{m:'#d672e6',l:'#ffe3ff',d:'#7f2898',a:'#9ff3ff',o:'#470d5c',e:'#9ff3ff'}]};
+const PEMO={fire:'🔥',water:'💠',leaf:'🍃',shiba:'🎀',bunny:'🥕',kitty:'🔔',star:'✨'};
+const PCOL={};Object.keys(PETPAL).forEach(k=>{const a=PETPAL[k][0],b=PETPAL[k][1];PCOL[k]=[a.m,a.l,a.d,b.m,b.d,b.l]});
+const BODY='M-34 -28 C-34 -52 -18 -60 0 -60 C18 -60 34 -52 34 -28 C34 -10 22 -2 0 -2 C-22 -2 -34 -10 -34 -28Z';
+const EGG='M60 28 C83 28 93 62 91 80 C89 99 77 108 60 108 C43 108 31 99 29 80 C27 62 37 28 60 28Z';
+
+function crown(u,x,y,r,k){return `<g transform="translate(${x} ${y}) rotate(${r}) scale(${k})">
+ <path d="M-14 0 L-17 -15 L-8 -7 L0 -19 L8 -7 L17 -15 L14 0Z" fill="url(#${u}cr)" stroke="#7a4a00" stroke-width="1.6" stroke-linejoin="round"/>
+ <rect x="-14.5" y="-3" width="29" height="6" rx="2" fill="url(#${u}cr)" stroke="#7a4a00" stroke-width="1.4"/>
+ <circle cx="-17" cy="-16" r="2.4" fill="#fff3b0" stroke="#7a4a00" stroke-width="1"/><circle cx="0" cy="-20" r="2.6" fill="#fff3b0" stroke="#7a4a00" stroke-width="1"/><circle cx="17" cy="-16" r="2.4" fill="#fff3b0" stroke="#7a4a00" stroke-width="1"/>
+ <circle cx="-7" cy="0" r="2" fill="#ff4f7a"/><circle cx="0" cy="0" r="2.2" fill="#3aa0ff"/><circle cx="7" cy="0" r="2" fill="#2fcf7a"/>
+ <path d="M-11 -4 L-12 -11" stroke="#fff" stroke-width="1.4" opacity=".7" stroke-linecap="round"/></g>`}
+
+function petEgg(sp,o,u){const C=(PETPAL[sp]||PETPAL.fire)[0],O=C.o,st=sp==='star';
+ let defs=rad(u+'eg',.36,.28,.85,st?[[0,'#8f93ff'],[.5,'#3a3fae'],[1,'#151552']]:[[0,'#ffffff'],[.55,C.l],[1,mix(C.l,C.m,.55)]])
+  +lin(u+'cu',0,0,0,1,[[0,'#e2455a'],[1,'#8a1c34']])+rad(u+'gl',.5,.5,.5,[[0,st?'#b8a6ff':C.a,.55],[1,C.a,0]])+`<clipPath id="${u}ck"><path d="${EGG}"/></clipPath>`;
+ let pat='';
+ if(sp==='fire')pat=`<path d="M26 72 l8 -8 l8 8 l8 -8 l8 8 l8 -8 l8 8 l8 -8 l8 8 l8 -8 l8 8 v9 l-8 -8 l-8 8 l-8 -8 l-8 8 l-8 -8 l-8 8 l-8 -8 l-8 8 l-8 -8 l-8 8z" fill="${C.m}"/><path d="M60 44 C53 41 53 33 58 27 C58 32 62 33 61 29 C66 34 68 41 60 44Z" fill="${C.a}" stroke="${C.d}" stroke-width="1.2" transform="translate(0 6)"/><circle cx="44" cy="92" r="3" fill="${C.m}" opacity=".6"/><circle cx="76" cy="90" r="2.4" fill="${C.m}" opacity=".6"/>`;
+ if(sp==='water')pat=`<path d="M24 80 q8 -8 16 0 t16 0 t16 0 t16 0 t16 0 v40 h-80z" fill="${C.m}" opacity=".85"/><path d="M24 88 q8 -6 16 0 t16 0 t16 0 t16 0 t16 0" fill="none" stroke="#fff" stroke-width="2" opacity=".6"/><circle cx="48" cy="58" r="5" fill="none" stroke="${C.m}" stroke-width="2"/><circle cx="70" cy="48" r="3" fill="none" stroke="${C.m}" stroke-width="2"/><circle cx="66" cy="64" r="2" fill="${C.m}"/>`;
+ if(sp==='leaf'){const lf=(x,y,r)=>`<path transform="translate(${x} ${y}) rotate(${r})" d="M0 0 C-5 -3 -6 -10 0 -15 C6 -10 5 -3 0 0Z" fill="${C.m}" stroke="${C.d}" stroke-width="1"/>`;pat=lf(46,62,-30)+lf(72,74,35)+lf(56,92,-10)+lf(78,52,20)+lf(40,84,-60)}
+ if(sp==='shiba'){const paw=(x,y,r)=>`<g transform="translate(${x} ${y}) rotate(${r})" fill="${C.m}"><ellipse cx="0" cy="3" rx="6" ry="5"/><circle cx="-6" cy="-4" r="2.6"/><circle cx="-2" cy="-7.5" r="2.6"/><circle cx="2.6" cy="-7.5" r="2.6"/><circle cx="6.6" cy="-4" r="2.6"/></g>`;pat=paw(50,60,-15)+paw(70,86,15)+`<path d="M28 98 Q60 88 92 98 V120 H28Z" fill="${C.m}" opacity=".5"/>`}
+ if(sp==='bunny')pat=[[46,56,5],[70,50,3],[74,72,6],[50,82,4],[64,96,4.5],[38,70,2.6],[84,88,3]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${C.a}" opacity=".55"/>`).join('');
+ if(sp==='kitty')pat=`<g fill="none" stroke="${C.m}" stroke-width="5" stroke-linecap="round"><path d="M30 58 q10 4 16 0"/><path d="M28 72 q12 5 18 0"/><path d="M30 88 q10 4 16 0"/><path d="M90 58 q-10 4 -16 0"/><path d="M92 72 q-12 5 -18 0"/><path d="M90 88 q-10 4 -16 0"/><path d="M54 32 v10 M60 30 v12 M66 32 v10"/></g>`;
+ if(st)pat=[[44,60,1.2],[70,48,1],[66,74,1.6],[50,90,1],[80,86,1.2],[40,78,.8],[58,40,.9],[76,64,.8]].map(([x,y,r],i)=>`<circle class="${i%2?'twk':''}" cx="${x}" cy="${y}" r="${r}" fill="#fff"/>`).join('')+pStar(58,66,9,'#ffd23f','#9a6a00')+`<ellipse cx="66" cy="84" rx="16" ry="8" fill="#ff7ad9" opacity=".25"/>`;
+ const crack=o.crack?`<path d="M34 70 l8 -6 l6 7 l8 -8 l7 6 l8 -5 l6 6 l8 -4" fill="none" stroke="#fff6c2" stroke-width="5" stroke-linejoin="round" opacity=".9"/><path d="M34 70 l8 -6 l6 7 l8 -8 l7 6 l8 -5 l6 6 l8 -4" fill="none" stroke="${O}" stroke-width="2.2" stroke-linejoin="round"/>`:'';
+ return `<defs>${defs}</defs><circle cx="60" cy="70" r="${st?52:44}" fill="url(#${u}gl)"/>
+ <path d="M18 104 Q60 90 102 104 Q106 113 60 117 Q14 113 18 104Z" fill="url(#${u}cu)" stroke="#5a1020" stroke-width="1.6"/><path d="M22 104 Q60 93 98 104" fill="none" stroke="#f2c14e" stroke-width="1.6" stroke-dasharray="3 2"/><circle cx="18" cy="106" r="3" fill="#f2c14e" stroke="#9a6a00"/><circle cx="102" cy="106" r="3" fill="#f2c14e" stroke="#9a6a00"/>
+ <g class="${o.wobble?'wob':''}"><path d="${EGG}" fill="url(#${u}eg)" stroke="${st?'#0e0e3a':O}" stroke-width="2.6"/><g clip-path="url(#${u}ck)">${pat}</g>
+ <ellipse cx="47" cy="50" rx="7" ry="13" fill="#fff" opacity=".65" transform="rotate(-22 47 50)"/><circle cx="44" cy="70" r="2.4" fill="#fff" opacity=".6"/>${crack}</g>
+ ${spk(92,40,6,st?'#fff3b0':'#fff',0)}${spk(26,56,4,'#fff',.8)}${st?spk(96,78,4,'#fff3b0',1.4):''}`}
+
+function petG(sp,stage,o){o=o||{};const u=artId();if(!stage)return petEgg(sp,o,u);
+ const C=(PETPAL[sp]||PETPAL.fire)[o.shiny?1:0],O=C.o,sw='2.4',sh=!!o.shiny;
+ const s=[0,.62,.74,.86,.97,1.06][stage],mood=o.mood==null?80:o.mood,sick=!!o.sick;
+ let defs=rad(u+'b',.36,.26,.9,[[0,mix(C.l,C.m,.3)],[.5,C.m],[1,C.d]])+rad(u+'w',.5,.3,.75,[[0,'#ffffff'],[1,C.l]])
+  +lin(u+'e',0,0,0,1,[[0,'#1b1020'],[.5,mix('#1b1020',C.e,.45)],[1,C.e]])+rad(u+'k',.5,.5,.5,[[0,'#ff6f93',.85],[1,'#ff6f93',0]])
+  +rad(u+'g',.5,.5,.5,[[0,'#000',.3],[1,'#000',0]])+lin(u+'cr',0,0,0,1,[[0,'#fff3a8'],[.5,'#ffc91f'],[1,'#d98a00']])
+  +lin(u+'pk',0,0,0,1,[[0,'#ffd0de'],[1,'#ff8fb0']])+`<clipPath id="${u}c"><path d="${BODY}"/></clipPath>`;
+ if(sh)defs+=`<linearGradient id="${u}h" x1="0" y1="0" x2="1" y2="1">${stp([[0,'#ff9ad5',0],[.3,'#ff9ad5',.5],[.45,'#fff6a0',.6],[.6,'#8ff0ff',.5],[.8,'#b59cff',0]])}<animateTransform attributeName="gradientTransform" type="translate" values="-1 -1;1 1" dur="3s" repeatCount="indefinite"/></linearGradient>`;
+ const B=`url(#${u}b)`;
+ let aura='',back='',deco='',head='',front='',fx='';
+ const mir=g=>g+`<g transform="scale(-1 1)">${g}</g>`;
+ if(sp==='fire'){
+  defs+=lin(u+'f',0,1,0,0,[[0,C.d],[.45,sh?'#ff8ac0':'#ff8a2a'],[1,C.a]])+lin(u+'hn',0,1,0,0,[[0,'#fffaf0'],[1,'#e2c08f']])+lin(u+'wg',0,0,1,1,[[0,C.a],[1,C.d]]);
+  const fl=(x,y,k,r)=>`<g transform="translate(${x} ${y}) rotate(${r||0}) scale(${k})"><g class="flick"><path d="M0 2 C-13 -4 -13 -20 -4 -32 C-4 -23 3 -21 2 -28 C10 -20 15 -7 0 2Z" fill="url(#${u}f)" stroke="${O}" stroke-width="1.8" stroke-linejoin="round"/><path d="M0 0 C-6 -3 -6 -11 -1 -17 C0 -11 4 -10 3 -14 C7 -8 6 -3 0 0Z" fill="#fff6c2"/></g></g>`;
+  head+=fl(0,-57,[0,.8,1,1.1,1.22,1.4][stage]);
+  if(stage>=2){const k=[0,0,.7,.85,1,1.08][stage];head+=`<g transform="translate(0 -52) scale(${k}) translate(0 52)">`+mir(`<path d="M-14 -50 C-22 -56 -26 -66 -21 -76 C-17 -67 -12 -61 -7 -56Z" fill="url(#${u}hn)" stroke="${O}" stroke-width="1.8" stroke-linejoin="round"/><path d="M-19 -61 q3 1.5 5 -1 M-21 -67 q2.5 1.2 4 -1" stroke="${O}" stroke-width="1.1" opacity=".45" fill="none"/>`)+`</g>`}
+  deco+=`<path d="M-10 -22 q10 4 20 0 M-12 -16 q12 4 24 0 M-10 -10 q10 3 20 0" stroke="${C.d}" stroke-width="1.5" opacity=".35" fill="none" stroke-linecap="round"/><path d="M-30 -36 l5 -2 l-2 5z M30 -36 l-5 -2 l2 5z" fill="${C.d}" opacity=".5"/>`;
+  if(stage>=3)back+=`<path d="M24 -16 C38 -14 44 -22 46 -32 L52 -30 C50 -16 40 -6 26 -6Z" fill="${B}" stroke="${O}" stroke-width="${sw}" stroke-linejoin="round"/>`+fl(49,-31,.55,30);
+  if(stage>=4){const w=`<path d="M-28 -40 C-44 -60 -66 -58 -72 -40 C-64 -42 -60 -38 -58 -33 C-52 -38 -47 -36 -45 -29 C-39 -34 -34 -31 -30 -27Z" fill="url(#${u}wg)" stroke="${O}" stroke-width="2" stroke-linejoin="round"/><path d="M-30 -38 L-70 -41 M-36 -36 L-58 -33 M-34 -32 L-45 -29" stroke="${O}" stroke-width="1.2" opacity=".45"/>`;back=`<g class="flapL">${w}</g><g class="flapR"><g transform="scale(-1 1)">${w}</g></g>`+back}
+  if(stage>=5)fx+=[[-30,-70,0],[34,-80,.7],[-44,-40,1.3],[46,-50,1.9],[0,-100,.4]].map(([x,y,d])=>`<circle class="ember" style="animation-delay:${d}s" cx="${x}" cy="${y}" r="2.2" fill="${C.a}"/>`).join('');
+ }
+ if(sp==='water'){
+  defs+=lin(u+'n',0,0,1,1,[[0,'#ffffff',.95],[.45,C.a,.9],[1,C.m,.95]]);
+  const k=[0,.8,1,1.1,1.25,1.35][stage];
+  const fin=`<path d="M-6 -58 C-6 -76 12 -84 16 -66 C10 -68 4 -64 -6 -58Z" fill="url(#${u}n)" stroke="${O}" stroke-width="1.8" stroke-linejoin="round"/><path d="M-2 -61 C0 -70 6 -76 11 -73 M2 -60 C5 -66 9 -69 13 -68" stroke="${O}" stroke-width="1" opacity=".35" fill="none"/>`;
+  head+=`<g transform="translate(0 -58) scale(${k}) translate(0 58)">${fin}</g>`;
+  if(stage>=4)head+=`<g transform="translate(-14 -54) rotate(-30) scale(.6) translate(0 58)">${fin}</g>`;
+  deco+=[[-24,-44,3],[-27,-36,2],[24,-46,3],[28,-38,2],[19,-52,1.6],[-18,-50,1.4]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${C.l}" opacity=".75"/>`).join('');
+  if(stage>=2)head+=mir(`<path d="M-32 -42 C-46 -52 -55 -40 -51 -27 C-45 -31 -39 -33 -33 -33Z" fill="url(#${u}n)" stroke="${O}" stroke-width="1.8" stroke-linejoin="round"/><path d="M-35 -39 L-48 -38 M-35 -35 L-48 -31" stroke="${O}" stroke-width="1" opacity=".35"/>`);
+  if(stage>=3)back+=`<path d="M26 -14 C36 -14 40 -20 44 -30 C48 -22 52 -18 60 -18 C53 -12 51 -4 55 5 C46 0 40 -4 30 -6Z" fill="url(#${u}n)" stroke="${O}" stroke-width="1.8" stroke-linejoin="round"/><path d="M34 -10 L50 -18 M34 -8 L50 0" stroke="${O}" stroke-width="1" opacity=".35"/>`;
+  fx+=[[-44,-52,4.2,0],[-50,-70,2.8,.9],[46,-62,3.2,1.6]].map(([x,y,r,d])=>`<g class="bub" style="animation-delay:${d}s"><circle cx="${x}" cy="${y}" r="${r}" fill="${C.a}" fill-opacity=".25" stroke="#bfefff" stroke-width="1.4"/><circle cx="${x-r*.35}" cy="${y-r*.35}" r="${r*.28}" fill="#fff"/></g>`).join('');
+  if(stage>=5)aura+=`<ellipse cx="60" cy="92" rx="54" ry="13" fill="none" stroke="${C.a}" stroke-width="3" opacity=".7"/><ellipse cx="60" cy="92" rx="46" ry="10" fill="none" stroke="#fff" stroke-width="1.4" opacity=".6" stroke-dasharray="4 5"/>`;
+ }
+ if(sp==='leaf'){
+  defs+=lin(u+'lf',0,0,1,1,sh?[[0,'#fff8b8'],[1,'#f0b429']]:[[0,'#d2f7a0'],[1,'#3fa952']])+rad(u+'fl',.5,.5,.6,[[0,'#fff'],[1,C.a]]);
+  const lf=(x,y,r,k)=>`<g transform="translate(${x} ${y}) rotate(${r}) scale(${k})"><path d="M0 0 C-10 -6 -12 -20 0 -31 C12 -20 10 -6 0 0Z" fill="url(#${u}lf)" stroke="${O}" stroke-width="1.7" stroke-linejoin="round"/><path d="M0 -2 V-27 M0 -9 l-5 -4 M0 -15 l5 -4 M0 -21 l-4 -3" stroke="${O}" stroke-width="1" opacity=".4" fill="none"/></g>`;
+  const k=[0,.6,.72,.82,.9,.95][stage];
+  head+=`<path d="M0 -58 q-1 -5 0 -10" stroke="${O}" stroke-width="2.6" fill="none"/>`+lf(0,-67,-42,k)+(stage>=2?lf(0,-67,42,k):'');
+  deco+=`<ellipse cx="-22" cy="-42" rx="5" ry="3" fill="${C.d}" opacity=".25"/><ellipse cx="21" cy="-48" rx="4" ry="2.4" fill="${C.d}" opacity=".25"/><ellipse cx="26" cy="-30" rx="3" ry="2" fill="${C.d}" opacity=".25"/><circle cx="-26" cy="-32" r="1.2" fill="#fff" opacity=".7"/><circle cx="18" cy="-40" r="1" fill="#fff" opacity=".7"/>`;
+  if(stage>=3)back+=lf(-30,-22,-118,.62)+lf(30,-22,118,.62);
+  if(stage>=4)head+=`<g transform="translate(0 ${-70-k*14})">${[0,72,144,216,288].map(a=>`<ellipse cx="0" cy="-8" rx="6" ry="8.5" fill="url(#${u}fl)" stroke="${O}" stroke-width="1.5" transform="rotate(${a})"/>`).join('')}<circle r="5.5" fill="#ffd23f" stroke="${O}" stroke-width="1.5"/><circle cx="-1.6" cy="-1.6" r="1.6" fill="#fff8c2"/></g>`;
+  if(stage>=5)fx+=[[-40,-80,0],[38,-90,1.2],[-10,-110,2.2],[50,-60,.6]].map(([x,y,d])=>`<ellipse class="petal" style="animation-delay:${d}s" cx="${x}" cy="${y}" rx="3" ry="4.5" fill="${C.a}" stroke="${O}" stroke-width=".8"/>`).join('');
+ }
+ if(sp==='shiba'){
+  const h=[0,10,13,16,18,19][stage];
+  head+=mir(`<path d="M-31 -43 Q-29 ${-50-h} -21 ${-53-h} Q-14 ${-47-h} -10 -55Z" fill="${B}" stroke="${O}" stroke-width="${sw}" stroke-linejoin="round"/><path d="M-26 -46 Q-24 ${-50-h*.75} -21 ${-51-h*.75} Q-17 ${-48-h*.7} -15 -53Z" fill="url(#${u}pk)"/>`);
+  deco+=`<path d="M-31 -28 C-29 -20 -18 -14 0 -14 C18 -14 29 -20 31 -28 C25 -25 17 -29 13 -35 C9 -30 5 -28 0 -28 C-5 -28 -9 -30 -13 -35 C-17 -29 -25 -25 -31 -28Z" fill="${C.l}" opacity=".95"/><ellipse cx="-12" cy="-46" rx="3.4" ry="2.3" fill="${sh?'#e8a050':'#fff4dc'}"/><ellipse cx="12" cy="-46" rx="3.4" ry="2.3" fill="${sh?'#e8a050':'#fff4dc'}"/>`;
+  front+=`<ellipse cx="0" cy="-29.5" rx="3.6" ry="2.5" fill="#2a1a12"/><ellipse cx="-1" cy="-30.4" rx="1.2" ry=".7" fill="#fff" opacity=".8"/>`;
+  if(stage>=3)back+=`<path d="M26 -20 C40 -22 48 -34 42 -45 C36 -53 26 -47 30 -39 C33 -34 38 -36 37 -41" fill="none" stroke="${O}" stroke-width="11" stroke-linecap="round"/><path d="M26 -20 C40 -22 48 -34 42 -45 C36 -53 26 -47 30 -39 C33 -34 38 -36 37 -41" fill="none" stroke="${C.m}" stroke-width="7" stroke-linecap="round"/><path d="M28 -22 C38 -24 44 -32 42 -40" fill="none" stroke="${C.l}" stroke-width="3" stroke-linecap="round"/>`;
+  if(stage>=4)front+=`<path d="M-26 -17 Q0 -7 26 -17 L23 -9 Q0 1 -23 -9Z" fill="${C.a}" stroke="${O}" stroke-width="1.8" stroke-linejoin="round"/><path d="M-9 -8 L0 5 L9 -8Z" fill="${C.a}" stroke="${O}" stroke-width="1.8" stroke-linejoin="round"/>${[[-17,-12],[-6,-9],[6,-9],[17,-12],[0,-2]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.5" fill="#fff"/>`).join('')}`;
+ }
+ if(sp==='bunny'){
+  const L=[0,18,26,32,36,38][stage];
+  const ear=(x,r)=>`<g transform="translate(${x} -52) rotate(${r})"><ellipse cx="0" cy="${-L/2-2}" rx="8.5" ry="${L/2+6}" fill="${B}" stroke="${O}" stroke-width="${sw}"/><ellipse cx="0" cy="${-L/2-1}" rx="4" ry="${L/2}" fill="url(#${u}pk)"/></g>`;
+  head+=ear(-12,-12)+ear(12,stage>=3?58:12);
+  if(stage>=4)head+=`<g transform="translate(-14 -60) rotate(-12)"><path d="M0 0 C-8 -9 -16 -3 -12 4 C-8 8 -3 3 0 0Z M0 0 C8 -9 16 -3 12 4 C8 8 3 3 0 0Z" fill="${C.a}" stroke="${O}" stroke-width="1.5"/><circle cx="-9" cy="-1" r="1.2" fill="#fff"/><circle cx="9" cy="-1" r="1.2" fill="#fff"/><circle cx="-6" cy="3" r="1" fill="#fff"/><circle r="3" fill="${C.a}" stroke="${O}" stroke-width="1.5"/></g>`;
+  if(stage>=3)back+=`<g transform="translate(32 -12)"><circle r="8" fill="#fff" stroke="${O}" stroke-width="2"/><circle cx="5" cy="-5" r="5" fill="#fff" stroke="${O}" stroke-width="2"/><circle cx="6" cy="3" r="4.5" fill="#fff" stroke="${O}" stroke-width="2"/><circle r="7" fill="#fff"/><circle cx="5" cy="-5" r="4" fill="#fff"/><circle cx="6" cy="3" r="3.5" fill="#fff"/></g>`;
+  if(stage>=5)aura+=`<g transform="translate(96 22) scale(.7)"><path d="M-16 -18 A22 22 0 1 0 18 14 A18 18 0 1 1 -16 -18Z" fill="#fff3b0" stroke="#e0b020" stroke-width="1.5" opacity=".9"/></g>`;
+ }
+ if(sp==='kitty'){
+  const h=[0,9,11,13,15,16][stage];
+  head+=mir(`<path d="M-31 -42 L-24 ${-54-h} L-10 -56Z" fill="${B}" stroke="${O}" stroke-width="${sw}" stroke-linejoin="round"/><path d="M-26 -46 L-23 ${-51-h*.8} L-15 -53Z" fill="url(#${u}pk)"/>`);
+  deco+=`<g stroke="${C.d}" stroke-width="2.4" stroke-linecap="round" fill="none" opacity=".75"><path d="M-6 -58 q1 5 2.5 7 M0 -59 v8 M6 -58 q-1 5 -2.5 7"/><path d="M-34 -36 q5 1 8 -2 M-34 -29 q5 1 8 -2 M34 -36 q-5 1 -8 -2 M34 -29 q-5 1 -8 -2"/></g>`;
+  front+=`<path d="M-2.6 -30.5 h5.2 l-2.6 3z" fill="#ff8fa8" stroke="${O}" stroke-width="1" stroke-linejoin="round"/><path d="M-18 -30 h-14 M-18 -26.5 l-13 4 M18 -30 h14 M18 -26.5 l13 4" stroke="${O}" stroke-width="1.2" opacity=".7"/>`;
+  if(stage>=3){const tp='M28 -10 C46 -8 52 -26 46 -42 C44 -48 38 -48 38 -44';back+=`<path d="${tp}" fill="none" stroke="${O}" stroke-width="10" stroke-linecap="round"/><path d="${tp}" fill="none" stroke="${C.m}" stroke-width="6.4" stroke-linecap="round"/><path d="${tp}" fill="none" stroke="${C.d}" stroke-width="6.4" stroke-dasharray="3 7"/>`}
+  if(stage>=4){defs+=rad(u+'bl',.35,.3,.8,[[0,'#fff8c8'],[.6,'#ffc928'],[1,'#c98a00']]);front+=`<path d="M-24 -15 Q0 -5 24 -15" stroke="${O}" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M-24 -15 Q0 -5 24 -15" stroke="#e5484d" stroke-width="4.4" fill="none" stroke-linecap="round"/><circle cx="0" cy="-6" r="6" fill="url(#${u}bl)" stroke="${O}" stroke-width="1.5"/><path d="M-3.5 -4.5 h7 M0 -4.5 v4" stroke="${O}" stroke-width="1.2"/><circle cx="0" cy="-3" r="1.2" fill="${O}"/>`}
+ }
+ if(sp==='star'){
+  defs+=lin(u+'sg',0,0,0,1,[[0,'#fff6b0'],[1,'#ffb800']])+rad(u+'nb',.5,.5,.5,[[0,sh?'#9ff3ff':'#ff7ad9',.6],[1,'#ff7ad9',0]]);
+  deco+=`<g clip-path="url(#${u}c)"><ellipse cx="-12" cy="-40" rx="20" ry="12" fill="url(#${u}nb)"/><ellipse cx="16" cy="-20" rx="16" ry="10" fill="url(#${u}nb)" opacity=".7"/>${[[-24,-44,1.1],[-16,-52,.8],[22,-48,1],[26,-30,.8],[-26,-22,.9],[12,-54,.7],[-8,-48,.6],[28,-40,.6],[-30,-34,.6]].map(([x,y,r],i)=>`<circle class="${i%3?'':'twk'}" cx="${x}" cy="${y}" r="${r}" fill="#fff"/>`).join('')}</g>`;
+  head+=`<path d="M0 -58 v-4" stroke="${O}" stroke-width="2"/><g class="spinS" >${pStar(0,-69,[0,9,10,11,12,13][stage],`url(#${u}sg)`,O)}</g>`;
+  if(stage>=2)head+=mir(`<path d="M-15 -53 q-7 -8 -5 -15 q5 6 10 8z" fill="${C.l}" stroke="${O}" stroke-width="1.6" stroke-linejoin="round"/>`);
+  if(stage>=3)back+=`<path d="M24 -14 C36 -12 44 -20 46 -30 L50 -28 C48 -14 38 -6 26 -6Z" fill="${B}" stroke="${O}" stroke-width="${sw}" stroke-linejoin="round"/>`+pStar(49,-32,7,`url(#${u}sg)`,O);
+  if(stage>=4){const w=`<path d="M-28 -40 C-40 -64 -66 -64 -74 -46 C-64 -46 -58 -40 -58 -34 C-50 -40 -44 -36 -44 -30 C-38 -34 -33 -31 -30 -27Z" fill="${C.l}" fill-opacity=".85" stroke="${O}" stroke-width="2" stroke-linejoin="round"/><circle cx="-52" cy="-50" r="1.2" fill="#fff"/><circle cx="-62" cy="-48" r="1" fill="${C.a}"/><circle cx="-44" cy="-44" r=".9" fill="#fff"/>`;back=`<g class="flapL">${w}</g><g class="flapR"><g transform="scale(-1 1)">${w}</g></g>`+back}
+  if(stage>=5)aura+=`<g stroke="${C.a}" stroke-width="1" opacity=".7"><path d="M14 40 L30 22 L52 28 M70 18 L92 30 L104 52" fill="none"/></g>${pStar(14,40,3,C.a)}${pStar(30,22,2.4,C.a)}${pStar(52,28,2,C.a)}${pStar(70,18,2.4,C.a)}${pStar(92,30,3,C.a)}${pStar(104,52,2.4,C.a)}`;
+ }
+ // 完全體：光環＋光芒＋皇冠
+ if(stage>=5&&!o.photo){defs+=rad(u+'au',.5,.5,.5,[[0,C.a,.55],[.6,C.a,.18],[1,C.a,0]]);
+  aura=`<g transform="translate(60 66)"><circle r="58" fill="url(#${u}au)"/><g class="spin">${Array.from({length:12},(_,i)=>{const a=i*30*Math.PI/180,b=.09;return `<path d="M0 0 L${(64*Math.cos(a-b)).toFixed(1)} ${(64*Math.sin(a-b)).toFixed(1)} L${(64*Math.cos(a+b)).toFixed(1)} ${(64*Math.sin(a+b)).toFixed(1)}Z" fill="${C.a}" opacity=".22"/>`}).join('')}</g></g>`+aura;
+  }if(stage>=5){const side=['shiba','kitty','bunny'].indexOf(sp)<0;fx+=side?crown(u,-24,-57,-24,.75):crown(u,0,-60,0,.72)}
+ // 臉
+ const eye=(x,dl)=>`<g class="blink" style="animation-delay:${dl}s"><ellipse cx="${x}" cy="-34" rx="6.4" ry="7.8" fill="#1b1020"/><ellipse cx="${x}" cy="-32.2" rx="5.1" ry="5.6" fill="url(#${u}e)"/><ellipse cx="${x-2}" cy="-37.4" rx="2.6" ry="3" fill="#fff"/><circle cx="${x+2.4}" cy="-30.4" r="1.4" fill="#fff" opacity=".9"/><circle cx="${x-3}" cy="-30.8" r=".8" fill="#fff" opacity=".7"/></g>`;
+ const dl=(_U%5)*.7;let eyes,mouth;
+ if(sick){eyes=[-11,11].map(x=>`<path d="M${x} -34 m-5 0 a5 5 0 1 1 5 5 a3.6 3.6 0 1 1 -3.6 -3.6 a2 2 0 1 1 2 2" fill="none" stroke="${O}" stroke-width="1.8" stroke-linecap="round"/>`).join('');
+  mouth=`<path d="M-6 -22 q3 -4 6 0 q3 4 6 0" fill="none" stroke="${O}" stroke-width="2" stroke-linecap="round"/>`}
+ else if(mood<30){eyes=eye(-11,dl)+eye(11,dl)+`<path d="M-18 -46 l8 3 M18 -46 l-8 3" stroke="${O}" stroke-width="2.2" stroke-linecap="round"/><path class="drip" d="M-17 -28 q-3 5 0 7 q3 -2 0 -7z" fill="#8fd3ff" stroke="#3a8ad0" stroke-width=".8"/>`;
+  mouth=`<path d="M-5 -22 q5 -5 10 0" fill="none" stroke="${O}" stroke-width="2.2" stroke-linecap="round"/>`}
+ else if(mood>=70){eyes=eye(-11,dl)+eye(11,dl);
+  mouth=`<path d="M-6.5 -26.5 Q0 -16.5 6.5 -26.5 Z" fill="#8a2236" stroke="${O}" stroke-width="1.8" stroke-linejoin="round"/><path d="M-3.6 -21.6 Q0 -18.6 3.6 -21.6 Q0 -24.4 -3.6 -21.6Z" fill="#ff8aa0"/>`+(sp==='bunny'?`<rect x="-2.6" y="-26.6" width="5.2" height="3.4" rx="1" fill="#fff" stroke="${O}" stroke-width=".9"/>`:'')}
+ else{eyes=eye(-11,dl)+eye(11,dl);mouth=`<path d="M-6 -25.5 q3 4 6 0 q3 4 6 0" fill="none" stroke="${O}" stroke-width="2.2" stroke-linecap="round"/>`+(sp==='bunny'?`<rect x="-2.4" y="-23.4" width="4.8" height="3.2" rx="1" fill="#fff" stroke="${O}" stroke-width=".9"/>`:'')}
+ const cheeks=`<ellipse cx="-22" cy="-26" rx="7" ry="4.6" fill="url(#${u}k)"/><ellipse cx="22" cy="-26" rx="7" ry="4.6" fill="url(#${u}k)"/><path d="M-25 -25 l1.8 -3 M-21.6 -25 l1.8 -3 M21.6 -25 l1.8 -3 M25 -25 l1.8 -3" stroke="#ff5a7e" stroke-width="1" opacity=".55" stroke-linecap="round"/>`;
+ const feet=stage>=2?[-14,14].map(x=>`<ellipse cx="${x}" cy="-3" rx="9.5" ry="5.5" fill="${B}" stroke="${O}" stroke-width="${sw}"/><path d="M${x-3} -4.5 v-2.6 M${x+2} -4.5 v-2.6" stroke="${O}" stroke-width="1.1" opacity=".45" stroke-linecap="round"/>`).join(''):'';
+ const arms=stage>=3?`<ellipse cx="-31" cy="-22" rx="6" ry="9" fill="${B}" stroke="${O}" stroke-width="${sw}" transform="rotate(25 -31 -22)"/><ellipse cx="31" cy="-22" rx="6" ry="9" fill="${B}" stroke="${O}" stroke-width="${sw}" transform="rotate(-25 31 -22)"/>`:'';
+ const body=`<path d="${BODY}" fill="${B}" stroke="${O}" stroke-width="${sw}"/><ellipse cx="0" cy="-15" rx="18" ry="11" fill="url(#${u}w)"/>${deco}${sh?`<path d="${BODY}" fill="url(#${u}h)"/>`:''}<ellipse cx="-15" cy="-49" rx="8" ry="4.4" fill="#fff" opacity=".5" transform="rotate(-28 -15 -49)"/><circle cx="-23" cy="-42" r="1.8" fill="#fff" opacity=".8"/><path d="M27 -44 C33 -34 32 -16 18 -7" stroke="#fff" stroke-width="2.4" opacity=".28" fill="none" stroke-linecap="round"/>`;
+ const sickX=sick?`<ellipse cx="0" cy="-48" rx="22" ry="8" fill="#6a8cff" opacity=".22"/><g transform="translate(24 -50) rotate(35)"><rect x="-11" y="-3.4" width="22" height="6.8" rx="3.4" fill="#fff" stroke="${O}" stroke-width="1.4"/><rect x="-11" y="-3.4" width="8" height="6.8" rx="3.4" fill="#ff5a5a"/><path d="M0 -3.4 v6.8 M4 -3.4 v6.8" stroke="#ccc" stroke-width="1"/></g><path d="M-30 -50 q4 6 0 9 q-4 -3 0 -9z" fill="#8fd3ff" stroke="#3a8ad0" stroke-width=".8"/>`:'';
+ const spark=sh?[[-46,-62,6,0],[46,-54,7,.5],[-44,-14,5,1],[48,-18,5,1.5],[0,-92,6,.8]].map(([x,y,r,d])=>spk(x,y,r,'#ffe066',d)).join(''):'';
+ let poo='';for(let i=0;i<Math.min(o.poops||0,4);i++){const x=[14,106,26,94][i];poo+=`<g transform="translate(${x} 112)"><path d="M-10 0 Q-12 -6 -6 -7 Q-8 -12 -2 -13 Q-3 -18 2 -19 Q4 -15 3 -13 Q9 -12 7 -7 Q12 -6 10 0Z" fill="#a8692e" stroke="#4a2a10" stroke-width="1.4"/><path d="M-6 -7 Q0 -5 6 -7 M-2 -13 Q1 -12 3 -13" stroke="#4a2a10" stroke-width="1" fill="none" opacity=".5"/><ellipse cx="-4" cy="-9" rx="1.6" ry="1" fill="#fff" opacity=".6"/><path class="stink" d="M-4 -22 q-3 -3 0 -6 q3 -3 0 -6 M4 -22 q-3 -3 0 -6 q3 -3 0 -6" stroke="#8ab84a" stroke-width="1.4" fill="none" stroke-linecap="round"/></g>`}
+ return `<defs>${defs}</defs>${aura}<ellipse cx="60" cy="108" rx="${34*s}" ry="6" fill="url(#${u}g)"/>${poo}<g transform="translate(60 106) scale(${s})"><g class="bob">${back}${feet}${body}${arms}${head}${front}${eyes}${mouth}${cheeks}${sickX}${spark}${fx}</g></g>`}
+function petSvg(sp,stage,o,size){return `<svg viewBox="0 0 120 120" width="${size}" height="${size}" style="overflow:visible">${petG(sp,stage,o)}</svg>`}
+
+// ===== 徽章圖示（每個徽章專屬，原創） =====
+const BICON={
+ chore:()=>`<g transform="rotate(-35)"><rect x="-1.7" y="-17" width="3.4" height="19" rx="1.6" fill="#c08040" stroke="#5a3a1a" stroke-width="1"/><path d="M-7.5 2 H7.5 L11 14 H-11Z" fill="#ffcf4d" stroke="#8a5a00" stroke-width="1.2" stroke-linejoin="round"/><path d="M-6 6 L-7.5 14 M-2 6 L-2.6 14 M2 6 L2.6 14 M6 6 L7.5 14" stroke="#c9901a" stroke-width="1"/><rect x="-8" y="0.5" width="16" height="3.6" rx="1.2" fill="#e5484d" stroke="#7a1a1a" stroke-width="1"/></g>${spk(10,-9,4.5,'#ffd23f')}${spk(-11,-4,3,'#7fd8ff',.6)}`,
+ s100:()=>`<text x="0" y="5" text-anchor="middle" font-size="15.5" font-weight="900" font-style="italic" fill="#e5484d" stroke="#fff" stroke-width="2.6" paint-order="stroke" font-family="Arial Black,Arial,Helvetica,sans-serif">100</text><path d="M-12 8.5 H12 M-9 12 H9" stroke="#e5484d" stroke-width="2.2" stroke-linecap="round"/>${spk(12,-10,4,'#ffd23f')}`,
+ s90:()=>`<g transform="rotate(-8)"><rect x="-10" y="-13" width="17" height="22" rx="2" fill="#fff" stroke="#5a6574" stroke-width="1.2"/><path d="M-7 -8 H4 M-7 -4 H4 M-7 0 H2 M-7 4 H0" stroke="#9fb4c8" stroke-width="1.2"/><path d="M-1 -6 l2.5 3 l5 -7" stroke="#e5484d" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g><g transform="translate(7 3) rotate(35)"><rect x="-2.3" y="-12" width="4.6" height="15" fill="#ffcc4d" stroke="#8a5a00" stroke-width="1"/><path d="M-2.3 3 L0 8.5 L2.3 3Z" fill="#f6d7b0" stroke="#8a5a00" stroke-width="1"/><rect x="-2.3" y="-15" width="4.6" height="3.2" fill="#ff8fa8" stroke="#8a5a00" stroke-width="1"/></g>`,
+ study:()=>`<rect x="-12" y="4" width="24" height="6" rx="1.5" fill="#4c8dff" stroke="#1e3f80" stroke-width="1.1"/><rect x="-10" y="-2" width="21" height="6" rx="1.5" fill="#ffb020" stroke="#8a5a00" stroke-width="1.1"/><rect x="-11" y="-8" width="20" height="6" rx="1.5" fill="#e5484d" stroke="#7a1a1a" stroke-width="1.1"/><path d="M7 5.5 H11 M8 -0.5 H10 M6 -6.5 H8" stroke="#fff" stroke-width="1.6"/><g transform="translate(2 -12) rotate(-12)"><path d="M-8 0 Q-4 -3 0 0 Q4 -3 8 0 V3 Q4 0 0 3 Q-4 0 -8 3Z" fill="#fff" stroke="#5a6574" stroke-width="1"/></g>`,
+ dish:()=>`<circle r="12.5" fill="#fff" stroke="#7a8ea3" stroke-width="1.3"/><circle r="8.5" fill="#f2f8ff" stroke="#c4d6e8" stroke-width="1.2"/><path d="M-6 -4 A7 7 0 0 1 -2 -7.5" stroke="#fff" stroke-width="2" fill="none"/>${spk(5,-3,4,'#7fd8ff')}<circle cx="-11" cy="9" r="2.6" fill="#dff4ff" stroke="#7fc8f0"/><circle cx="-7" cy="12" r="1.6" fill="#dff4ff" stroke="#7fc8f0"/><circle cx="11" cy="-10" r="2" fill="#dff4ff" stroke="#7fc8f0"/>`,
+ laundry:()=>`<path d="M-6 -11 L-14 -6 L-10.5 0.5 L-7 -2 V12 H7 V-2 L10.5 0.5 L14 -6 L6 -11 Q0 -6 -6 -11Z" fill="#5ec2f2" stroke="#1e5a8a" stroke-width="1.3" stroke-linejoin="round"/><path d="M-7 3 H7 M-7 7 H7" stroke="#fff" stroke-width="1.8" opacity=".85"/>${spk(9,-12,4,'#ffd23f')}${spk(-11,10,3,'#fff',.7)}`,
+ bed:()=>`<circle cx="8" cy="-8" r="5.5" fill="#ffcf3a" stroke="#d9940a" stroke-width="1"/><path d="M8 -16 v-2.5 M15 -8 h2.5 M13.5 -13.5 l1.8 -1.8 M2.5 -13.5 l-1.8 -1.8" stroke="#ffb020" stroke-width="1.4" stroke-linecap="round"/><rect x="-14" y="-6" width="5" height="16" rx="1.5" fill="#b07a44" stroke="#5a3a1a" stroke-width="1"/><rect x="-10" y="1" width="25" height="7" rx="2" fill="#ff8fb0" stroke="#a03a5a" stroke-width="1.1"/><ellipse cx="-5" cy="-0.5" rx="4.5" ry="2.8" fill="#fff" stroke="#8a9aaa" stroke-width="1"/><path d="M-2 4.5 H14" stroke="#fff" stroke-width="1.4" stroke-dasharray="2 2"/><rect x="12" y="6" width="3" height="5" fill="#b07a44" stroke="#5a3a1a" stroke-width="1"/>`,
+ clean:()=>`<g transform="rotate(-12)"><rect x="-7" y="-4" width="11" height="16" rx="3" fill="#5ad1b0" stroke="#1f7a62" stroke-width="1.2"/><rect x="-5" y="-9" width="7" height="5" fill="#fff" stroke="#5a6574" stroke-width="1"/><path d="M2 -8 H7 V-6 H2" fill="#e5484d" stroke="#7a1a1a" stroke-width="1"/><rect x="-5" y="1" width="7" height="6" rx="1" fill="#fff" opacity=".8"/></g>${spk(11,-10,5,'#ffd23f')}${spk(13,1,3,'#7fd8ff',.5)}${spk(4,-15,2.6,'#fff',1)}`,
+ streak:()=>`<path d="M0 14 C-13 10 -13 -4 -6 -14 C-5 -6 0 -6 -1 -12 C8 -6 13 4 0 14Z" fill="#ff7a2a" stroke="#8a2a0a" stroke-width="1.3" stroke-linejoin="round"/><path d="M0 12 C-6 9 -6 2 -2 -3 C-1 2 3 2 2 -1 C6 3 6 9 0 12Z" fill="#ffd23f"/><path d="M0 11 C-2.5 9 -2.5 6 0 3 C2.5 6 2.5 9 0 11Z" fill="#fff8d0"/>`,
+ team:()=>[[-8,'#6b4a2a',-1],[8,'#2a2a3a',1],[0,'#c0602a',0]].map(([x,h,r])=>`<g transform="translate(${x} ${x?2:-3})"><circle r="6.5" fill="#ffd9b8" stroke="#8a5a3a" stroke-width="1.1"/><path d="M-6.5 -1 A6.5 6.5 0 0 1 6.5 -1 Q2 -4 -6.5 -1Z" fill="${h}"/><circle cx="-2.2" cy="1" r=".9" fill="#3a2a1a"/><circle cx="2.2" cy="1" r=".9" fill="#3a2a1a"/><path d="M-1.6 3.2 Q0 4.6 1.6 3.2" stroke="#3a2a1a" stroke-width=".9" fill="none"/></g>`).join('')+`<path d="M-13 11 Q0 6 13 11" stroke="#e5484d" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M0 -14 c-2 -3 -6 -1 -4 2 l4 3 l4 -3 c2 -3 -2 -5 -4 -2z" fill="#ff5a7e"/>`,
+ earn:()=>`${[10,5,0].map(y=>`<ellipse cx="-4" cy="${y}" rx="9" ry="3.6" fill="#ffc928" stroke="#9a6200" stroke-width="1.1"/><path d="M-13 ${y} v-2.6 M5 ${y} v-2.6" stroke="#9a6200" stroke-width="1.1"/><ellipse cx="-4" cy="${y-2.6}" rx="9" ry="3.6" fill="#ffe27a" stroke="#9a6200" stroke-width="1.1"/>`).join('')}<circle cx="7" cy="-6" r="8" fill="#ffd23f" stroke="#9a6200" stroke-width="1.3"/><circle cx="7" cy="-6" r="5.6" fill="none" stroke="#e0a000" stroke-width="1"/>${pStar(7,-6,3.6,'#fff3a8')}${spk(-10,-12,3.5,'#fff')}`,
+ lv:()=>`${pStar(0,1,15,'#ffd23f','#9a6200')}<path d="M-6 -2 L-4 -8" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".8"/><text x="0" y="5.5" text-anchor="middle" font-size="7.5" font-weight="900" fill="#9a4a00" font-family="Arial Black,Arial,sans-serif">Lv</text>`,
+ dep:()=>`<ellipse cx="-1" cy="3" rx="12" ry="9" fill="#ffa6c4" stroke="#b0476e" stroke-width="1.3"/><path d="M-8 -4 L-6 -10 L-2 -6Z" fill="#ff8fb0" stroke="#b0476e" stroke-width="1.1" stroke-linejoin="round"/><ellipse cx="10" cy="4" rx="3.6" ry="3" fill="#ff8fb0" stroke="#b0476e" stroke-width="1.1"/><circle cx="9.2" cy="4" r=".7" fill="#7a2a4a"/><circle cx="11" cy="4" r=".7" fill="#7a2a4a"/><circle cx="4" cy="0" r="1.1" fill="#3a1a2a"/><path d="M-6 -4.5 H0" stroke="#7a2a4a" stroke-width="1.6" stroke-linecap="round"/><path d="M-8 11 v3 M5 11 v3" stroke="#b0476e" stroke-width="3" stroke-linecap="round"/><ellipse cx="-6" cy="0" rx="3" ry="1.8" fill="#fff" opacity=".6"/><g class="coinD"><circle cx="-3" cy="-12" r="4.6" fill="#ffd23f" stroke="#9a6200" stroke-width="1.1"/><path d="M-3 -14.5 v5" stroke="#9a6200" stroke-width="1"/></g>`,
+ interest:()=>`<rect x="-2.2" y="2" width="4.4" height="12" rx="1" fill="#a0683a" stroke="#5a3a1a" stroke-width="1"/><circle cx="-7" cy="-3" r="7" fill="#58c05a" stroke="#2a6e2a" stroke-width="1.1"/><circle cx="7" cy="-3" r="7" fill="#58c05a" stroke="#2a6e2a" stroke-width="1.1"/><circle cx="0" cy="-9" r="8" fill="#6fd06a" stroke="#2a6e2a" stroke-width="1.1"/>${[[-7,-3],[6,-1],[1,-11],[-2,-4]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="2.6" fill="#ffd23f" stroke="#9a6200" stroke-width=".9"/>`).join('')}<circle cx="-4" cy="-12" r="1.6" fill="#fff" opacity=".6"/>`,
+ pets:()=>`<path d="M-10 0 C-10 10 10 10 10 0 l-3 -3 l-3 3 l-3 -3 l-2 3 l-2 -3 l-3 3 l-3 -3z" fill="#fff8e8" stroke="#8a7a5a" stroke-width="1.2" stroke-linejoin="round"/><circle cx="0" cy="-5" r="7.5" fill="#ffd94a" stroke="#a07a00" stroke-width="1.2"/><circle cx="-2.6" cy="-6" r="1.2" fill="#3a2a1a"/><circle cx="2.6" cy="-6" r="1.2" fill="#3a2a1a"/><path d="M-1.8 -3.4 L0 -1.4 L1.8 -3.4Z" fill="#ff8a1f"/><circle cx="-4.6" cy="-3.6" r="1.2" fill="#ff9ab0" opacity=".8"/><circle cx="4.6" cy="-3.6" r="1.2" fill="#ff9ab0" opacity=".8"/><path d="M-6 -11 l2 -3 l2 2 l2 -3 l2 3 l2 -2 l2 3 C3 -8 -3 -8 -6 -11Z" fill="#fff8e8" stroke="#8a7a5a" stroke-width="1"/>`,
+ care:()=>`<rect x="-11" y="-3" width="20" height="13" rx="5" fill="#ff9ec6" stroke="#b0476e" stroke-width="1.2"/><rect x="-8" y="0" width="9" height="3" rx="1.5" fill="#fff" opacity=".6"/>${[[6,-8,4.4],[-4,-10,3.2],[11,-1,2.6],[0,-15,2]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#e8f8ff" stroke="#7fc8f0" stroke-width="1"/><circle cx="${x-r*.35}" cy="${y-r*.35}" r="${r*.3}" fill="#fff"/>`).join('')}`,
+ wish:()=>`<path d="M-14 12 L2 -4" stroke="#ff8fd0" stroke-width="5" stroke-linecap="round" opacity=".5"/><path d="M-12 14 L3 -1" stroke="#8fe0ff" stroke-width="3" stroke-linecap="round" opacity=".7"/><path d="M-10 9 L1 -3" stroke="#fff3a8" stroke-width="2" stroke-linecap="round"/>${pStar(5,-6,9,'#ffd23f','#9a6200')}${spk(-8,-10,3,'#fff')}${spk(12,8,2.6,'#fff',.6)}`,
+ posts:()=>`<path d="M-13 -11 H5 a3 3 0 0 1 3 3 V2 a3 3 0 0 1 -3 3 H-6 L-11 9 V5 H-13 a3 3 0 0 1 -3 -3 V-8 a3 3 0 0 1 3 -3Z" fill="#5ec2f2" stroke="#1e5a8a" stroke-width="1.2" stroke-linejoin="round"/><circle cx="-9" cy="-3" r="1.5" fill="#fff"/><circle cx="-4" cy="-3" r="1.5" fill="#fff"/><circle cx="1" cy="-3" r="1.5" fill="#fff"/><path d="M2 2 H13 a3 3 0 0 1 3 3 V10 a3 3 0 0 1 -3 3 H12 V16 L8 13 H2 a3 3 0 0 1 -3 -3 V5 a3 3 0 0 1 3 -3Z" fill="#ffd23f" stroke="#9a6200" stroke-width="1.2" stroke-linejoin="round"/><path d="M7.5 9.5 c-1.5 -2 -4 -.5 -2.5 1.4 l2.5 2 l2.5 -2 c1.5 -1.9 -1 -3.4 -2.5 -1.4z" fill="#ff5a7e"/>`,
+ math:()=>`<rect x="-11" y="-14" width="22" height="28" rx="4" fill="#4cb6a0" stroke="#1f6a5a" stroke-width="1.3"/><rect x="-8" y="-11" width="16" height="7" rx="1.5" fill="#e8fff8" stroke="#1f6a5a" stroke-width=".8"/><text x="6" y="-5.6" text-anchor="end" font-size="6" font-weight="900" fill="#1f6a5a" font-family="Arial,sans-serif">123</text>${[[-5,1,'#fff'],[0,1,'#fff'],[5,1,'#ffd23f'],[-5,6,'#fff'],[0,6,'#fff'],[5,6,'#ffd23f'],[-5,11,'#fff'],[0,11,'#fff'],[5,11,'#ff8a7a']].map(([x,y,f])=>`<rect x="${x-2}" y="${y-2}" width="4" height="3.6" rx="1" fill="${f}" stroke="#1f6a5a" stroke-width=".6"/>`).join('')}${spk(12,-12,4,'#ffd23f')}`,
+ elder:()=>`<path d="M-13 7 L-15 -8 L-7 -1 L0 -12 L7 -1 L15 -8 L13 7Z" fill="#ffc928" stroke="#8a5a00" stroke-width="1.3" stroke-linejoin="round"/><rect x="-13.5" y="5" width="27" height="6" rx="2" fill="#ffd94a" stroke="#8a5a00" stroke-width="1.2"/><circle cx="-6" cy="8" r="1.8" fill="#e5484d"/><circle cx="0" cy="8" r="2" fill="#3aa0ff"/><circle cx="6" cy="8" r="1.8" fill="#2fcf7a"/><circle cx="-15" cy="-9" r="2" fill="#fff3b0" stroke="#8a5a00"/><circle cx="0" cy="-13" r="2.2" fill="#fff3b0" stroke="#8a5a00"/><circle cx="15" cy="-9" r="2" fill="#fff3b0" stroke="#8a5a00"/>`
+};
+// 金屬：0 未取得、1 銅、2 銀、3 金、4 鑽石
+const MET=[['#f2f3f5','#c6ccd4','#868e99'],['#ffe0c2','#cf8444','#6e3a12'],['#ffffff','#c0cad4','#5f6b78'],['#fff6c0','#f6c21e','#946000'],['#f2feff','#8de2ff','#6a4cf0']];
+const RIB=[['#c9ccd2','#8d939c'],['#ef5350','#a8191c'],['#42a5f5','#12579e'],['#9c4dcc','#5a1a8a'],['#ff5fa2','#6a4cf0']];
+const TIERC=MET.map(m=>m[1]),TIERN=['還沒拿到','銅牌','銀牌','金牌','鑽石'];
+function medal(icon,tier,size,id){const u=artId(),t=tier||0,M=MET[t],R=RIB[t],cx=40,cy=52;
+ let d=lin(u+'m',0,0,1,1,t===4?[[0,'#f2feff'],[.3,'#8de2ff'],[.55,'#d2b6ff'],[.8,'#7fd8ff'],[1,'#6a4cf0']]:[[0,M[0]],[.45,M[1]],[.7,M[0]],[1,M[2]]])
+  +lin(u+'n',1,1,0,0,[[0,M[0]],[.5,M[1]],[1,M[2]]])+rad(u+'c',.38,.32,.75,[[0,'#ffffff'],[.7,mix(M[0],'#ffffff',.3)],[1,mix(M[0],M[1],.45)]])
+  +lin(u+'r',0,0,1,0,[[0,R[1]],[.5,R[0]],[1,R[1]]])+rad(u+'gl',.5,.5,.5,[[0,t===4?'#bff3ff':'#fff1a8',.8],[1,'#fff1a8',0]])
+  +`<clipPath id="${u}cp"><circle cx="${cx}" cy="${cy}" r="21"/></clipPath><filter id="${u}gs"><feColorMatrix type="saturate" values="0"/></filter>`;
+ let g='';
+ if(t>=3)g+=`<circle cx="${cx}" cy="${cy}" r="40" fill="url(#${u}gl)"/><g transform="translate(${cx} ${cy})"><g class="${t===4?'spin':''}">${Array.from({length:16},(_,i)=>{const a=i*22.5*Math.PI/180,b=.07;return `<path d="M0 0 L${(40*Math.cos(a-b)).toFixed(1)} ${(40*Math.sin(a-b)).toFixed(1)} L${(40*Math.cos(a+b)).toFixed(1)} ${(40*Math.sin(a+b)).toFixed(1)}Z" fill="${t===4?'#9fe8ff':'#ffd94a'}" opacity=".55"/>`}).join('')}</g></g>`;
+ // 緞帶
+ g+=`<path d="M60 1 H47 L35 32 H48Z" fill="${R[1]}" stroke="${mix(R[1],'#000000',.35)}" stroke-width="1"/><path d="M53.5 1 L41.5 32" stroke="#fff" stroke-width="1.6" opacity=".35"/>
+ <path d="M20 1 H33 L45 32 H32Z" fill="url(#${u}r)" stroke="${mix(R[1],'#000000',.35)}" stroke-width="1"/><path d="M26.5 1 L38.5 32" stroke="#fff" stroke-width="2" opacity=".55"/>`;
+ // 月桂葉
+ if(t>=3){const lc=t===4?['#ffd94a','#9a6a00']:['#5cbf55','#246a28'];let lv=`<path d="M${(cx+32*Math.cos(1.75)).toFixed(1)} ${(cy+32*Math.sin(1.75)).toFixed(1)} A32 32 0 0 1 ${(cx+32*Math.cos(3.95)).toFixed(1)} ${(cy+32*Math.sin(3.95)).toFixed(1)}" fill="none" stroke="${lc[1]}" stroke-width="1.2"/>`;for(let i=0;i<7;i++){const th=104+i*19,a=th*Math.PI/180;for(const [rr,tw] of [[35,32],[29.5,-32]]){const x=(cx+rr*Math.cos(a)).toFixed(1),y=(cy+rr*Math.sin(a)).toFixed(1);lv+=`<ellipse cx="${x}" cy="${y}" rx="2.4" ry="5.2" fill="${lc[0]}" stroke="${lc[1]}" stroke-width=".8" transform="rotate(${th+tw} ${x} ${y})"/>`}}g+=lv+`<g transform="translate(${2*cx} 0) scale(-1 1)">${lv}</g>`}
+ // 鋸齒外圈
+ let p='';for(let i=0;i<48;i++){const a=i*7.5*Math.PI/180,r=i%2?28.2:30;p+=(i?'L':'M')+(cx+r*Math.cos(a)).toFixed(2)+' '+(cy+r*Math.sin(a)).toFixed(2)}
+ g+=`<path d="${p}Z" fill="url(#${u}m)" stroke="${M[2]}" stroke-width="1"/><circle cx="${cx}" cy="${cy}" r="25" fill="url(#${u}n)" stroke="${M[2]}" stroke-width=".8"/><circle cx="${cx}" cy="${cy}" r="21" fill="url(#${u}c)" stroke="${M[2]}" stroke-width="1"/>`;
+ if(t===4)g+=`<circle cx="${cx}" cy="${cy}" r="23" fill="none" stroke="#fff" stroke-width="1.2" stroke-dasharray="2 3" opacity=".9"/>`;
+ const ic=BICON[id]?BICON[id]():`<text x="0" y="7" text-anchor="middle" font-size="19">${icon||'🏅'}</text>`;
+ g+=`<g transform="translate(${cx} ${cy}) scale(1.08)"${t?'':` filter="url(#${u}gs)" opacity=".38"`}>${ic}</g>`;
+ if(t)g+=`<g clip-path="url(#${u}cp)"><rect class="shine" x="${cx-40}" y="${cy-30}" width="9" height="60" fill="#fff" opacity=".55" transform="rotate(25 ${cx} ${cy})"/></g>`;
+ g+=`<path d="M22 37 A20 20 0 0 1 36 30" stroke="#fff" stroke-width="2.2" fill="none" opacity=".75" stroke-linecap="round"/>`;
+ // 底部緞帶＋星星
+ if(t){g+=`<path d="M14 80 L9 86 L14 92 H22 V80Z M66 80 L71 86 L66 92 H58 V80Z" fill="${R[1]}" stroke="${mix(R[1],'#000000',.35)}" stroke-width="1"/><path d="M17 77 H63 V89 H17Z" fill="url(#${u}r)" stroke="${mix(R[1],'#000000',.35)}" stroke-width="1"/>`;
+  for(let i=0;i<t;i++)g+=pStar(cx+(i-(t-1)/2)*8.5,83,3.4,'#fff3b0','#9a6a00')}
+ else g+=`<g transform="translate(54 70)"><path d="M-4 -3 V-6 a4 4 0 0 1 8 0 V-3" fill="none" stroke="#7a828c" stroke-width="2"/><rect x="-6" y="-3" width="12" height="10" rx="2.2" fill="#aab2bc" stroke="#5f6772" stroke-width="1.2"/><circle cy="1.6" r="1.6" fill="#5f6772"/></g>`;
+ if(t>=3)g+=spk(8,26,4.5,'#fff',0)+spk(73,40,3.6,'#fff',.7)+spk(70,74,4,t===4?'#bff3ff':'#fff3a8',1.3)+spk(10,66,3,'#fff',1.9);
+ return `<svg viewBox="0 0 80 96" width="${size}" height="${Math.round(size*1.2)}" style="overflow:visible${t?'':';opacity:.6'}"><defs>${d}</defs>${g}</svg>`}
+
+// ===== 紀念品 =====
+const MEMO_ART={
+ fire:u=>`<path d="M-14 16 C-18 2 -10 -14 10 -22 C2 -12 0 -2 4 14Z" fill="url(#${u}it)" stroke="#6e4a20" stroke-width="1.6" stroke-linejoin="round"/><path d="M-12 8 q6 2 13 -2 M-11 0 q6 2 11 -3 M-6 -8 q4 1 8 -4" stroke="#8a6030" stroke-width="1.1" opacity=".5" fill="none"/><path d="M-10 12 C-12 2 -6 -8 6 -16" stroke="#fff" stroke-width="2" opacity=".6" fill="none" stroke-linecap="round"/><ellipse cx="-4" cy="16" rx="10" ry="3" fill="#ff8a2a" opacity=".5"/>`,
+ water:u=>`<path d="M0 -20 C14 -20 20 -6 18 6 C16 16 8 20 0 20 C-8 20 -16 16 -18 6 C-20 -6 -14 -20 0 -20Z" fill="url(#${u}it)" stroke="#123a70" stroke-width="1.6"/><path d="M-12 -2 Q0 -14 12 -2 M-14 6 Q0 -6 14 6 M-12 13 Q0 3 12 13" stroke="#fff" stroke-width="1.3" fill="none" opacity=".7"/><ellipse cx="-6" cy="-10" rx="4" ry="6" fill="#fff" opacity=".55" transform="rotate(-25 -6 -10)"/>`,
+ leaf:u=>`<path d="M-16 18 C-20 -4 -6 -20 18 -20 C18 4 4 18 -16 18Z" fill="url(#${u}it)" stroke="#1d552a" stroke-width="1.6" stroke-linejoin="round"/><path d="M-16 18 L12 -14 M-6 6 L-8 -6 M2 -2 L0 -12 M-4 4 L8 2 M4 -4 L14 -4" stroke="#1d552a" stroke-width="1.1" opacity=".45" fill="none"/><path d="M8 4 q-3 4 0 6 q3 -2 0 -6z" fill="#dff6ff" stroke="#7fc8f0" stroke-width=".8"/><circle cx="7" cy="7" r=".9" fill="#fff"/>`,
+ shiba:u=>`<ellipse cx="0" cy="-2" rx="17" ry="12" fill="none" stroke="#7a1a1a" stroke-width="7.4"/><ellipse cx="0" cy="-2" rx="17" ry="12" fill="none" stroke="url(#${u}it)" stroke-width="5"/><path d="M-15 -6 Q0 -16 15 -6" stroke="#fff" stroke-width="1.2" fill="none" opacity=".5" stroke-dasharray="2 3"/><path d="M0 10 v4" stroke="#9a6a00" stroke-width="1.6"/><path d="M-7 15 a3 3 0 1 1 3 4 h8 a3 3 0 1 1 3 -4 a3 3 0 1 1 -3 -4 h-8 a3 3 0 1 1 -3 4z" fill="#ffd23f" stroke="#9a6a00" stroke-width="1.2"/>`,
+ bunny:u=>`<g transform="rotate(30)"><path d="M-6 -10 Q0 -12 6 -10 L1 20 Q0 22 -1 20Z" fill="url(#${u}it)" stroke="#a04a10" stroke-width="1.5" stroke-linejoin="round"/><path d="M-4 -4 h4 M-3 3 h3 M-2 10 h3" stroke="#a04a10" stroke-width="1.1" opacity=".55"/><path d="M0 -11 C-8 -20 -10 -24 -6 -26 C-3 -20 -1 -18 0 -14 C2 -20 4 -24 8 -24 C6 -18 3 -14 0 -11Z" fill="#5cbf55" stroke="#246a28" stroke-width="1.2"/><circle cx="6.5" cy="-2" r="3" fill="#fff8ee"/></g>`,
+ kitty:u=>`<path d="M-6 -16 Q0 -22 6 -16" fill="none" stroke="#9a6a00" stroke-width="2"/><path d="M-14 8 C-14 -8 -8 -16 0 -16 C8 -16 14 -8 14 8 L16 12 H-16Z" fill="url(#${u}it)" stroke="#8a5a00" stroke-width="1.6" stroke-linejoin="round"/><path d="M-16 12 H16" stroke="#8a5a00" stroke-width="2.4" stroke-linecap="round"/><circle cx="0" cy="15" r="3.4" fill="#ffd23f" stroke="#8a5a00" stroke-width="1.3"/><ellipse cx="-6" cy="-4" rx="2.6" ry="6" fill="#fff" opacity=".6" transform="rotate(15 -6 -4)"/><path d="M-18 -12 q8 6 0 12 M18 -12 q-8 6 0 12" stroke="#e5484d" stroke-width="2.6" fill="none" stroke-linecap="round" opacity=".9"/>`,
+ star:u=>`<rect x="-6" y="-24" width="12" height="6" rx="1.6" fill="#c08a50" stroke="#6a4a20" stroke-width="1.2"/><path d="M-5 -18 V-14 C-14 -10 -15 -2 -15 6 C-15 16 -9 20 0 20 C9 20 15 16 15 6 C15 -2 14 -10 5 -14 V-18Z" fill="url(#${u}it)" stroke="#5a5fd6" stroke-width="1.5" stroke-linejoin="round"/>${pStar(-4,6,5,'#ffd23f')}${pStar(6,0,3.6,'#fff3a8')}${pStar(2,13,3,'#9ff3ff')}<circle class="twk" cx="-7" cy="-4" r="1.3" fill="#fff"/><circle class="twk" style="animation-delay:.8s" cx="8" cy="11" r="1.1" fill="#fff"/><path d="M-11 -2 C-12 6 -10 12 -6 15" stroke="#fff" stroke-width="2" fill="none" opacity=".55" stroke-linecap="round"/>`};
+const MEMO_GRAD={fire:[['#fffbf0'],['#e8c690']],water:[['#e0fbff'],['#4cb6f2']],leaf:[['#d2f7a0'],['#3fa952']],shiba:[['#ff6b6b'],['#c4282c']],bunny:[['#ffb35a'],['#ff7a1a']],kitty:[['#fff8c8'],['#e0a000']],star:[['#3a3fae'],['#151552']]};
+function memoItem(sp,shiny,size){const u=artId(),G=MEMO_GRAD[sp]||MEMO_GRAD.fire;
+ const gs=shiny?[[0,'#fffbe0'],[.4,'#ffd94a'],[.7,'#ffb0e0'],[1,'#8de2ff']]:[[0,G[0][0]],[1,G[1][0]]];
+ return `<svg viewBox="0 0 80 80" ${size==="100%"?'style="width:100%;height:auto;display:block"':`width="${size}" height="${size}"`}><defs>${rad(u+'bg',.5,.3,.8,shiny?[[0,'#6a4cb0'],[1,'#1e1240']]:[[0,'#3c3a7a'],[1,'#141332']])}${lin(u+'it',0,0,1,1,gs)}${lin(u+'sp',0,0,0,1,[[0,'#fff',.45],[1,'#fff',0]])}${lin(u+'pd',0,0,0,1,[[0,'#ffe9a0'],[1,'#b07a10']])}</defs>
+ <rect width="80" height="80" rx="10" fill="url(#${u}bg)"/><path d="M28 0 H52 L70 66 H10Z" fill="url(#${u}sp)"/>
+ <ellipse cx="40" cy="66" rx="20" ry="5" fill="url(#${u}pd)" stroke="#7a5200" stroke-width="1"/><rect x="20" y="66" width="40" height="8" fill="url(#${u}pd)"/><ellipse cx="40" cy="74" rx="20" ry="4" fill="#9a6a10"/>
+ <g transform="translate(40 40)"><g class="bob">${(MEMO_ART[sp]||MEMO_ART.fire)(u)}</g></g>
+ ${shiny?spk(14,16,5,'#fff3b0',0)+spk(66,22,4,'#fff',.6)+spk(64,56,3.4,'#bff3ff',1.2)+spk(16,52,3,'#fff',1.8):spk(64,18,3,'#fff',.4)}
+ <path d="M6 10 L20 2" stroke="#fff" stroke-width="3" opacity=".25" stroke-linecap="round"/><rect x="1" y="1" width="78" height="78" rx="9.5" fill="none" stroke="${shiny?'#ffd94a':'#c9a24a'}" stroke-width="2"/></svg>`}
+// 合照背景（寵物的故鄉）
+function scene(sp,u){const S={
+ fire:`${lin(u+'s',0,0,0,1,[[0,'#ff9f5a'],[1,'#ffe3b0']])}|<rect width="120" height="120" fill="url(#${u}s)"/><circle cx="92" cy="26" r="10" fill="#fff3b0" opacity=".9"/><path d="M18 84 L44 40 H58 L84 84Z" fill="#6a3a2a"/><path d="M44 40 H58 L54 50 L50 46 L46 52Z" fill="#ff5a1a"/><circle cx="46" cy="30" r="7" fill="#d8d0c8" opacity=".9"/><circle cx="56" cy="22" r="9" fill="#e8e2dc" opacity=".9"/><rect y="84" width="120" height="36" fill="#3a9ad0"/><path d="M0 92 q15 -4 30 0 t30 0 t30 0 t30 0" stroke="#fff" stroke-width="1.5" fill="none" opacity=".5"/><ellipse cx="60" cy="110" rx="56" ry="10" fill="#f5d59a"/>`,
+ water:`${lin(u+'s',0,0,0,1,[[0,'#7fd8f0'],[1,'#1a6ab0']])}|<rect width="120" height="120" fill="url(#${u}s)"/><path d="M20 0 L36 0 L60 120 H40Z M70 0 H80 L96 120 H86Z" fill="#fff" opacity=".12"/><path d="M8 110 C6 90 14 84 12 70 M14 110 C18 94 26 92 24 78" stroke="#2fae55" stroke-width="4" fill="none" stroke-linecap="round"/><g fill="#ff7aa8"><circle cx="98" cy="96" r="7"/><circle cx="106" cy="88" r="5"/><circle cx="92" cy="86" r="4.4"/></g><circle cx="30" cy="30" r="3" fill="none" stroke="#fff" opacity=".7"/><circle cx="90" cy="40" r="2" fill="none" stroke="#fff" opacity=".7"/><ellipse cx="60" cy="114" rx="64" ry="12" fill="#f0d79a"/>`,
+ leaf:`${lin(u+'s',0,0,0,1,[[0,'#bfeaff'],[1,'#e8fbd8']])}|<rect width="120" height="120" fill="url(#${u}s)"/><circle cx="14" cy="50" r="22" fill="#3fa952"/><circle cx="34" cy="38" r="18" fill="#58c05a"/><circle cx="96" cy="44" r="24" fill="#3fa952"/><circle cx="110" cy="62" r="16" fill="#58c05a"/><rect x="12" y="60" width="6" height="40" fill="#8a5a30"/><rect x="98" y="62" width="6" height="40" fill="#8a5a30"/><ellipse cx="60" cy="112" rx="70" ry="18" fill="#6fcf5a"/><g fill="#fff"><circle cx="26" cy="104" r="2"/><circle cx="94" cy="108" r="2"/></g><g fill="#ffd23f"><circle cx="26" cy="104" r=".9"/><circle cx="94" cy="108" r=".9"/></g>`,
+ shiba:`${lin(u+'s',0,0,0,1,[[0,'#8fd3ff'],[1,'#e0f6ff']])}|<rect width="120" height="120" fill="url(#${u}s)"/><ellipse cx="30" cy="22" rx="14" ry="6" fill="#fff"/><ellipse cx="92" cy="30" rx="12" ry="5" fill="#fff"/><path d="M86 74 L100 58 L114 74Z" fill="#e5484d" stroke="#7a1a1a" stroke-width="1.2"/><rect x="88" y="74" width="24" height="20" fill="#f2c27a" stroke="#7a4a1a" stroke-width="1.2"/><path d="M96 94 V84 a4 4 0 0 1 8 0 V94Z" fill="#5a3a1a"/><ellipse cx="60" cy="112" rx="70" ry="20" fill="#7ed36a"/><path d="M14 102 a2.4 2.4 0 1 1 2 3 h6 a2.4 2.4 0 1 1 2 -3 a2.4 2.4 0 1 1 -2 -3 h-6 a2.4 2.4 0 1 1 -2 3z" fill="#fff" stroke="#c9b8a0"/>`,
+ bunny:`${lin(u+'s',0,0,0,1,[[0,'#2a2a6a'],[1,'#7a6ab0']])}|<rect width="120" height="120" fill="url(#${u}s)"/><circle cx="90" cy="28" r="15" fill="#fff6c8"/><circle cx="85" cy="24" r="3" fill="#efe4a8"/><circle cx="95" cy="33" r="2" fill="#efe4a8"/>${[[16,18],[40,10],[60,26],[30,40],[110,52],[70,8]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.1" fill="#fff"/>`).join('')}<ellipse cx="20" cy="110" rx="60" ry="22" fill="#4a8a5a"/><ellipse cx="96" cy="114" rx="60" ry="20" fill="#5a9a6a"/>`,
+ kitty:`${lin(u+'s',0,0,0,1,[[0,'#ff9ab0'],[1,'#ffd9a0']])}|<rect width="120" height="120" fill="url(#${u}s)"/><circle cx="60" cy="74" r="20" fill="#fff0a0" opacity=".8"/><path d="M0 70 L14 56 L28 70 V90 H0Z" fill="#7a5a9a"/><path d="M28 78 L46 64 L64 78 V90 H28Z" fill="#9a6ab0"/><path d="M74 66 L94 50 L114 66 V90 H74Z" fill="#7a5a9a"/><rect x="100" y="48" width="6" height="12" fill="#5a3a7a"/><rect x="8" y="72" width="6" height="6" fill="#ffe08a"/><rect x="84" y="70" width="6" height="6" fill="#ffe08a"/><rect y="90" width="120" height="30" fill="#c8a07a"/>`,
+ star:`${lin(u+'s',0,0,0,1,[[0,'#0e0e3a'],[1,'#3a2a7a']])}|<rect width="120" height="120" fill="url(#${u}s)"/><ellipse cx="40" cy="40" rx="40" ry="16" fill="#ff7ad9" opacity=".18" transform="rotate(-20 40 40)"/>${Array.from({length:22},(_,i)=>`<circle cx="${(i*37)%118+1}" cy="${(i*53)%90+2}" r="${i%4?.7:1.3}" fill="#fff"/>`).join('')}<circle cx="96" cy="24" r="9" fill="#ffb06a"/><ellipse cx="96" cy="24" rx="16" ry="4" fill="none" stroke="#ffe0b0" stroke-width="1.6" transform="rotate(-15 96 24)"/><ellipse cx="60" cy="116" rx="60" ry="12" fill="#2a2a5a"/>`}[sp]||'';const [d,b]=S.split('|');return {d,b}}
+function memoCard(m){const ph=/^和.+的合照$/.test(m.name);
+ if(ph){const u=artId(),s=scene(m.species,u);
+  return `<div class="memo photo ${m.shiny?'shiny':''}"><div class="pf"><i class="tape"></i><svg viewBox="0 0 120 120" width="100%" style="display:block"><defs>${s.d}<clipPath id="${u}pc"><rect width="120" height="120"/></clipPath></defs><g clip-path="url(#${u}pc)">${s.b}<g transform="translate(6 4) scale(.9)">${petG(m.species,5,{shiny:m.shiny,mood:90,photo:1})}</g></g></svg><div class="cap">${esc(m.pet||'')}${m.shiny?' ✨':''}</div></div><div class="mn">${esc(m.name)}</div><div class="mu" style="font-size:10px">${m.date||''}</div></div>`}
+ return `<div class="memo ${m.shiny?'shiny':''}">${memoItem(m.species,m.shiny||/閃亮/.test(m.name),'100%')}<div class="plate">${esc(m.name)}</div><div class="mu" style="font-size:10px">${m.date||''}</div></div>`}
+const ART_CSS=`
+.bob{animation:bob 2.4s ease-in-out infinite}@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.wob{animation:wob 1.6s ease-in-out infinite;transform-origin:60px 108px}@keyframes wob{0%,100%{transform:rotate(0)}25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
+.blink{transform-box:fill-box;transform-origin:center;animation:blink 5s infinite}@keyframes blink{0%,94%,100%{transform:scaleY(1)}96.5%{transform:scaleY(.12)}}
+.flick{transform-box:fill-box;transform-origin:50% 100%;animation:flick .9s ease-in-out infinite alternate}@keyframes flick{from{transform:scale(1,1)}to{transform:scale(.92,1.1) skewX(3deg)}}
+.flapL{transform-box:fill-box;transform-origin:100% 80%;animation:flapL 1.8s ease-in-out infinite}@keyframes flapL{50%{transform:rotate(9deg)}}
+.flapR{transform-box:fill-box;transform-origin:0% 80%;animation:flapR 1.8s ease-in-out infinite}@keyframes flapR{50%{transform:rotate(-9deg)}}
+.bub{animation:bub 3s ease-in-out infinite}@keyframes bub{0%{transform:translateY(6px);opacity:0}30%{opacity:1}100%{transform:translateY(-14px);opacity:0}}
+.ember{animation:ember 2.6s ease-in infinite}@keyframes ember{0%{transform:translateY(8px);opacity:0}30%{opacity:1}100%{transform:translateY(-18px);opacity:0}}
+.petal{animation:petal 4s ease-in-out infinite}@keyframes petal{0%{transform:translate(0,-6px) rotate(0);opacity:0}20%{opacity:1}100%{transform:translate(8px,30px) rotate(180deg);opacity:0}}
+.stink{animation:stink 1.8s ease-in-out infinite}@keyframes stink{0%{transform:translateY(2px);opacity:0}50%{opacity:.9}100%{transform:translateY(-5px);opacity:0}}
+.twk{transform-box:fill-box;transform-origin:center;animation:twk 1.8s ease-in-out infinite}@keyframes twk{0%,100%{transform:scale(.5);opacity:.4}50%{transform:scale(1.1);opacity:1}}
+.spin{transform-box:fill-box;transform-origin:center;animation:spin 14s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.spinS{transform-box:fill-box;transform-origin:center;animation:spinS 3s ease-in-out infinite}@keyframes spinS{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+.shine{animation:shine 3.4s ease-in-out infinite}@keyframes shine{0%,55%{transform:translateX(0) rotate(25deg)}100%{transform:translateX(62px) rotate(25deg)}}
+.drip{animation:drip 2s ease-in infinite}@keyframes drip{0%{transform:translateY(0);opacity:1}100%{transform:translateY(6px);opacity:0}}
+.coinD{animation:coinD 2s ease-in infinite}@keyframes coinD{0%,30%{transform:translateY(-4px);opacity:0}50%{opacity:1}100%{transform:translateY(5px);opacity:0}}
+.mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center}
+.memo{font-size:12px;font-weight:700;line-height:1.3}
+.memo>svg{border-radius:12px;box-shadow:0 4px 10px rgba(30,20,80,.25)}
+.memo .plate{margin:6px auto 2px;padding:3px 6px;border-radius:6px;background:linear-gradient(#fff3c0,#e8c35a);border:1px solid #b08a2a;color:#5a3a00;font-size:11px;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.memo.shiny .plate{background:linear-gradient(90deg,#ffe3f3,#fff6b8,#d8f6ff);border-color:#d0a0ff}
+.memo.photo .pf{position:relative;background:#fff;border-radius:3px;box-shadow:0 4px 10px rgba(0,0,0,.22);padding:5px 5px 4px;transform:rotate(-3deg);margin:4px 2px 6px}
+.memo.photo:nth-child(2n) .pf{transform:rotate(2.5deg)}
+.memo.photo.shiny .pf{background:linear-gradient(135deg,#fff7c8,#ffd94a,#fff7c8);box-shadow:0 0 0 1px #e0b020,0 4px 12px rgba(224,176,32,.5)}
+.memo .pf .cap{font-family:"Comic Sans MS","Chalkboard SE",cursive;font-size:11px;color:#555;padding-top:3px}
+.memo .tape{position:absolute;left:50%;top:-6px;width:34px;height:12px;margin-left:-17px;background:rgba(255,180,200,.75);transform:rotate(-4deg);z-index:1}
+.memo .mn{font-size:12px}
+`;
+(function(){const c=document.createElement('style');c.textContent=ART_CSS;document.head.appendChild(c)})();
+
+// ===== 徽章、紀念品、排行榜 =====
+(function(){const c=document.createElement('style');c.textContent=`
+.bgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 6px;text-align:center}
+.bcell{cursor:pointer}.bn{font-size:13px;font-weight:700;line-height:1.2;margin-top:2px}.bt{font-size:11px;color:#999}.bt.t1{color:#b06a2a}.bt.t2{color:#7d8a96}.bt.t3{color:#d99a00}.bt.t4{color:#1fa9d6}
+.bbar{height:5px;background:rgba(0,0,0,.08);border-radius:9px;margin:3px 10px 0;overflow:hidden}.bbar i{display:block;height:100%;background:#ffb020;border-radius:9px}
+.shelf{display:flex;gap:4px;overflow-x:auto;padding:2px 0}.shelf svg{flex:none}
+.rk{display:flex;align-items:center;gap:8px;padding:7px 4px;border-radius:12px}.rk.me{background:rgba(255,200,40,.16)}.rk .rm{width:24px;text-align:center;font-size:20px}.rk .rnm{flex:1;min-width:0;font-weight:700}
+#rkSeg .chip{min-width:0;flex:1;padding-left:2px;padding-right:2px}
+.rbar{height:6px;background:rgba(0,0,0,.07);border-radius:9px;overflow:hidden;margin-top:3px}.rbar i{display:block;height:100%;background:linear-gradient(90deg,#ffd966,#ffb020);border-radius:9px}
+`;document.head.appendChild(c)})();
+let BDG=null;
+// 彩帶慶祝
+function confetti(){const C=['#ff5a7e','#ffd23f','#3aa0ff','#2fcf7a','#b07aff','#ff9a3c'];let h='<div class="cfti">';for(let i=0;i<34;i++)h+=`<i style="left:${(i*29)%100}%;background:${C[i%6]};animation-delay:${(i%9)*.12}s;animation-duration:${1.6+(i%5)*.3}s;transform:rotate(${i*37}deg)"></i>`;return h+'</div>'}
+(function(){const c=document.createElement('style');c.textContent=`.modal .box{position:relative}.cfti{position:absolute;inset:0;overflow:hidden;pointer-events:none;border-radius:inherit}.cfti i{position:absolute;top:-12px;width:7px;height:12px;border-radius:2px;animation:cf 2s ease-in forwards}@keyframes cf{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(420px) rotate(540deg);opacity:0}}
+.pop{animation:pop .7s cubic-bezier(.3,1.6,.5,1) both}.pop:nth-child(2){animation-delay:.15s}.pop:nth-child(3){animation-delay:.3s}.pop:nth-child(4){animation-delay:.45s}@keyframes pop{0%{transform:scale(0) rotate(-20deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}`;document.head.appendChild(c)})();
+function badgeShelf(b){if(!b)return '';const L=b.list.filter(x=>x.tier).sort((x,y)=>y.tier-x.tier);
+  return `<div class="card" onclick="go('badge')" style="cursor:pointer"><div class="row" style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">🏅 我的徽章 ${b.earned} 個</h3><span class="mu">看全部 ›</span></div>
+  <div class="shelf">${L.length?L.slice(0,8).map(x=>medal(x.icon,x.tier,46,x.id)).join(''):'<div class="mu" style="padding:8px 0">做任務、照顧寵物，就能拿到徽章喔！</div>'}</div></div>`}
+function badgeWall(b){BDG=b;return `<div class="card"><h3>🏅 徽章牆　<span class="mu">已拿到 ${b.earned} 個，點徽章看怎麼升級</span></h3><div class="bgrid">${b.list.map(x=>`<div class="bcell" onclick="badgeInfo('${x.id}')">${medal(x.icon,x.tier,60,x.id)}<div class="bn">${esc(x.name)}</div><div class="bt t${x.tier}">${x.special?'特別徽章':TIERN[x.tier]}</div>${x.next?`<div class="bbar"><i style="width:${Math.min(100,Math.round(x.value/x.next*100))}%"></i></div>`:''}</div>`).join('')}</div></div>
+  <div class="card"><h3>🎁 紀念品櫃</h3>${b.memos.length?`<div class="mgrid">${b.memos.map(memoCard).join('')}</div>`:'<div class="empty">把寵物養大，牠會留下紀念品喔！</div>'}</div>`}
+function badgeInfo(id){const x=BDG.list.find(b=>b.id===id);if(!x)return;
+  ask(`<div style="text-align:center">${medal(x.icon,x.tier,96,x.id)}<h3>${esc(x.name)}</h3><div class="mu">${esc(x.what)}</div></div>
+  ${x.special?'<div style="text-align:center;margin-top:8px">從舊 App 就一起努力的元老，獨一無二！</div>':`<div style="margin-top:10px">目前：<b>${n(x.value)}</b></div>${x.tiers.map((t,i)=>`<div class="it" style="display:flex;justify-content:space-between;padding:6px 0"><span>${medal(x.icon,i+1,30,x.id)} ${TIERN[i+1]}</span><b>${n(t)} ${x.value>=t?'✅':''}</b></div>`).join('')}
+  ${x.next?`<div style="text-align:center;margin-top:8px">再 <b>${n(x.next-x.value)}</b> 就能升級成 ${TIERN[x.tier+1]}！</div>`:'<div style="text-align:center;margin-top:8px">🎉 已經是最高等級了！</div>'}`}`,null,'關閉')}
+// 新徽章慶祝：跟上次看過的比較
+function badgeCheck(b,me){if(!b)return;let seen={},first=false;try{const v=localStorage.getItem('bdg_'+me);if(v)seen=JSON.parse(v);else first=true}catch(e){return}
+  const now={};b.list.forEach(x=>now[x.id]=x.tier);const up=b.list.filter(x=>x.tier>(seen[x.id]||0));
+  try{localStorage.setItem('bdg_'+me,JSON.stringify(now))}catch(e){}
+  if(!up.length)return;
+  setTimeout(()=>ask(`${confetti()}<div style="text-align:center;position:relative"><div style="font-size:40px">🎉</div><h3>${first?'你的徽章':'拿到新徽章了！'}</h3><div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px">${up.map(x=>`<div style="width:92px" class="pop">${medal(x.icon,x.tier,76,x.id)}<div class="bn">${esc(x.name)}</div><div class="bt t${x.tier}">${x.special?'特別徽章':TIERN[x.tier]}</div></div>`).join('')}</div></div>`,null,'太棒了！'),600)}
+// 排行榜
+let RK={p:'week'};
+async function loadRank(){chips($('#rkSeg'),['week','month','lastweek','lastmonth','all'],RK.p,v=>{RK.p=v;loadRank()},v=>({week:'本週',month:'本月',lastweek:'上週',lastmonth:'上月',all:'全部'})[v]);
+  $('#rkBody').innerHTML='<div class="card empty">⏳ 讀取中…</div>';let d;try{d=await call('getRanks',{period:RK.p})}catch(e){return toast(errMsg(e),1)}
+  const md=['🥇','🥈','🥉'];
+  $('#rkBody').innerHTML=`<div class="mu" style="margin:0 4px 8px">${d.label}${RK.p==='all'?'':'：'+d.from.slice(5)+' ～ '+d.to.slice(5)}</div>`+d.boards.map(bd=>{const max=Math.max(1,...bd.rows.map(r=>r.value));
+    return `<div class="card"><h3>${bd.icon} ${bd.name}</h3>${bd.rows.map((r,i)=>{const p=d.people[r.kid]||{nick:r.kid};return `<div class="rk ${r.kid===S.me?'me':''}"><span class="rm">${r.value?md[i]||'':''}</span>${avatar(p,32)}<div class="rnm">${esc(p.nick)}<div class="rbar"><i style="width:${Math.round(r.value/max*100)}%"></i></div></div><b>${n(r.value)}</b><span class="mu">${bd.unit}</span></div>`}).join('')}</div>`}).join('');
+  loadImgs(Object.values(d.people).map(p=>p.photo))}
+// 寵物狀態卡（爸媽看的、小島首頁用）
+function petBars(v){const bar=(ic,lab,val,c)=>`<div style="display:flex;align-items:center;gap:6px;font-size:13px;margin:3px 0"><span style="width:58px">${ic} ${lab}</span><div class="rbar" style="flex:1;height:10px;margin:0"><i style="width:${val}%;background:${val<25?'#f0705f':c}"></i></div><b style="width:28px;text-align:right">${val}</b></div>`;
+  return bar('🍙','飽足',v.full,'#ffb020')+bar('😊','心情',v.mood,'#ff8fb1')+bar('🫧','清潔',v.clean,'#5ec2f2')}
+</script>
+<script>
+let S={},st={tab:'home',rec:'p',pCat:'',kKid:'',kType:'獎金',kCat:'',sync:true,kid:'',kidView:'bank',depMonths:6,book:'__parent',noFixed:false,range:'this',stats:null,payer:'',sPayer:''},INB=null,CFG=null,recs=[],mems=[];
+const PF=k=>(S.profiles||{})[k]||{icon:'柴犬',nick:k};
+const av=(k,s)=>avatar(PF(k),s||24);
+const kidLab=k=>av(k,22)+' '+esc(k);
+const D5=['🍃','🐌','🌧️','🌪️','🌋'];
+
+/* ===== 導覽 ===== */
+const TABS=[['home','🏠','海星家'],['rec','✏️','記帳'],['kids','🧒','郗芝炘團隊'],['forum','💬','廣場'],['stat','📊','統計'],['set','⚙️','設定']];
+function buildDock(){$('#dock').innerHTML=TABS.map(t=>`<div data-p="${t[0]}" class="${t[0]===st.tab?'on':''}"><b>${t[1]}</b>${t[2]}<i class="badge hidden" id="bd-${t[0]}"></i></div>`).join('');$$('#dock>div').forEach(d=>d.onclick=()=>go(d.dataset.p))}
+function go(p){st.tab=p;$$('#dock>div').forEach(d=>d.classList.toggle('on',d.dataset.p===p));$$('.page').forEach(s=>s.classList.toggle('on',s.id==='pg-'+p));window.scrollTo(0,0);
+  if(p==='home'&&Date.now()-H_AT>20000)loadHome();if(p==='forum')loadForum();if(p==='rec'){if(st.rec==='r')loadRecur();else loadRecent()}if(p==='kids')loadKid();if(p==='stat')loadStats();if(p==='set')loadSet()}
+
+/* ===== 總覽＋審核收件匣 ===== */
+let H_AT=0,LAST_MS=null;
+async function loadHome(pre){
+  const [from,to]=rangeOf('this');
+  let inb,ms;if(pre&&pre.inbox&&(pre.ms||LAST_MS)){inb=pre.inbox;ms=pre.ms||LAST_MS}else{try{[inb,ms]=await Promise.all([call('getInbox'),call('getStats',{book:'__parent',from,to,noFixed:false})])}catch(e){return toast(errMsg(e),1)}}
+  H_AT=Date.now();LAST_MS=ms;INB=inb;S.profiles=Object.assign(S.profiles||{},inb.profiles);
+  const tasks=inb.items.filter(x=>x.status==='待審核'),buys=inb.items.filter(x=>x.status==='待兌現');
+  const bd=$('#bd-home');bd.textContent=inb.items.length;bd.classList.toggle('hidden',!inb.items.length);
+  $('#homeTop').innerHTML=`<div class="row"><div class="hi">${av(S.me,30)} 你好，${esc(PF(S.me).nick||S.me)}</div><small>${S.today}</small></div>
+   <div class="hi" style="margin-top:12px">本月支出</div><div class="bal">NT$ ${n(ms.total)}</div><small>${ms.cats.slice(0,3).map(c=>esc(c.cat)+' '+n(c.sum)).join('・')||'這個月還沒有支出'}</small>
+   <div style="margin-top:6px;font-size:13px">${S.parents.map(p=>esc(PF(p).nick||p)+' '+n(ms.items.filter(x=>x.payer===p).reduce((a,x)=>a+x.amount,0))).join('　')}</div>`;
+  $('#homeBody').innerHTML=`
+  ${pinsHtml()}
+  <div class="card"><div class="row"><h3>📥 審核收件匣 ${inb.items.length?`<span class="pill">${inb.items.length}</span>`:''}</h3>${tasks.length>1?'<button class="sbtn" onclick="okAll()">全部通過</button>':''}</div>
+   ${inb.items.length?'':'<div class="empty">沒有要處理的事 ✨</div>'}
+   ${tasks.map(x=>`<div class="it"><div class="ic">${av(x.kid,34)}</div><div class="t"><b>${esc(x.kid)}</b> 完成${x.type==='團隊'?'🤝合作任務':''}「${esc(x.name)}」<div class="mu">${x.time.slice(5)}・+${x.exp} 經驗・+${n(x.coins)} 金幣${x.ntd?`・<b class="plus">+${n(x.ntd)} 元</b>`:''}${x.note?'・'+esc(x.note):''}</div></div>
+     <div class="acts"><button class="ok" onclick="rv('${x.id}',1)">通過</button><button class="no" onclick="rv('${x.id}',0)">退回</button></div></div>`).join('')}
+   ${buys.map(x=>`<div class="it"><div class="ic">${av(x.kid,34)}</div><div class="t"><b>${esc(x.kid)}</b> ${x.type==='兌換'?'要兌換':'買了'}「${esc(x.name)}」<div class="mu">${x.time.slice(5)}・${n(-x.coins)} 金幣${x.type==='兌換'?`・存進存摺 ${n(x.ntd)} 元`:''}</div></div>
+     <div class="acts"><button class="ok" onclick="rv('${x.id}',1)">${x.type==='兌換'?'存入':'兌現'}</button><button class="no" onclick="rv('${x.id}',0)">退回</button></div></div>`).join('')}</div>
+  <div class="card"><h3>🏝️ 小孩們</h3>${S.kids.map(k=>{const g=inb.kids[k]||{};return `<div class="it" onclick="st.kid='${esc(k)}';st.kidView='game';go('kids')"><div class="ic">${av(k,38)}</div>
+   <div class="t"><b>${esc(PF(k).nick||k)}</b> <span class="mu">${esc(k)}</span><div class="mu">Lv.${g.lv||1} ${titleOf(g.lv||1)}${g.pending?`・⏳ ${g.pending} 個待審核`:''}</div></div>
+   <div style="text-align:right"><b class="gold">🪙 ${n(g.coins)}</b><div class="mu">💵 ${n(g.ntd)} 元</div></div></div>`}).join('')}</div>`;
+  loadImgs(Object.values(S.profiles).map(p=>p.photo))}
+async function rv(id,ok){const x=INB.items.find(i=>i.id===id);
+  if(!ok&&!await ask(`<h3>退回這一筆？</h3>${esc(x.kid)}：${esc(x.name)}${x.status==='待兌現'?'<br><span class="mu">金幣會還給小孩</span>':''}`,'退回'))return;
+  const r=await run(null,'review',{id,ok:!!ok});if(r)loadHome({inbox:r.inbox})}
+async function okAll(){if(!await ask('<h3>全部通過？</h3>所有待審核的任務都會通過（購買不會）','全部通過'))return;const r=await run(null,'approveAll');if(r)loadHome({inbox:r.inbox})}
+
+/* ===== 發金幣／處罰／團隊 ===== */
+let pickKids=[];
+function kidPicker(){return `<div class="chips" id="pk">${S.kids.map(k=>`<button type="button" class="chip ${pickKids.includes(k)?'on':''}" onclick="togKid('${esc(k)}',this)">${kidLab(k)}</button>`).join('')}</div>`}
+function togKid(k,el){pickKids=pickKids.includes(k)?pickKids.filter(x=>x!==k):pickKids.concat(k);el.classList.toggle('on')}
+// 獎勵、處罰合併成一個視窗，用圖示切換
+let AW={};
+async function awardBox(kind,kid){pickKids=kid?[kid]:[];AW={kind:kind||'獎勵'};
+  if(!await ask(`<h3>🎁 獎勵 ／ ⚠️ 處罰</h3><div class="chips" id="aw_k"></div><label>給誰</label>${kidPicker()}<label id="aw_nl">名稱</label><input id="aw_n">
+   <div class="two"><div><label id="aw_el">經驗</label><input id="aw_e" type="number" inputmode="numeric" value="0"></div><div><label id="aw_cl">金幣</label><input id="aw_c" type="number" inputmode="numeric" value="0"></div></div>
+   <div class="mu" id="aw_h"></div>`,'確定',undefined,drawAw))return;
+  const r=await run(null,'award',{kids:pickKids,kind:AW.kind,name:$('#aw_n').value,exp:+$('#aw_e').value,coins:+$('#aw_c').value});
+  if(!r)return;if(st.tab==='home')loadHome({inbox:r.inbox});else loadKid()}
+function drawAw(){const pun=AW.kind==='處罰';chips($('#aw_k'),['獎勵','處罰'],AW.kind,v=>{AW.kind=v;drawAw()},v=>v==='處罰'?'⚠️ 處罰':'🎁 獎勵');
+  $('#aw_nl').textContent=pun?'原因':'名稱';$('#aw_n').placeholder=pun?'例如：沒洗碗':'例如：幫忙搬東西';
+  $('#aw_el').textContent=pun?'扣經驗':'加經驗';$('#aw_cl').textContent=pun?'扣金幣':'加金幣';
+  $('#aw_h').textContent=pun?'不想扣的就填 0。扣經驗等級會下降，但小島蓋好的東西不會消失。':'';$('#mYes').textContent=pun?'確定處罰':'發出獎勵'}
+
+/* ===== 記帳 ===== */
+function drawRec(){chips($('#recSeg'),['p','k','r'],st.rec,v=>{st.rec=v;drawRec();if(v==='p')loadRecent();if(v==='r')loadRecur()},v=>({p:'海星家支出',k:'郗芝炘獎金',r:'每月固定支出'})[v]);
+  $('#recP').classList.toggle('hidden',st.rec!=='p');$('#recK').classList.toggle('hidden',st.rec!=='k');$('#recR').classList.toggle('hidden',st.rec!=='r');
+  chips($('#pCats'),S.cats,st.pCat,v=>{st.pCat=v;drawRec()},c=>'<b>'+em(c)+'</b>'+esc(c));
+  chips($('#pPayer'),S.parents,st.payer,v=>{st.payer=v;drawRec()},v=>av(v,22)+' '+esc(PF(v).nick||v));
+  chips($('#kKids'),S.kids,st.kKid,v=>{st.kKid=v;drawRec()},kidLab);
+  chips($('#kType'),['獎金','花錢'],st.kType,v=>{st.kType=v;drawRec()},v=>TYPE[v]+' '+v);
+  chips($('#kCats'),S.cats,st.kCat,v=>{st.kCat=v;drawRec()},c=>'<b>'+em(c)+'</b>'+esc(c));
+  $('#kSpend').classList.toggle('hidden',st.kType!=='花錢');$('#kBtn').textContent=st.kType==='獎金'?'發零用錢（台幣）':'記下花費'}
+async function sendParent(btn){const a=$('#pAmt').value;if(!(a>0))return toast('請輸入金額',1);
+  if(await run(btn,'addParentExpense',{date:$('#pDate').value,amount:a,cat:st.pCat,note:$('#pNote').value,payer:st.payer})!==null){$('#pAmt').value='';$('#pNote').value='';loadRecent()}}
+async function sendKid(btn){const a=$('#kAmt').value;if(!(a>0))return toast('請輸入金額',1);
+  if(await run(btn,'addChildRecord',{date:$('#kDate').value,kid:st.kKid,type:st.kType,amount:a,cat:st.kCat,note:$('#kNote').value,syncParent:st.sync})!==null){$('#kAmt').value='';$('#kNote').value=''}}
+let delItems={};
+function delBtn(it){const id='d'+Math.random().toString(36).slice(2);delItems[id]=it;return `<button class="del" onclick="delRec('${id}')">🗑️</button>`}
+async function delRec(id){const it=delItems[id];const sync=it.book==='kid'&&it.type==='花錢';
+  if(!await ask(`<h3>確定要刪除嗎？</h3>${it.date}　${esc(it.label||'')}<br>金額 <b>${n(it.amount)}</b> 元${sync?'<br><span class="mu">同步到爸媽帳本的那一筆也會一起刪除。</span>':''}<br><span class="mu">刪除後無法復原。</span>`,'刪除'))return;
+  if(await run(null,'deleteRecord',{book:it.book,row:it.row,date:it.date,amount:it.amount})===null)return;
+  if(st.tab==='rec')loadRecent();if(st.tab==='kids')loadKid();if(st.tab==='stat')loadStats()}
+async function loadRecent(){$('#recentList').innerHTML='<div class="empty">讀取中…</div>';let r;try{r=await call('recentParent')}catch(e){return toast(errMsg(e),1)}
+  $('#recentList').innerHTML=r.map(x=>`<div class="it"><div class="ic">${em(x.cat)}</div><div class="t">${esc(x.note)||esc(x.cat)}<div class="mu">${x.date.slice(5)}・${esc(x.cat)}・${payLab(x)}${x.src&&x.src!=='手動'?'・'+esc(x.src):''}</div></div>
+   <b>-${n(x.amount)}</b>${editBtn(x)}</div>`).join('')||'<div class="empty">還沒有紀錄</div>'}
+/* ===== 修改爸媽帳本的一筆 ===== */
+function payLab(x){return x.payer?av(x.payer,16)+' '+esc(x.payer):(x.src==='小孩消費'?'小孩花的':'<span class="red">未分支出者</span>')}
+function editBtn(x){const id='e'+Math.random().toString(36).slice(2);delItems[id]=x;return `<button class="del" onclick="editRec('${id}')">✏️</button>`}
+let ED={};
+async function editRec(id){const x=delItems[id];ED={cat:x.cat,payer:x.payer||''};
+  const ok=await ask(`<h3>✏️ 修改這筆支出</h3><label>金額</label><input id="ed_a" class="amt" type="number" inputmode="numeric" value="${x.amount}">
+   <label>分類</label><div class="chips cats" id="ed_c"></div><label>誰付的</label><div class="chips" id="ed_p"></div>
+   <div class="two"><div><label>日期</label><input id="ed_d" type="date" value="${x.date}"></div><div><label>備註</label><input id="ed_n" value="${esc(x.note)}"></div></div>
+   ${x.src==='小孩消費'?'<div class="mu">這筆是小孩記帳同步過來的，這裡只會改爸媽帳本，小孩存摺不會變。</div>':''}
+   <button type="button" class="btn red" onclick="$('#modal').classList.add('hidden');delRec('${id}')">🗑️ 刪除這筆</button>`,'儲存修改',undefined,drawEd);
+  if(!ok)return;
+  const d={row:x.row,date:x.date,amount:x.amount,newDate:$('#ed_d').value,newAmount:$('#ed_a').value,cat:ED.cat,note:$('#ed_n').value,payer:ED.payer};
+  if(await run(null,'editParentRecord',d)!==null){if(st.tab==='rec')loadRecent();if(st.tab==='stat')loadStats();if(st.tab==='home')loadHome()}}
+function drawEd(){chips($('#ed_c'),S.cats,ED.cat,v=>{ED.cat=v;drawEd()},c=>'<b>'+em(c)+'</b>'+esc(c));chips($('#ed_p'),S.parents.concat(['']),ED.payer,v=>{ED.payer=v;drawEd()},v=>v?av(v,22)+' '+esc(PF(v).nick||v):'不指定')}
+
+/* ===== 修改小孩存摺的一筆（只有爸媽） ===== */
+function kidEditBtn(h){const id='k'+Math.random().toString(36).slice(2);delItems[id]=Object.assign({},h,{kid:st.kid});delItems[id+'d']={book:'kid',type:h.type,row:h.row,date:h.date,amount:h.raw,label:st.kid+' '+h.type};return `<button class="del" onclick="editKidRec('${id}')">✏️</button>`}
+let KE={};
+async function editKidRec(id){const h=delItems[id];KE={cat:h.cat||S.cats[0]};const spend=h.type==='花錢';
+  const ok=await ask(`<h3>✏️ 修改 ${esc(h.kid)} 的${esc(h.type)}</h3><label>金額</label><input id="ke_a" class="amt" type="number" inputmode="numeric" value="${h.raw}">
+   ${spend?'<label>分類</label><div class="chips cats" id="ke_c"></div>':''}
+   <div class="two"><div><label>日期</label><input id="ke_d" type="date" value="${h.date}"></div><div><label>備註</label><input id="ke_n" value="${esc(h.note)}"></div></div>
+   ${spend?'<div class="mu">爸媽帳本裡同步的那一筆也會一起改。</div>':''}
+   <button type="button" class="btn red" onclick="$('#modal').classList.add('hidden');delRec('${id}d')">🗑️ 刪除這筆</button>`,'儲存修改',undefined,spend?drawKE:null);
+  if(!ok)return;
+  if(await run(null,'editKidRecord',{row:h.row,date:h.date,amount:h.raw,newDate:$('#ke_d').value,newAmount:$('#ke_a').value,cat:KE.cat,note:$('#ke_n').value})!==null)loadKid()}
+function drawKE(){chips($('#ke_c'),S.cats,KE.cat,v=>{KE.cat=v;drawKE()},c=>'<b>'+em(c)+'</b>'+esc(c))}
+/* ===== 小孩：存摺＋小島遊戲 ===== */
+async function loadKid(){if(!st.kid)st.kid=S.kids[0];
+  chips($('#kidSel'),S.kids,st.kid,v=>{st.kid=v;loadKid()},kidLab);
+  chips($('#kidSeg'),['bank','game','badge','rank'],st.kidView,v=>{st.kidView=v;loadKid()},v=>({bank:'💵 台幣存摺',game:'🏝️ 小島',badge:'🏅 徽章寵物',rank:'🏆 排行榜'})[v]);
+  $('#kidSel').classList.toggle('hidden',st.kidView==='rank');
+  if(st.kidView==='rank'){$('#kidBody').innerHTML='<div class="chips" id="rkSeg"></div><div style="height:8px"></div><div id="rkBody"></div>';return loadRank()}
+  $('#kidBody').innerHTML='<div class="card empty">讀取中…</div>';
+  if(st.kidView==='game')return loadKidGame();
+  if(st.kidView==='badge')return loadKidBadge();
+  let r;try{r=await call('getPassbook',st.kid)}catch(e){return toast(errMsg(e),1)}
+  $('#kidBody').innerHTML=`<div class="card hero2"><div class="mu">活存餘額</div><div class="bal2">NT$ ${n(r.balance)}</div><div class="mu">定存中 ${n(r.depositTotal)} 元</div></div>
+  <div class="card"><div class="row"><h3>存定存</h3><button class="sbtn" onclick="bankCfg()">⚙️ 定存設定</button></div><div class="mu">年利率 ${(S.rate*100).toFixed(1)}%・提前領出利息打 ${Math.round(S.discount*100)/10} 折・最少 ${n(S.minDep)} 元<br>小孩也可以在自己的存摺頁自己存、自己解約</div>
+   <label>金額</label><input id="dAmt" type="number" inputmode="numeric" placeholder="0" oninput="depPrev()"><label>期間</label><div class="chips" id="dMon"></div>
+   <div id="dPrev" class="mu"></div><button class="btn" onclick="deposit(this)">存入定存</button></div>
+  <div class="card"><h3>定期存款</h3>${r.deposits.map(d=>`<div class="dep"><div class="row"><b>NT$ ${n(d.principal)}</b><span class="mu">${d.months} 個月</span><button class="sbtn" onclick="withdraw('${esc(d.id)}')">領出</button></div>
+   <div class="prog"><i style="width:${Math.round(d.progress*100)}%"></i></div><div class="mu">${d.start} → ${d.end}・到期利息 +${n(d.full)}</div></div>`).join('')||'<div class="empty">沒有定存</div>'}</div>
+  <div class="card"><h3>交易明細</h3>${r.history.map(h=>`<div class="it"><div class="ic">${TYPE[h.type]||'•'}</div><div class="t">${esc(h.note)||esc(h.type)}<div class="mu">${h.date.slice(5)}・${esc(h.type)}${h.cat?'・'+esc(h.cat):''}</div></div>
+   <b class="${h.amount>=0?'plus':''}">${h.amount>=0?'+':''}${n(h.amount)}</b>${(h.type==='獎金'||h.type==='花錢')?kidEditBtn(h):''}</div>`).join('')||'<div class="empty">還沒有紀錄</div>'}</div>`;drawMon()}
+async function bankCfg(){if(!await ask(`<h3>⚙️ 定存設定</h3><label>年利率（%）</label><input id="bc_r" type="number" step="0.1" inputmode="decimal" value="${Math.round(S.rate*1000)/10}">
+  <label>提前解約利息打幾折（0.8 = 八折，0 = 沒有利息）</label><input id="bc_d" type="number" step="0.1" inputmode="decimal" value="${S.discount}">
+  <label>最低存款金額（元）</label><input id="bc_m" type="number" inputmode="numeric" value="${S.minDep}"><div class="mu">只影響之後新存的定存，已經存的不會變</div>`,'儲存'))return;
+  const d={rate:$('#bc_r').value,discount:$('#bc_d').value,min:$('#bc_m').value};
+  if(await run(null,'saveBankCfg',d)!==null){S.rate=+d.rate/100;S.discount=+d.discount;S.minDep=Math.round(+d.min);loadKid()}}
+function drawMon(){chips($('#dMon'),[1,3,6,12],st.depMonths,v=>{st.depMonths=v;drawMon()},v=>v+' 個月');depPrev()}
+function depPrev(){const a=+($('#dAmt')||{}).value||0;$('#dPrev').innerHTML=`到期日 ${addMonths(S.today,st.depMonths)}${a>0?`・到期利息 +${n(Math.round(a*S.rate*st.depMonths/12))} 元`:''}`}
+async function deposit(btn){const a=$('#dAmt').value;if(!(a>0))return toast('請輸入金額',1);if(await run(btn,'createDeposit',{kid:st.kid,amount:a,months:st.depMonths})!==null)loadKid()}
+async function withdraw(id){let p;try{p=await call('previewWithdraw',id)}catch(e){return toast(errMsg(e),1)}
+  const html=p.early?`<h3>還沒到期</h3>到期日 ${p.end}。現在領出：本金 ${n(p.principal)} + 利息 ${n(p.interest)}（存滿 ${p.months} 個月，打 ${S.discount*10} 折）<br>到期可拿 ${n(p.full)}，會少拿 <b class="red">${n(p.full-p.interest)}</b> 元。確定嗎？`:`<h3>定存到期</h3>本金 ${n(p.principal)} + 利息 ${n(p.interest)}，領回活存？`;
+  if(!await ask(html,'領出'))return;if(await run(null,'withdrawDeposit',id)!==null)loadKid()}
+function logBtn(x){const id='g'+Math.random().toString(36).slice(2);delItems[id]=x;return `<button class="del" onclick="logBox('${id}')">✏️</button>`}
+async function logBox(id){const x=delItems[id];
+  const ok=await ask(`<h3>✏️ 修改 ${esc(x.kid)} 的紀錄</h3><div class="mu">${x.time}・${esc(x.type)}・${esc(x.status)}</div><label>名稱</label><input id="lg_n" value="${esc(x.name)}">
+   <div class="two"><div><label>經驗（扣的寫負數）</label><input id="lg_e" type="number" inputmode="numeric" value="${x.exp}"></div><div><label>金幣（扣的寫負數）</label><input id="lg_c" type="number" inputmode="numeric" value="${x.coins}"></div></div>
+   <label>備註</label><input id="lg_t" value="${esc(x.note)}">${x.type==='兌換'&&x.status==='已兌現'?'<div class="mu">這筆已經存進存摺，改這裡不會改到存摺的錢。</div>':''}
+   <button type="button" class="btn red" onclick="$('#modal').classList.add('hidden');delLog('${id}')">🗑️ 刪除這筆</button>`,'儲存修改');
+  if(!ok)return;if(await run(null,'editLog',{id:x.id,name:$('#lg_n').value,exp:$('#lg_e').value,coins:$('#lg_c').value,note:$('#lg_t').value})!==null)loadKidGame()}
+async function delLog(id){const x=delItems[id];if(!await ask(`<h3>刪除這筆紀錄？</h3>${esc(x.kid)}：${esc(x.name)}<br>金幣、經驗會跟著扣回來。<br><span class="mu">刪除後無法復原。</span>`,'刪除'))return;
+  if(await run(null,'deleteLog',{id:x.id})!==null)loadKidGame()}
+async function loadKidBadge(){let r;try{r=await call('kidGame',st.kid)}catch(e){return toast(errMsg(e),1)}const v=r.pet&&r.pet.now;
+  $('#kidBody').innerHTML=`<div class="card"><h3>🐾 寵物</h3>${v?`<div style="display:flex;gap:10px;align-items:center">${petSvg(v.species,v.stage,{shiny:v.shiny,sick:v.sick,mood:v.mood,poops:v.poops},96)}<div style="flex:1"><b>${esc(v.name)}</b> <span class="mu">${v.typeName}・${v.stageName}${v.shiny?' ✨':''}</span>
+   <div class="mu">${v.stage?'第 '+(v.ageDays+1)+' 天・還有 '+v.daysLeft+' 天長大・照顧分數 '+v.avg:'還要 '+Math.ceil(v.hatchIn)+' 小時孵化'}${v.sick?'・<b class="red">生病中</b>':''}</div>${v.stage?petBars(v):''}</div></div>`:'<div class="empty">還沒有養寵物</div>'}</div>${r.badges?badgeWall(r.badges):''}`}
+async function loadKidGame(){let r;try{r=await call('kidGame',st.kid)}catch(e){return toast(errMsg(e),1)}const g=r.me;
+  $('#kidBody').innerHTML=`<div class="card hero2 row"><div>${av(st.kid,56)}</div><div style="flex:1"><b>${esc(PF(st.kid).nick||st.kid)}</b><div class="mu">Lv.${g.lv} ${titleOf(g.lv)}・${eraOf(g.maxLv)[1]}</div>
+   <div class="prog"><i style="width:${Math.round(g.into/g.need*100)}%;background:#ffb020"></i></div><div class="mu">${g.into}/${g.need} 經驗・累積 ${n(g.exp)}</div></div><div style="text-align:right"><b class="gold" style="font-size:22px">🪙 ${n(g.coins)}</b></div></div>
+  <button class="btn" onclick="awardBox('獎勵','${esc(st.kid)}')">🎁 獎勵 ／ ⚠️ 處罰</button>
+  <div class="card"><h3>遊戲紀錄</h3>${r.records.map(x=>`<div class="it" style="${x.status==='退回'||x.status==='取消'?'opacity:.5':''}"><div class="t">${esc(x.name)}<div class="mu">${x.time.slice(5)}・${esc(x.type)}・${esc(x.status)}${x.by?'・'+esc(x.by):''}${x.note?'・'+esc(x.note):''}</div></div>
+   <div style="text-align:right">${x.coins?`<b class="${x.coins>0?'gold':'red'}">${x.coins>0?'+':''}${n(x.coins)}</b>`:''}${x.exp?`<div class="mu">${x.exp>0?'+':''}${x.exp} 經驗</div>`:''}</div>${logBtn(x)}</div>`).join('')||'<div class="empty">還沒有紀錄</div>'}</div>`;loadImgs([PF(st.kid).photo])}
+
+/* ===== 統計 ===== */
+function rangeOf(k){let y=+S.today.slice(0,4),m=+S.today.slice(5,7);if(k==='last'){m--;if(m<1){m=12;y--}}const p=v=>String(v).padStart(2,'0');return [`${y}-${p(m)}-01`,`${y}-${p(m)}-${p(new Date(y,m,0).getDate())}`]}
+function setRange(k){st.range=k;const r=rangeOf(k);$('#sFrom').value=r[0];$('#sTo').value=r[1];drawQuick()}
+function drawQuick(){chips($('#sQuick'),['this','last'],st.range,v=>{setRange(v);loadStats()},v=>v==='this'?'本月':'上個月')}
+async function loadStats(){chips($('#sBook'),['__parent'].concat(S.kids),st.book,v=>{st.book=v;loadStats()},v=>v==='__parent'?'海星家':kidLab(v));
+  chips($('#sPayer'),[''].concat(S.parents),st.sPayer,v=>{st.sPayer=v;loadStats()},v=>v?av(v,20)+' '+esc(PF(v).nick||v):'全部');
+  $('#sFixedBox').classList.toggle('hidden',st.book!=='__parent');$('#sPayBox').classList.toggle('hidden',st.book!=='__parent');const from=$('#sFrom').value,to=$('#sTo').value;if(!from||!to)return;if(from>to)return toast('開始日期不能晚於結束日期',1);
+  let r;try{r=await call('getStats',{book:st.book,from,to,noFixed:st.book==='__parent'&&st.noFixed,payer:st.book==='__parent'?st.sPayer:''})}catch(e){return toast(errMsg(e),1)}st.stats=r;
+  $('#statBody').innerHTML=`<div class="card">${pie(r.cats,r.total,'#fff')}${r.cats.map((c,i)=>`<div class="it" onclick="showCat(${i})"><div class="t"><span class="dot" style="background:${COL[i%COL.length]}"></span>${em(c.cat)} ${esc(c.cat)}</div><b>${n(c.sum)}</b><span class="mu" style="width:42px;text-align:right">${Math.round(c.sum/r.total*100)}%</span></div>`).join('')}</div><div id="sDetail"></div>`}
+function showCat(i){const c=st.stats.cats[i],items=st.stats.items.filter(x=>x.cat===c.cat);
+  $('#sDetail').innerHTML=`<div class="card"><h3>${em(c.cat)} ${esc(c.cat)}（${items.length} 筆）</h3>${items.map(x=>`<div class="it"><div class="t">${esc(x.note)||'（沒有備註）'}<div class="mu">${x.date}${x.book==='parent'?'・'+payLab(x):''}${x.src&&x.src!=='手動'?'・'+esc(x.src):''}</div></div><b>${n(x.amount)}</b>${x.book==='parent'?editBtn(x):delBtn({book:x.book,type:'花錢',row:x.row,date:x.date,amount:x.amount,label:x.note||x.cat})}</div>`).join('')}</div>`;$('#sDetail').scrollIntoView({behavior:'smooth'})}
+
+/* ===== 設定 ===== */
+async function loadSet(){chips($('#setSeg'),['task','shop','fam'],st.set||'task',v=>{st.set=v;loadSet()},v=>({task:'任務',shop:'商品',fam:'家人'})[v]);
+  const v=st.set||'task';$('#setBody').innerHTML='<div class="card empty">讀取中…</div>';
+  if(v==='task'||v==='shop'){try{CFG=await call('gameConfig')}catch(e){return toast(errMsg(e),1)}}
+  if(v==='task')$('#setBody').innerHTML=`<button class="btn" onclick="taskBox()">＋ 新增任務</button><div class="card">${CFG.tasks.map((t,i)=>`<div class="it" style="${t.status==='下架'?'opacity:.45':''}"><div class="ic">${t.type==='團隊'?'🤝':D5[t.diff-1]}</div>
+   <div class="t">${esc(t.name)}<div class="mu">${t.type==='團隊'?'團隊・':''}難度 ${t.diff}・+${t.exp} 經驗・+${n(t.coins)} 金幣${t.cash?`・<b class="plus">+${n(t.cash)} 元</b>`:''}${t.status==='下架'?'・已下架':''}</div></div><button class="sbtn" onclick="taskBox(${i})">編輯</button></div>`).join('')}</div>`;
+  if(v==='shop'){$('#setBody').innerHTML=`<button class="btn" onclick="prodBox()">＋ 新增商品</button><div class="card">${CFG.shop.map((p,i)=>`<div class="it" style="${p.status==='下架'?'opacity:.45':''}"><div class="ic">${p.photo?imgTag(p.photo,'thumb'):(p.type==='兌換'?'💵':'🎁')}</div>
+   <div class="t">${esc(p.name)}<div class="mu">${n(p.price)} 金幣${p.type==='兌換'?`・換 ${n(p.ntd)} 元`:''}${p.status==='下架'?'・已下架':''}</div></div><button class="sbtn" onclick="prodBox(${i})">編輯</button></div>`).join('')}</div>`;loadImgs(CFG.shop.map(p=>p.photo))}
+  if(v==='fam')loadMembers()}
+let TB={};
+async function taskBox(i){const t=i===undefined?{name:'',exp:5,coins:30,diff:2,type:'個人',status:'上架'}:CFG.tasks[i];TB=Object.assign({},t);
+  if(!await ask(`<h3>${t.id?'編輯任務':'新增任務'}</h3><label>任務名稱</label><input id="tb_n" value="${esc(t.name)}">
+   <div class="two"><div><label>經驗</label><input id="tb_e" type="number" value="${t.exp}"></div><div><label>金幣</label><input id="tb_c" type="number" value="${t.coins}"></div></div>
+   <label>現金獎勵（元，選填；通過時直接存進存摺）</label><input id="tb_m" type="number" inputmode="numeric" value="${t.cash||''}" placeholder="0">
+   <label>難度</label><div class="chips">${[1,2,3,4,5].map(d=>`<button type="button" class="chip ${t.diff===d?'on':''}" onclick="TB.diff=${d};this.parentNode.querySelectorAll('.chip').forEach(b=>b.classList.remove('on'));this.classList.add('on')">${D5[d-1]}<br>${d}</button>`).join('')}</div>
+   <label>類型</label><div class="chips">${['個人','團隊'].map(x=>`<button type="button" class="chip ${t.type===x?'on':''}" onclick="TB.type='${x}';this.parentNode.querySelectorAll('.chip').forEach(b=>b.classList.remove('on'));this.classList.add('on')">${x}</button>`).join('')}</div>
+   <label>狀態</label><div class="chips">${['上架','下架'].map(x=>`<button type="button" class="chip ${t.status===x?'on':''}" onclick="TB.status='${x}';this.parentNode.querySelectorAll('.chip').forEach(b=>b.classList.remove('on'));this.classList.add('on')">${x}</button>`).join('')}</div>${t.id?`<button type="button" class="btn red" onclick="$('#modal').classList.add('hidden');delTask('${t.id}')">🗑️ 刪除這個任務</button>`:''}`,'儲存'))return;
+  TB.name=$('#tb_n').value;TB.exp=$('#tb_e').value;TB.coins=$('#tb_c').value;TB.cash=$('#tb_m').value;if(await run(null,'saveTask',TB)!==null)loadSet()}
+async function delTask(id){const t=CFG.tasks.find(x=>x.id===id);if(!await ask(`<h3>刪除任務「${esc(t.name)}」？</h3>以前做過的紀錄不會不見。<br><span class="mu">只想暫時不讓小孩看到，可以改用「下架」。</span>`,'刪除'))return;if(await run(null,'deleteTask',{id})!==null)loadSet()}
+async function delProd(id){const p=CFG.shop.find(x=>x.id===id);if(!await ask(`<h3>刪除商品「${esc(p.name)}」？</h3>以前買過的紀錄不會不見。<br><span class="mu">只想暫時不賣，可以改用「下架」。</span>`,'刪除'))return;if(await run(null,'deleteProduct',{id})!==null)loadSet()}
+let PB={};
+async function prodBox(i){const p=i===undefined?{name:'',price:100,type:'商品',ntd:'',status:'上架',photo:''}:CFG.shop[i];PB=Object.assign({},p,{photoData:'',clearPhoto:false});
+  if(!await ask(`<h3>${p.id?'編輯商品':'新增商品'}</h3><div id="pb_img" class="pbimg">${p.photo?imgTag(p.photo,'big'):'<span>📷</span>'}</div>
+   <div class="two"><button type="button" class="sbtn" onclick="pbPhoto()">上傳照片</button><button type="button" class="sbtn" onclick="PB.clearPhoto=true;PB.photoData='';$('#pb_img').innerHTML='<span>📷</span>'">移除照片</button></div>
+   <label>商品名稱</label><input id="pb_n" value="${esc(p.name)}"><label>價格（金幣）</label><input id="pb_p" type="number" value="${p.price}">
+   <label>類型</label><div class="chips">${['商品','兌換'].map(x=>`<button type="button" class="chip ${p.type===x?'on':''}" onclick="PB.type='${x}';$('#pb_ntdBox').classList.toggle('hidden','${x}'!=='兌換');this.parentNode.querySelectorAll('.chip').forEach(b=>b.classList.remove('on'));this.classList.add('on')">${x==='兌換'?'兌換台幣':'一般商品'}</button>`).join('')}</div>
+   <div id="pb_ntdBox" class="${p.type==='兌換'?'':'hidden'}"><label>兌換成多少台幣（存進存摺）</label><input id="pb_t" type="number" value="${p.ntd||''}"></div>
+   <label>狀態</label><div class="chips">${['上架','下架'].map(x=>`<button type="button" class="chip ${p.status===x?'on':''}" onclick="PB.status='${x}';this.parentNode.querySelectorAll('.chip').forEach(b=>b.classList.remove('on'));this.classList.add('on')">${x}</button>`).join('')}</div>${p.id?`<button type="button" class="btn red" onclick="$('#modal').classList.add('hidden');delProd('${p.id}')">🗑️ 刪除這個商品</button>`:''}`,'儲存'))return;
+  PB.name=$('#pb_n').value;PB.price=$('#pb_p').value;PB.ntd=($('#pb_t')||{}).value;toast('儲存中…');if(await run(null,'saveProduct',PB)!==null)loadSet()}
+async function pbPhoto(){try{PB.photoData=await pickPhoto(320);PB.clearPhoto=false;$('#pb_img').innerHTML=`<img class="big" src="${PB.photoData}">`}catch(e){toast(errMsg(e),1)}}
+// 固定扣款
+async function loadRecur(){try{recs=await call('listRecurring')}catch(e){return toast(errMsg(e),1)}
+  $('#recR').innerHTML=`<button class="btn" onclick="recBox()">＋ 新增每月固定支出</button><div class="card"><div class="mu">每月到了扣款日，會自動記一筆進海星家帳本（算在設定的支出者身上）</div>${recs.map((r,i)=>`<div class="it" style="${r.status==='啟用'?'':'opacity:.45'}"><div class="ic">${em(r.cat)}</div>
+   <div class="t">${esc(r.name)}<div class="mu">每月 ${r.day} 號・${n(r.amount)} 元・${esc(r.cat)}・${r.payer?esc(r.payer)+' 付':'<span class="red">未設定誰付</span>'}${r.status==='啟用'?'':'・已停用'}</div></div><button class="sbtn" onclick="recBox(${i})">編輯</button></div>`).join('')||'<div class="empty">還沒有固定扣款</div>'}</div>`}
+let RB={};
+async function recBox(i){const r=i===undefined?{name:'',amount:'',cat:S.cats.includes('通訊')?'通訊':S.cats[0],day:'',status:'啟用',payer:S.me}:recs[i];RB={status:r.status,payer:r.payer||''};
+  if(!await ask(`<h3>${r.row?'編輯':'新增'}每月固定支出</h3><label>名稱</label><input id="rb_n" value="${esc(r.name)}" placeholder="例如：手機費"><div class="two"><div><label>每月金額</label><input id="rb_a" type="number" inputmode="numeric" value="${r.amount}"></div><div><label>每月幾號</label><input id="rb_d" type="number" inputmode="numeric" value="${r.day}"></div></div>
+   <label>分類</label><select id="rb_c">${S.cats.map(c=>`<option ${c===r.cat?'selected':''}>${esc(c)}</option>`).join('')}</select>
+   <label>誰付的</label><div class="chips" id="rb_p"></div>
+   ${r.row?'<label>狀態</label><div class="chips" id="rb_s"></div>':''}
+   ${r.row?`<button type="button" class="btn red" onclick="$('#modal').classList.add('hidden');delRecur(${i})">🗑️ 刪除這個固定支出</button>`:''}`,'儲存',undefined,drawRB))return;
+  const d={name:$('#rb_n').value.trim(),amount:$('#rb_a').value,cat:$('#rb_c').value,day:$('#rb_d').value,status:RB.status,payer:RB.payer};if(r.row)d.row=r.row;
+  if(!(d.day>=1&&d.day<=31))return toast('扣款日要在 1～31 號',1);if(await run(null,'saveRecurring',d)!==null)loadRecur()}
+function drawRB(){chips($('#rb_p'),S.parents,RB.payer,v=>{RB.payer=v;drawRB()},v=>av(v,20)+' '+esc(PF(v).nick||v));if($('#rb_s'))chips($('#rb_s'),['啟用','停用'],RB.status,v=>{RB.status=v;drawRB()})}
+async function delRecur(i){const r=recs[i];if(!await ask(`<h3>刪除「${esc(r.name)}」？</h3>以後不會再自動扣款。之前已經記進帳本的不會刪掉。<br><span class="mu">只想暫停的話，可以改成「停用」。</span>`,'刪除'))return;
+  if(await run(null,'deleteRecurring',{row:r.row,name:r.name})!==null)loadRecur()}
+// 家人
+async function loadMembers(){try{mems=await call('listMembers')}catch(e){return toast(errMsg(e),1)}
+  $('#setBody').innerHTML=`<div class="card"><div class="mu">每個人用自己的 QR code 打開。爸媽改小孩的暱稱和頭像不受每天一次的限制。</div>${mems.map((m,i)=>`<div class="it"><div class="ic" onclick="famBox(${i})">${avatar({photo:m.photo,icon:m.avatar},38)}</div>
+   <div class="t"><b>${esc(m.nick)}</b> <span class="mu">${esc(m.name)}</span><div class="mu">${S.parents.includes(m.name)?'爸媽・全部功能':'小孩'}</div></div>
+   <button class="sbtn" onclick="famBox(${i})">資料</button><button class="sbtn" onclick="showQR(${i})">QR</button></div>`).join('')}</div>`;loadImgs(mems.map(m=>m.photo))}
+async function famBox(i){const m=mems[i];
+  await ask(`<h3>${esc(m.name)} 的資料</h3><label>暱稱</label><input id="fb_n" value="${esc(m.nick)}"><button class="btn" onclick="famNick('${esc(m.name)}')">儲存暱稱</button>
+   <label>頭像</label><button class="btn" onclick="famPhoto('${esc(m.name)}')">📷 上傳照片</button><div class="pick">${Object.keys(SPR).map(k=>`<button onclick="famIcon('${esc(m.name)}','${k}')">${sprite(k,40)}</button>`).join('')}</div>`,null,'關閉')}
+async function famNick(nm){const v=$('#fb_n').value.trim();if(await run(null,'setProfile',{name:nm,nick:v})!==null)refreshFam()}
+async function famIcon(nm,k){if(await run(null,'setProfile',{name:nm,icon:k})!==null)refreshFam()}
+async function famPhoto(nm){let d;try{d=await pickPhoto(256)}catch(e){return toast(errMsg(e),1)}if(await run(null,'setProfile',{name:nm,photo:d})!==null)refreshFam()}
+async function refreshFam(){$('#modal').classList.add('hidden');try{const r=await call('getInit');S.profiles=r.profiles}catch(e){}loadMembers()}
+function qrSvg(t){try{const q=qrcode(0,'M');q.addData(t);q.make();return q.createSvgTag({cellSize:4,margin:2,scalable:true})}catch(e){return ''}}
+function showQR(i){const m=mems[i];ask(`<h3>${esc(m.name)} 的專屬 QR code</h3><div class="qr">${qrSvg(m.url)||'（請改用下面的連結）'}</div><input readonly value="${esc(m.url)}" onclick="this.select()" style="font-size:12px">
+   <button class="btn red" onclick="renewQR(${i})">換新 QR code（舊的會失效）</button>`,null,'關閉')}
+async function renewQR(i){const m=mems[i];$('#modal').classList.add('hidden');
+  if(!await ask(`<h3>換新 ${esc(m.name)} 的 QR code？</h3>舊的會馬上失效。${m.name===S.me?'<br><b class="red">你現在用的連結也會失效！</b>':''}`,'換新'))return;
+  const r=await run(null,'resetToken',m.name);if(!r)return;await loadMembers();showQR(mems.findIndex(x=>x.name===m.name))}
+
+/* ===== 啟動 ===== */
+function start(r){S=r;st.payer=r.me;st.pCat=st.kCat=r.cats[0]||'';st.kKid=st.kid=r.kids[0]||'';$('#pDate').value=$('#kDate').value=r.today;
+  buildDock();drawRec();setRange('this')}
+if(BOOT.init){start(BOOT.init);loadHome(BOOT.home);foCheck()}
+else call('getInit').then(r=>{start(r);loadHome()}).catch(e=>{toast('載入失敗：'+errMsg(e),1);$('#homeBody').innerHTML='<div class="card empty">⚠️ 載入失敗：'+esc(errMsg(e))+'<br>請截圖給爸爸</div>'});
+
+</script>
+</body></html>
