@@ -703,7 +703,7 @@ omlwowowowowlmmmmo.omo
 function pxRects(rows,pal,c,ox,oy,only){let s='';rows.forEach((r,y)=>{let x=0;while(x<r.length){const ch=r[x];if(ch==='.'){x++;continue}let e=x;while(e<r.length&&r[e]===ch)e++;
   const col=only||pal[ch]||pal.m;s+=`<rect x="${(ox+x*c).toFixed(2)}" y="${(oy+y*c).toFixed(2)}" width="${((e-x)*c+.15).toFixed(2)}" height="${(c+.15).toFixed(2)}" fill="${col}"${ch==='e'&&!only?' class="pxeye"':''}/>`;x=e}});return s}
 function pxPet(sp,stage,o,u){const C=PETPAL[sp][o.shiny?1:0],sh=!!o.shiny,sick=!!o.sick,mood=o.mood==null?80:o.mood;
- const big=stage>=3,rows0=PXS[sp][big?1:0].split('\n'),W=Math.max(...rows0.map(r=>r.length)),H=rows0.length;
+ const big=stage>=3,rows0=PXS[sp][big?1:0].split(String.fromCharCode(10)),W=Math.max(...rows0.map(r=>r.length)),H=rows0.length;
  const pal={o:C.o,m:C.m,d:C.d,l:C.l,a:C.a,e:sick?'#9a7ab0':C.e,w:C.w,x:C.x,g:C.g};
  const rows=rows0.map(r=>sick?r.replace(/e/g,'o'):r);
  const target=[0,56,64,82,90,98][stage],c=target/Math.max(W,H*1.05),wpx=W*c,hpx=H*c;
@@ -744,7 +744,7 @@ ommmmmmmmmmo
 ommddmmddmmo
 .ommddddmmo.
 .oommmmmmoo.
-...oooooo...`.split('\n').map(r=>r.replace(/l/g,'w'));
+...oooooo...`.split(String.fromCharCode(10)).map(r=>r.replace(/l/g,'w'));
  const pal={o:C.o,w:'#fffaf0',m:C.m,a:C.a,d:C.d},c=6.4,ox=60-6*c,oy=104-13*c;
  const crack=o.crack?`<path d="M${ox+c} ${oy+c*6} l${c} -${c} l${c} ${c} l${c} -${c} l${c} ${c} l${c} -${c} l${c} ${c} l${c} -${c} l${c} ${c} l${c} -${c}" fill="none" stroke="#fff6c2" stroke-width="3"/>`:'';
  return `<defs>${rad(u+'gl',.5,.5,.5,[[0,C.g,.6],[1,C.g,0]])}</defs><circle cx="60" cy="66" r="50" fill="url(#${u}gl)" class="pxpulse"/>
@@ -794,7 +794,8 @@ const ART_CSS2=`
 const SHAPE2={corgi:1,dino:1,narwhal:1};
 
 // ---------- 圖片寵物（用 AI 繪圖工具畫好的圖，放在網站 pets/ 資料夾） ----------
-const IMGPET={sheep:{dir:'https://boyi05.github.io/pets/sheep/',v:1}};
+const PETIMG_HOST='https:/'+'/boyi05.github.io/pets/';
+const IMGPET={sheep:{dir:PETIMG_HOST+'sheep/',v:1}};
 Object.assign(PETPAL,{sheep:[{m:'#f6e6c8',l:'#fffaf0',d:'#a07850',a:'#ffd86a',o:'#6a4a32',e:'#6a4a32',g:'#ffe9a0'},{m:'#f6c8ec',l:'#fff0fa',d:'#a0508a',a:'#ff9ad8',o:'#5a2a4a',e:'#5a2a4a',g:'#ffb0e8'}]});
 PEMO.sheep='☁️';PCOL.sheep=['#f6e6c8','#fffaf0','#a07850','#f6c8ec','#a0508a','#fff0fa'];
 function imgPet(sp,stage,o,u){const P=IMGPET[sp],C=PETPAL[sp][o.shiny?1:0],sh=!!o.shiny,mood=o.mood==null?80:o.mood;
