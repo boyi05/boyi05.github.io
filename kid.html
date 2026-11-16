@@ -103,6 +103,39 @@ input.amt{font-size:24px;text-align:right;color:var(--red)}
 .modal .btns{display:flex;gap:10px;margin-top:14px}.modal .btns button{flex:1;padding:12px;border:0;border-radius:14px;font-weight:900}
 #mNo{background:#eadcc4;color:var(--ink)}#mYes{background:var(--leaf);color:#fff;box-shadow:0 4px 0 var(--leaf2)}
 .hidden{display:none!important}
+.pst{position:relative;height:210px;overflow:hidden;touch-action:manipulation;cursor:pointer;-webkit-tap-highlight-color:transparent;border-radius:14px}
+.pst.night:before{content:'';position:absolute;inset:0;background:linear-gradient(#1c2a5cdd,#1c2a5c55 70%,#1c2a5c33);pointer-events:none}
+.pgnd{position:absolute;left:0;bottom:0;width:100%;height:100%;pointer-events:none}
+.pw{position:absolute;left:50%;bottom:0;width:170px;height:170px;margin-left:-85px;transition-property:transform;transition-timing-function:linear;z-index:1}
+.pf{transition:transform .25s}.pf.l{transform:scaleX(-1)}
+.pa{transform-origin:50% 92%}
+.pa.idle{animation:pidle 2.6s ease-in-out infinite}@keyframes pidle{0%,100%{transform:scale(1,1)}50%{transform:scale(1.02,.98)}}
+.pa.walk{animation:pwalk .4s ease-in-out infinite}@keyframes pwalk{0%,50%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-7px) rotate(-3deg)}75%{transform:translateY(-7px) rotate(3deg)}}
+.pa.run{animation:pwalk .24s ease-in-out infinite}
+.pa.hop{animation:phop .7s cubic-bezier(.3,.7,.4,1) 2}@keyframes phop{0%,100%{transform:translateY(0) scale(1,1)}15%{transform:translateY(0) scale(1.12,.86)}45%{transform:translateY(-38px) scale(.92,1.1)}78%{transform:translateY(0) scale(1.1,.9)}}
+.pa.squish{animation:psq .5s ease-out}@keyframes psq{0%,100%{transform:scale(1,1)}30%{transform:scale(1.16,.84)}60%{transform:scale(.94,1.07)}}
+.pa.scratch{animation:pscr .12s linear 12}@keyframes pscr{0%,100%{transform:rotate(-4deg) translateX(-2px)}50%{transform:rotate(5deg) translateX(2px)}}
+.pa.sniff{animation:psnf .5s ease-in-out 3}@keyframes psnf{0%,100%{transform:rotate(0)}50%{transform:rotate(9deg) translateY(5px)}}
+.pa.eat{animation:peat .4s ease-in-out infinite}@keyframes peat{0%,100%{transform:rotate(0) translateY(0)}50%{transform:rotate(12deg) translateY(9px) scale(1.03,.95)}}
+.pa.shake{animation:pshk .1s linear 14}@keyframes pshk{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+.pa.shiver{animation:pshv .08s linear 10}@keyframes pshv{0%,100%{transform:translateX(-2px)}50%{transform:translateX(2px)}}
+.pa.dance{animation:pdnc .8s ease-in-out 2}@keyframes pdnc{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg) translateY(-6px)}75%{transform:rotate(12deg) translateY(-6px)}}
+.pa.yawn{animation:pyawn 1.6s ease-in-out}@keyframes pyawn{0%,100%{transform:scale(1,1)}40%,60%{transform:scale(.96,1.08) rotate(-4deg)}}
+.pa.sleep{animation:pslp 3.2s ease-in-out infinite}@keyframes pslp{0%,100%{transform:scale(1,.97) translateY(4px)}50%{transform:scale(1.03,.93) translateY(6px)}}
+.pa.sad{animation:psad 3s ease-in-out infinite}@keyframes psad{0%,100%{transform:rotate(-2deg) translateY(3px)}50%{transform:rotate(2deg) translateY(3px)}}
+.pbub{position:absolute;left:62%;top:28px;transform:translate(-20%,-100%) scale(0);transform-origin:20% 100%;background:#fff;border:2px solid #4a3b2a;border-radius:14px;padding:3px 10px;font-weight:700;font-size:15px;white-space:nowrap;transition:transform .2s;z-index:3;color:#4a3b2a}
+.pbub.on{transform:translate(-20%,-100%) scale(1)}
+.pbub:after{content:'';position:absolute;left:18%;bottom:-8px;border:7px solid transparent;border-top-color:#4a3b2a;border-bottom:0}
+.pfx{position:absolute;font-size:30px;transform:translate(-50%,0);pointer-events:none;z-index:2;transition:transform .3s}
+.pfx.up{animation:pup 1.3s ease-out forwards}@keyframes pup{to{transform:translate(-50%,-70px);opacity:0}}
+.pfx.zz{font-size:24px;animation:pzz 2.4s ease-out forwards}@keyframes pzz{0%{opacity:0;transform:translate(-50%,0) scale(.6)}30%{opacity:1}100%{opacity:0;transform:translate(10px,-60px) scale(1.2)}}
+.pfx.bub{font-size:26px;animation:pbb 1.7s ease-out forwards}@keyframes pbb{0%{transform:translate(-50%,0) scale(.4);opacity:0}20%{opacity:1}100%{transform:translate(-50%,-90px) scale(1.1);opacity:0}}
+.pfx.food{font-size:36px}
+.pfx.ball{font-size:30px;animation:pball .45s ease-in infinite alternate}@keyframes pball{from{transform:translate(-50%,0)}to{transform:translate(-50%,-34px)}}
+.pfx.pat{font-size:38px;animation:ppat .3s ease-in-out 5 alternate}@keyframes ppat{from{transform:translate(-75%,0) rotate(-15deg)}to{transform:translate(-25%,0) rotate(15deg)}}
+.pfx.sweep{font-size:40px;animation:pswp 1.5s ease-in-out forwards}@keyframes pswp{from{transform:translate(-50%,0) translateX(-170px) rotate(-10deg)}to{transform:translate(-50%,0) translateX(170px) rotate(10deg)}}
+.pfx.drop{animation:pdrop .7s ease-in forwards}@keyframes pdrop{0%{transform:translate(-50%,-80px);opacity:0}30%{opacity:1}100%{transform:translate(-50%,-10px);opacity:0}}
+.psnd{position:absolute;top:4px;right:4px;width:34px;height:34px;border:0;border-radius:50%;background:#ffffffb0;font-size:17px;z-index:4;padding:0}
 </style></head><body>
 <header id="hud"></header>
 <main>
@@ -1246,25 +1279,108 @@ function petMini(v){if(!v)return `<div class="card" onclick="go('pet')" style="c
   const warn=v.ready?'💝 長大了，去說再見':v.sick?'🤒 生病了！':v.poops>=2?'💩 要清大便了':v.full<30?'🍙 肚子餓了':v.mood<30?'😢 想要玩':'';
   return `<div class="card" onclick="go('pet')" style="cursor:pointer;display:flex;align-items:center;gap:10px">${petSvg(v.species,v.stage,{shiny:v.shiny,sick:v.sick,mood:v.mood,crack:v.stage===0&&v.hatchIn<3},60)}<div style="flex:1"><b>${esc(v.name)}</b> <span class="mu">${v.typeName}・${v.stageName}</span>${warn?`<div style="color:#e5484d;font-size:14px">${warn}</div>`:`<div class="mu">${v.stage?'精神很好！':'還要 '+Math.ceil(v.hatchIn)+' 小時孵化'}</div>`}</div><span class="mu">去照顧 ›</span></div>`}
 function drawPet(){const el=$('#pg-pet');if(!PET){el.innerHTML='<div class="card empty">⏳ 讀取中…</div>';return}
-  const v=PET.now,TY=PET.types,AC=PET.acts,c=(G.me||{}).coins||0;
-  if(!v){el.innerHTML=`<div class="sign"><h3>🥚 領養一顆蛋</h3></div><div class="card mu">選一顆喜歡的蛋，取個名字，12 小時後就會孵化。牠會長大 14 天，要每天餵飯、陪牠玩、清大便喔！</div>
+  const v=PET.now,TY=PET.types,c=(G.me||{}).coins||0;
+  if(!v){clearTimeout(PB.t);PB.key='';el.innerHTML=`<div class="sign"><h3>🥚 領養一顆蛋</h3></div><div class="card mu">選一顆喜歡的蛋，取個名字，12 小時後就會孵化。牠會長大 14 天，要每天餵飯、陪牠玩、清大便喔！</div>
     ${[['小動物','🐶 可愛小動物'],['怪獸','🐲 小怪獸'],['稀有怪獸','🌟 稀有怪獸'],['像素傳說','👾 像素傳說・超稀有'],['水彩繪本','🎨 水彩繪本・新登場']].map(([kd,tt])=>{const ks=Object.keys(TY).filter(k=>TY[k].kind===kd);return ks.length?`<div class="sign" style="margin-top:6px"><h3>${tt}</h3></div><div class="grid">${ks.map(k=>`<div class="prod ${c<TY[k].price?'poor':''}" style="text-align:center">${petSvg(k,0,{},110)}<div class="pn"><b>${TY[k].name}</b><br><span class="mu">長大會變成</span></div><div style="display:flex;justify-content:center">${petSvg(k,5,{},80)}</div><div class="pp">🪙 ${n(TY[k].price)}</div><button class="go" onclick="adopt('${k}')">${c<TY[k].price?'金幣不夠':'領養'}</button></div>`).join('')}</div>`:''}).join('')}`;return}
-  const btn=(a,ic,dis0)=>{const A=AC[a],dis=dis0||c<A[1];return `<button class="go" style="padding:10px 4px" ${dis?'disabled':''} onclick="petDo('${a}')"><div style="font-size:24px">${ic}</div>${A[0]}<div style="font-size:11px;opacity:.9">${A[1]?A[1]+' 🪙':'免費'}</div></button>`};
+  const key=[v.id,v.stage,v.shiny,v.sick,v.mood<30,v.ready].join('|');
+  if(PB.key===key&&$('#petStage')){petPanel();pbPoo();return}
+  PB.key=key;
   el.innerHTML=`<div class="card" style="text-align:center;background:linear-gradient(#cdeeff,#e9fbff 58%,#bfe8b0 58%);padding-top:4px">
    <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:19px">${esc(v.name)}</b><span class="mini">${v.typeName}・${v.stageName}${v.shiny?' ✨':''}</span></div>
-   <div id="petStage" style="position:relative;height:210px;display:flex;justify-content:center;align-items:flex-end" onclick="petDo('pat')">${petSvg(v.species,v.stage,{shiny:v.shiny,sick:v.sick,mood:v.mood,poops:v.poops,crack:v.stage===0&&v.hatchIn<3,wobble:v.stage===0},200)}</div>
-   <div class="mu">${v.stage===0?'還要 <b>'+Math.ceil(v.hatchIn)+'</b> 小時孵化，點蛋摸摸牠':v.ready?'':'第 '+(v.ageDays+1)+' 天・還有 '+v.daysLeft+' 天長大'}</div></div>
-  ${v.ready?`<div class="card" style="text-align:center"><div style="font-size:16px"><b>${esc(v.name)}</b> 已經完全長大了！<br>牠要回到${esc(v.home)}生活了。</div><button class="go wide" onclick="petByeBox()">💝 跟 ${esc(v.name)} 說再見</button></div>`:v.stage===0?'':`
+   <div id="petStage" class="pst" onclick="petTap()"><svg class="pgnd" viewBox="0 0 120 120" preserveAspectRatio="xMidYMax meet">${petPoo(v.poops)}</svg>
+    <div class="pw" id="petW"><div class="pf" id="petF"><div class="pa" id="petA">${petSvg(v.species,v.stage,{shiny:v.shiny,sick:v.sick,mood:v.mood,poops:0,crack:v.stage===0&&v.hatchIn<3,wobble:v.stage===0},170)}</div></div><div class="pbub" id="petBub"></div></div>
+    <div id="petFx"></div>${v.stage&&!v.ready?`<button class="psnd" onclick="event.stopPropagation();petSoundToggle(this)">${PSOUND?'🔊':'🔇'}</button>`:''}</div>
+   <div class="mu" id="petCap"></div></div><div id="petPanel"></div>`;
+  petPanel();petStart(v)}
+function petPanel(){const v=PET.now,AC=PET.acts,c=(G.me||{}).coins||0,P=$('#petPanel');if(!P)return;
+  const cap=$('#petCap');if(cap)cap.innerHTML=v.stage===0?'還要 <b>'+Math.ceil(v.hatchIn)+'</b> 小時孵化，點蛋摸摸牠':v.ready?'':'第 '+(v.ageDays+1)+' 天・還有 '+v.daysLeft+' 天長大・點牠可以摸摸';
+  const full={feed:v.full>=95&&'吃飽了',snack:v.full>=95&&'吃飽了',play:v.mood>=95&&'很開心',bath:v.clean>=95&&'很乾淨',poop:!v.poops&&'沒有大便',doctor:!v.sick&&'很健康'};
+  const btn=(a,ic)=>{const A=AC[a],why=full[a]||(c<A[1]&&'金幣不夠');return `<button class="go" style="padding:10px 4px" ${why?'disabled':''} onclick="petDo('${a}')"><div style="font-size:24px">${ic}</div>${A[0]}<div style="font-size:11px;opacity:.9">${why||(A[1]?A[1]+' 🪙':'免費')}</div></button>`};
+  P.innerHTML=v.ready?`<div class="card" style="text-align:center"><div style="font-size:16px"><b>${esc(v.name)}</b> 已經完全長大了！<br>牠要回到${esc(v.home)}生活了。</div><button class="go wide" onclick="petByeBox()">💝 跟 ${esc(v.name)} 說再見</button></div>`:v.stage===0?'':`
   <div class="card">${v.sick?'<div style="background:#ffe8e6;border-radius:12px;padding:8px;margin-bottom:6px;color:#c0392b">🤒 生病了！快帶牠去看醫生</div>':''}${petBars(v)}<div class="mu" style="margin-top:4px">💩 大便 ${v.poops} 坨${v.poops>=2?'　<b style="color:#e5484d">快清乾淨，不然會生病！</b>':''}</div></div>
-  <div class="card"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${btn('feed','🍙',v.full>=95)}${btn('snack','🍰')}${btn('play','⚽')}${btn('bath','🛁')}${btn('poop','💩',!v.poops)}${btn('doctor','💊',!v.sick)}</div><div class="mu" style="text-align:center;margin-top:8px">我有 🪙 ${n(c)}</div></div>
-  <div class="card mu">${v.nextStage?`🌱 再 <b>${v.nextStage.inHours}</b> 小時會長成「${v.nextStage.name}」<br>`:''}${v.stage<4?`✨ 照顧分數 <b>${v.avg}</b>（成年前保持 75 以上，會變成閃亮型！）`:v.shiny?'✨ 照顧得很好，變成閃亮型了！':'照顧分數 '+v.avg}</div>`}`}
+  <div class="card"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${btn('feed','🍙')}${btn('snack','🍰')}${btn('play','⚽')}${btn('bath','🛁')}${btn('poop','💩')}${btn('doctor','💊')}</div><div class="mu" style="text-align:center;margin-top:8px">我有 🪙 ${n(c)}</div></div>
+  <div class="card mu">${v.nextStage?`🌱 再 <b>${v.nextStage.inHours}</b> 小時會長成「${v.nextStage.name}」<br>`:''}${v.stage<4?`✨ 照顧分數 <b>${v.avg}</b>（成年前保持 75 以上，會變成閃亮型！）`:v.shiny?'✨ 照顧得很好，變成閃亮型了！':'照顧分數 '+v.avg}</div>`}
 async function adopt(k){const T=PET.types[k];if(((G.me||{}).coins||0)<T.price)return toast('金幣不夠喔',1);
   const ok=await ask(`<div style="text-align:center">${petSvg(k,0,{},100)}<h3>領養${T.name}的蛋</h3>花 <b class="gold">${T.price} 金幣</b></div><label>幫牠取個名字</label><input id="petName" maxlength="10" placeholder="例如：小火">`,'領養！');
   if(!ok)return;const nm=$('#petName').value.trim();if(!nm)return toast('請幫牠取名字',1);
   const r=await run(null,'petAdopt',{species:k,name:nm});if(r){PET=r.pet;drawPet();loadGame()}}
-async function petDo(a){const r=await run(null,'petAct',{act:a});if(!r)return;PET=r.pet;if(r.coins!=null&&G.me){G.me.coins=r.coins;drawHud()}drawPet();
-  const fx={feed:'🍙',snack:'🍰',play:'💕',bath:'🫧',poop:'✨',doctor:'💊',pat:'💗'}[a];const box=$('#petStage');if(box){const e=document.createElement('div');e.textContent=fx;e.style.cssText='position:absolute;left:50%;top:40%;font-size:40px;transform:translate(-50%,0);transition:all 1s;pointer-events:none';box.appendChild(e);requestAnimationFrame(()=>{e.style.top='0%';e.style.opacity='0'});setTimeout(()=>e.remove(),1100)}
-  if(a!=='pat')G_AT=0}
+/* 照顧：先在畫面上馬上反應，再到背景跟伺服器同步 */
+const pcl=x=>Math.max(0,Math.min(100,Math.round(x)));
+function petGuard(v,a){if(v.ready)return v.name+' 已經長大了，去跟牠說再見吧';if(v.stage===0)return '還是蛋喔！摸摸牠，等牠孵化';const A=PET.acts[a],c=(G.me||{}).coins||0;
+  if((a==='feed'||a==='snack')&&v.full>=95)return v.name+' 吃不下了～';if(a==='play'&&v.mood>=95)return v.name+' 玩累了，讓牠休息一下';if(a==='bath'&&v.clean>=95)return v.name+' 已經很乾淨了';
+  if(a==='poop'&&!v.poops)return '現在沒有大便喔';if(a==='doctor'&&!v.sick)return v.name+' 很健康，不用看醫生';if(A[1]>c)return '金幣不夠喔（還差 '+(A[1]-c)+'）';return ''}
+let PQ=Promise.resolve(),PPEND=0;
+function petSend(a){PPEND++;PQ=PQ.then(()=>call('petAct',{act:a})).then(r=>{PPEND--;if(!PPEND&&r&&r.pet){PET=r.pet;if(r.coins!=null&&G.me){G.me.coins=r.coins;drawHud()}if(st.tab==='pet')drawPet()}},
+  e=>{PPEND--;toast(errMsg(e),1);if(!PPEND)loadGame()})}
+function petDo(a){const v=PET&&PET.now;if(!v)return;const err=petGuard(v,a);if(err)return toast(err,1);const A=PET.acts[a];
+  if(a==='feed')v.full=pcl(v.full+35);if(a==='snack'){v.full=pcl(v.full+15);v.mood=pcl(v.mood+20)}if(a==='play'){v.mood=pcl(v.mood+30);v.full=pcl(v.full-5)}
+  if(a==='bath')v.clean=pcl(v.clean+60);if(a==='poop'){v.poops=0;v.clean=pcl(v.clean+10)}if(a==='doctor'){v.sick=false;v.mood=pcl(v.mood+10)}
+  if(A[1]&&G.me){G.me.coins-=A[1];drawHud()}toast({feed:'好好吃！',snack:'最愛點心了！',play:'玩得好開心！',bath:'洗得香香的！',poop:'清乾淨了！',doctor:'病好了！'}[a]);
+  if(a==='doctor'){PB.key='';drawPet()}else petPanel();petPlay(a);petSend(a);G_AT=0}
+/* 摸摸：免費，10 分鐘內只有第一次會加心情 */
+function petTap(){const v=PET&&PET.now;if(!v)return;if(!v.stage){pbEgg();return}if(v.ready)return;
+  const k='patAt'+v.id;let t=0;try{t=+localStorage.getItem(k)||0}catch(e){}
+  if(Date.now()-t>600000){try{localStorage.setItem(k,Date.now())}catch(e){}v.mood=pcl(v.mood+3);petPanel();petSend('pat')}petPlay('pat')}
+
+/* ===== 寵物舞台：走路、叫聲、抓癢… ===== */
+const PB={key:'',x:0,dir:1,seq:0,t:null};
+let PSOUND=true;try{PSOUND=localStorage.getItem('petSound')!=='0'}catch(e){}
+const PSND={shiba:['汪！','汪汪～','嗚～？'],corgi:['汪！','汪汪！','嗚嗚～'],kitty:['喵～','喵嗚？','呼嚕呼嚕～'],bunny:['噗噗～','啾？','咕咕～'],sheep:['咩～','咩咩！','咩？'],fire:['呼嚕！','嘎嘎～','噗咻！'],water:['啵啵～','咕嚕？','啵！'],leaf:['沙沙～','咕咕？','啾啾～'],star:['啾啦～','啾啾！','嗶嚕？'],dino:['嗷嗚！','吼吼～','嘎？'],narwhal:['噗咻～','嗚～','啵啵！'],pxdragon:['吼！','吼吼～','嘎嗚！'],pxwolf:['嗷嗚～','嗚汪！','呼～'],pxshark:['嗶嗶！','嗶嗚？','滋滋～']};
+const PVOX={dog:{w:'square',a:620,b:420,d:.09,n:2,g:.07},cat:{w:'sine',a:520,b:880,c:560,d:.5,g:.12},bunny:{w:'sine',a:900,b:1300,d:.07,n:3,g:.08},sheep:{w:'triangle',a:440,b:400,c:380,d:.6,v:16,g:.14},mon:{w:'triangle',a:320,b:760,d:.18,n:2,g:.12},bubble:{w:'sine',a:300,b:1200,d:.12,n:3,g:.1},roar:{w:'sawtooth',a:190,b:90,d:.45,v:25,g:.07},robot:{w:'square',a:980,b:960,d:.06,n:3,g:.05},star:{w:'sine',a:880,b:1760,d:.25,n:2,g:.09}};
+const PVK={shiba:'dog',corgi:'dog',pxwolf:'dog',kitty:'cat',bunny:'bunny',sheep:'sheep',fire:'mon',leaf:'mon',dino:'roar',pxdragon:'roar',water:'bubble',narwhal:'bubble',pxshark:'robot',star:'star'};
+let PAC=null;
+function petVoice(sp){if(!PSOUND)return;try{PAC=PAC||new (window.AudioContext||window.webkitAudioContext)();if(PAC.state==='suspended')PAC.resume();
+  const V=PVOX[PVK[sp]]||PVOX.mon,t0=PAC.currentTime+.02;for(let i=0;i<(V.n||1);i++){const t=t0+i*(V.d+.06),o=PAC.createOscillator(),g=PAC.createGain();o.type=V.w;
+   o.frequency.setValueAtTime(V.a,t);o.frequency.exponentialRampToValueAtTime(V.b,t+V.d*(V.c?.5:.9));if(V.c)o.frequency.exponentialRampToValueAtTime(V.c,t+V.d);
+   if(V.v){const l=PAC.createOscillator(),lg=PAC.createGain();l.frequency.value=V.v;lg.gain.value=V.a*.05;l.connect(lg);lg.connect(o.frequency);l.start(t);l.stop(t+V.d)}
+   g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(V.g,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+V.d);o.connect(g);g.connect(PAC.destination);o.start(t);o.stop(t+V.d+.03)}}catch(e){}}
+function petSoundToggle(b){PSOUND=!PSOUND;try{localStorage.setItem('petSound',PSOUND?'1':'0')}catch(e){}b.textContent=PSOUND?'🔊':'🔇';if(PSOUND)petVoice(PET.now.species)}
+const pbSleep=ms=>new Promise(r=>setTimeout(r,ms));
+const pbPick=a=>a[Math.floor(Math.random()*a.length)];
+function pbNight(){const h=new Date().getHours();return h>=22||h<6}
+function pbRange(){const s=$('#petStage');return Math.max(20,((s?s.clientWidth:320)-170)/2+20)}
+function pbPoo(){const g=$('#petStage .pgnd');if(g)g.innerHTML=petPoo(PET.now.poops)}
+function pbBase(){const a=$('#petA'),v=PET&&PET.now;if(!a||!v)return;const s=$('#petStage');if(s)s.classList.toggle('night',v.stage>0&&pbNight());a.className='pa '+(!v.stage?'':pbNight()?'sleep':v.sick||v.mood<30?'sad':'idle')}
+function pbFace(d){PB.dir=d;const f=$('#petF');if(f)f.classList.toggle('l',d<0)}
+function pbFreeze(){const w=$('#petW');if(!w)return;const m=getComputedStyle(w).transform;let x=PB.x;if(m&&m!=='none'){const p=m.split(',');x=parseFloat(p[4])||0}w.style.transitionDuration='0ms';w.style.transform=`translateX(${x}px)`;PB.x=x}
+function pbMove(x,ms){const w=$('#petW');if(!w)return;if(Math.abs(x-PB.x)>2)pbFace(x<PB.x?-1:1);w.style.transitionDuration=ms+'ms';w.style.transform=`translateX(${x}px)`;PB.x=x}
+async function pbWalk(x,id,sp){const R=pbRange();x=Math.max(-R,Math.min(R,x));const d=Math.abs(x-PB.x);if(d<6)return;const ms=Math.round(d/(sp||85)*1000),a=$('#petA');if(!a)return;
+  a.className='pa '+(sp>120?'run':'walk');pbMove(x,ms);await pbSleep(ms);if(id===PB.seq)pbBase()}
+async function pbAct(c,ms,id){const a=$('#petA');if(!a)return;a.className='pa '+c;await pbSleep(ms);if(id===PB.seq)pbBase()}
+let pbBT;function pbSay(t,ms){const b=$('#petBub');if(!b)return;b.textContent=t;b.classList.add('on');clearTimeout(pbBT);pbBT=setTimeout(()=>b.classList.remove('on'),ms||1400)}
+function pfx(t,x,y,c,ms){const L=$('#petFx');if(!L)return null;const e=document.createElement('div');e.className='pfx '+(c||'');e.textContent=t;e.style.left=`calc(50% + ${Math.round(x)}px)`;e.style.bottom=Math.round(y)+'px';L.appendChild(e);if(ms)setTimeout(()=>e.remove(),ms);return e}
+function pbHearts(n,ic){for(let i=0;i<n;i++)setTimeout(()=>pfx(ic||'💗',PB.x+Math.random()*90-45,95+Math.random()*40,'up',1300),i*170)}
+function petStart(v){clearTimeout(PB.t);PB.seq++;PB.x=0;PB.dir=1;pbBase();if(v.stage&&!v.ready)PB.t=setTimeout(pbIdle,1200)}
+async function pbEgg(){const a=$('#petA');if(!a)return;a.className='pa squish';pbHearts(1);toast('蛋動了一下！');await pbSleep(500);a.className='pa'}
+async function pbIdle(){if(!$('#petA')||st.tab!=='pet'||!PET||!PET.now)return;const v=PET.now,id=++PB.seq;let next=2600+Math.random()*3800;
+  if(pbNight()){pbBase();if(Math.random()<.6)pfx('💤',PB.x+30,120,'zz',2400);next=3500}
+  else if(v.sick){pbSay(pbPick(['咳咳…','不舒服…','頭暈暈…']),1600);await pbAct('shiver',900,id)}
+  else if(v.mood<30){pbSay(pbPick(['好無聊…','陪我玩嘛…','唉…']),1600)}
+  else if(v.full<30&&Math.random()<.5){pbSay(pbPick(['肚子餓了…','咕嚕咕嚕～','想吃飯…']),1600);await pbAct('sniff',1500,id)}
+  else{const r=Math.random(),R=pbRange();
+    if(r<.36)await pbWalk((Math.random()*2-1)*R,id);
+    else if(r<.46){pbSay(pbPick(PSND[v.species]||['♪']),1300);await pbAct('hop',1400,id)}
+    else if(r<.58){pbSay(pbPick(PSND[v.species]||['♪']),1300);await pbAct('squish',500,id)}
+    else if(r<.68){pbSay('抓抓～',1500);await pbAct('scratch',1450,id)}
+    else if(r<.78){pbSay(pbPick(['嗅嗅…','咦？','這是什麼？']),1300);await pbAct('sniff',1500,id)}
+    else if(r<.86){pbFace(-PB.dir);await pbSleep(700);if(id===PB.seq)pbFace(-PB.dir);await pbSleep(500)}
+    else if(r<.93){pbSay(pbPick(['啦啦～ ♪','嘿嘿','♪ ♫']),1500);await pbAct('dance',1600,id)}
+    else{pbSay('呵～欠',1400);await pbAct('yawn',1600,id)}}
+  if(id===PB.seq)PB.t=setTimeout(pbIdle,next)}
+async function petPlay(a){const v=PET.now;if(!$('#petA'))return;clearTimeout(PB.t);pbFreeze();const id=++PB.seq;const R=pbRange();
+  try{
+  if(a==='pat'){pfx('🤚',PB.x,128,'pat',1500);await pbAct('squish',500,id);petVoice(v.species);pbSay(pbPick(PSND[v.species]||['♪']),1300);pbHearts(3);await pbSleep(900)}
+  else if(a==='feed'||a==='snack'){const s=PB.x>0?-1:1,fx=Math.max(-R-40,Math.min(R+40,PB.x+80*s));const f=pfx(a==='feed'?'🍙':'🍰',fx,4,'food',0);pbFace(s);
+    await pbAct('sniff',500,id);const ea=$('#petA');if(ea)ea.className='pa eat';for(const sc of [.8,.6,.35,0]){await pbSleep(600);if(id!==PB.seq)break;if(f)f.style.transform=`translate(-50%,0) scale(${sc})`}
+    if(f)f.remove();if(id===PB.seq){pbSay(a==='feed'?'好飽～':'好甜！',1400);pbHearts(2);await pbAct('hop',1400,id)}}
+  else if(a==='play'){const s=PB.x>0?-1:1,b=pfx('⚽',PB.x+40*s,4,'ball',0);if(b){b.style.transition='left .9s ease-out'}
+    for(let i=0;i<3&&id===PB.seq;i++){const to=(i%2?-1:1)*s*R;if(b)b.style.left=`calc(50% + ${Math.round(to+(i%2?-1:1)*s*40)}px)`;await pbWalk(to,id,160)}
+    if(b)b.remove();if(id===PB.seq){petVoice(v.species);pbSay(pbPick(PSND[v.species]||['♪']),1300);pbHearts(3);await pbAct('hop',1400,id)}}
+  else if(a==='bath'){for(let i=0;i<9;i++)setTimeout(()=>pfx('🫧',PB.x+Math.random()*120-60,10+Math.random()*70,'bub',1700),i*140);
+    await pbAct('squish',600,id);await pbSleep(700);pbSay('甩甩～',1200);await pbAct('shake',1400,id);pbHearts(4,'✨')}
+  else if(a==='poop'){pfx('🧹',0,0,'sweep',1500);await pbSleep(700);pbPoo();pbHearts(3,'✨');await pbAct('hop',1400,id)}
+  else if(a==='doctor'){pfx('💊',PB.x,150,'drop',800);await pbSleep(700);await pbAct('shiver',800,id);pbSay('好多了！',1400);pbHearts(3,'✨');await pbAct('hop',1400,id)}
+  }finally{if(id===PB.seq){pbBase();PB.t=setTimeout(pbIdle,2200)}}}
 async function petByeBox(){const v=PET.now;if(!await ask(`<div style="text-align:center">${petSvg(v.species,v.stage,{shiny:v.shiny,mood:90},120)}<h3>要跟 ${esc(v.name)} 說再見了</h3>謝謝你這 14 天的照顧！<br>${esc(v.name)} 會留下紀念品給你。</div>`,'說再見','再看一下'))return;
   const r=await run(null,'petBye');if(!r)return;
   await ask(`<div style="text-align:center"><div style="font-size:40px">💝</div><h3>${esc(r.msg)}</h3>你得到了：<div class="mgrid" style="margin-top:8px">${r.memos.map(m=>memoCard({name:m,species:r.species,shiny:/閃亮/.test(m)||(/合照/.test(m)&&r.shiny)})).join('')}</div><div class="mu" style="margin-top:6px">紀念品放在「我的 → 徽章」的紀念品櫃</div></div>`,null,'好');
