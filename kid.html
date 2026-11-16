@@ -146,7 +146,7 @@ function chips(el,items,cur,pick,lab){el.innerHTML='';items.forEach(v=>{const b=
   b.className='chip'+(v===cur?' on':'');b.innerHTML=lab?lab(v):esc(v);b.onclick=()=>pick(v);el.appendChild(b)})}
 function addMonths(s,m){const p=s.split('-').map(Number);const last=new Date(p[0],p[1]-1+m+1,0).getDate();const d=new Date(p[0],p[1]-1+m,Math.min(p[2],last));
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
-const EMO={'飲食':'🍔','日常':'🧻','交通':'🚌','娛樂':'🎮','學費':'📚','醫療':'💊','通訊':'📱','其他':'📦'};
+const EMO={'飲食':'🍔','日常':'🧻','交通':'🚌','娛樂':'🎮','學費':'📚','醫療':'💊','通訊':'📱','其他':'📦','衣鞋':'👕','水電油':'⛽','學習':'✏️','膽膽':'🦔'};
 const em=c=>EMO[c]||'🔹';
 const TYPE={'獎金':'🎁','花錢':'🛒','存定存':'📦','領定存':'🔓','利息':'✨'};
 const PAL={"K": "#16182e", "W": "#f4f4f4", "B": "#a0522d", "R": "#e63946", "S": "#c9d1dc", "O": "#ff8c2b", "P": "#ff9fb8", "G": "#9aa0aa", "Y": "#ffd23f", "T": "#d9a066", "L": "#cdb8ff"};
