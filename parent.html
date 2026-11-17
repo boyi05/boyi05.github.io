@@ -795,7 +795,7 @@ const SHAPE2={corgi:1,dino:1,narwhal:1};
 
 // ---------- 圖片寵物（用 AI 繪圖工具畫好的圖，放在網站 pets/ 資料夾） ----------
 const PETIMG_HOST='https:/'+'/boyi05.github.io/pets/';
-const IMGPET={sheep:{dir:PETIMG_HOST+'sheep/',v:1,frames:{2:'f',3:'f',4:'f4'},front:{2:1,3:1,4:1},fv:1}};
+const IMGPET={sheep:{dir:PETIMG_HOST+'sheep/',v:1,frames:{2:'f',3:'f',4:'f4',5:'f5'},front:{2:1,3:1,4:1,5:1},fv:1}};
 Object.assign(PETPAL,{sheep:[{m:'#f6e6c8',l:'#fffaf0',d:'#a07850',a:'#ffd86a',o:'#6a4a32',e:'#6a4a32',g:'#ffe9a0'},{m:'#f6c8ec',l:'#fff0fa',d:'#a0508a',a:'#ff9ad8',o:'#5a2a4a',e:'#5a2a4a',g:'#ffb0e8'}]});
 PEMO.sheep='☁️';PCOL.sheep=['#f6e6c8','#fffaf0','#a07850','#f6c8ec','#a0508a','#fff0fa'];
 function imgPet(sp,stage,o,u){const P=IMGPET[sp],C=PETPAL[sp][o.shiny?1:0],sh=!!o.shiny,mood=o.mood==null?80:o.mood;
