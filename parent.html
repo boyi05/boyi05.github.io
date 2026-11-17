@@ -526,6 +526,7 @@ Object.assign(PETPAL,PETPAL2);
 Object.assign(PEMO,{corgi:'🦴',dino:'🦖',narwhal:'🦄',pxdragon:'🔥',pxwolf:'⚡',pxshark:'🤖'});
 Object.keys(PETPAL2).forEach(k=>{const a=PETPAL[k][0],b=PETPAL[k][1];PCOL[k]=[a.m,a.l,a.d,b.m,b.d,b.l]});
 const PXSP={pxdragon:1,pxwolf:1,pxshark:1};
+const PXSIZE=[0,48,58,76,92,106];   /* 每個階段的大小：差距拉大，看得出長大 */
 
 // 共用：漸層定義、臉
 function petDefs(u,C,sh){let d=rad(u+'b',.36,.26,.9,[[0,mix(C.l,C.m,.3)],[.5,C.m],[1,C.d]])+rad(u+'w',.5,.3,.75,[[0,'#ffffff'],[1,C.l]])
@@ -727,11 +728,15 @@ function pxPose(R,p){if(!p)return R;R=R.slice();const n=R.length;
   if(a<0)return R;const m=Math.floor((a+b)/2),d=p==='walk2'?1:-1;
   for(let k=n-2;k<n;k++)R[k]=sh(R[k].slice(0,m),d)+sh(R[k].slice(m),-d)}
  return R}
-function pxPet(sp,stage,o,u){const C=PETPAL[sp][o.shiny?1:0],sh=!!o.shiny,sick=!!o.sick,mood=o.mood==null?80:o.mood;
+/* 像素寵物進化配色：成年、完全體換顏色，一眼看得出長大（閃亮版維持閃亮配色） */
+const PXEVO={pxdragon:{4:{m:'#d62a1e',d:'#7a0e14',l:'#ffe08a',a:'#ffd040',g:'#ff5a1a',x:'#8a1a10',w:'#ff6a2a'},5:{m:'#6a0e22',d:'#2a0410',l:'#ff8a3a',a:'#c04aff',g:'#ff3a7a',x:'#3a0a2a',w:'#9a3aff',e:'#ffea4a'}},
+ pxwolf:{4:{m:'#3a5ac8',d:'#1a2a7a',l:'#d8e6ff',x:'#7aa0ff'},5:{m:'#eef4ff',d:'#8aa0d8',l:'#ffffff',a:'#ffd700',g:'#fff36a',x:'#c0d0ff',e:'#3ab0ff'}},
+ pxshark:{4:{m:'#5a7090',d:'#2a3a52',l:'#d8e2f0',x:'#ff4a1a'},5:{m:'#2a2a36',d:'#10101a',l:'#9aa4b8',a:'#ff2a4a',g:'#ff2a4a',e:'#ff2a4a',x:'#ff8a1a'}}};
+function pxPet(sp,stage,o,u){const C0=PETPAL[sp][o.shiny?1:0],C=!o.shiny&&PXEVO[sp]&&PXEVO[sp][stage]?Object.assign({},C0,PXEVO[sp][stage]):C0,sh=!!o.shiny,sick=!!o.sick,mood=o.mood==null?80:o.mood;
  const big=stage>=3,rows0=PXS[sp][big?1:0].split(String.fromCharCode(10)),W=Math.max(...rows0.map(r=>r.length)),H=rows0.length;
  const pal={o:C.o,m:C.m,d:C.d,l:C.l,a:C.a,e:sick?'#9a7ab0':C.e,w:C.w,x:C.x,g:C.g};
  const rows=pxPose(rows0.map(r=>sick?r.replace(/e/g,'o'):r),sick?'':o.pose);
- const target=[0,56,64,82,90,98][stage],c=target/Math.max(W,H*1.05),wpx=W*c,hpx=H*c;
+ const target=PXSIZE[stage],c=target/Math.max(W,H*1.05),wpx=W*c,hpx=H*c;
  const ox=60-wpx/2,oy=106-rows.length*c;
  let defs=rad(u+'g',.5,.5,.5,[[0,'#000',.35],[1,'#000',0]])+rad(u+'gl',.5,.5,.5,[[0,C.g,.55],[1,C.g,0]])+lin(u+'cr',0,0,0,1,[[0,'#fff3a8'],[.5,'#ffc91f'],[1,'#d98a00']]);
  if(sh)defs+=`<linearGradient id="${u}h" x1="0" y1="0" x2="1" y2="1">${stp([[0,'#fff',0],[.4,'#fff',.0],[.5,'#fff',.55],[.6,'#fff',0],[1,'#fff',0]])}<animateTransform attributeName="gradientTransform" type="translate" values="-1 -1;1 1" dur="2.4s" repeatCount="indefinite"/></linearGradient>`;
