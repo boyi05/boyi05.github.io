@@ -883,6 +883,7 @@ function badgeCheck(b,me){if(!b)return;let seen={},first=false;try{const v=local
   const now={};b.list.forEach(x=>now[x.id]=x.tier);const up=b.list.filter(x=>x.tier>(seen[x.id]||0));
   try{localStorage.setItem('bdg_'+me,JSON.stringify(now))}catch(e){}
   if(!up.length)return;
+  setTimeout(()=>{if(window.sfx&&!first)window.sfx('badge')},600);
   setTimeout(()=>ask(`${confetti()}<div style="text-align:center;position:relative"><div style="font-size:40px">🎉</div><h3>${first?'你的徽章':'拿到新徽章了！'}</h3><div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px">${up.map(x=>`<div style="width:92px" class="pop">${medal(x.icon,x.tier,76,x.id)}<div class="bn">${esc(x.name)}</div><div class="bt t${x.tier}">${x.special?'特別徽章':TIERN[x.tier]}</div></div>`).join('')}</div></div>`,null,'太棒了！'),600)}
 // 排行榜
 let RK={p:'week'};

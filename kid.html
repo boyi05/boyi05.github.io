@@ -978,6 +978,7 @@ function badgeCheck(b,me){if(!b)return;let seen={},first=false;try{const v=local
   const now={};b.list.forEach(x=>now[x.id]=x.tier);const up=b.list.filter(x=>x.tier>(seen[x.id]||0));
   try{localStorage.setItem('bdg_'+me,JSON.stringify(now))}catch(e){}
   if(!up.length)return;
+  setTimeout(()=>{if(window.sfx&&!first)window.sfx('badge')},600);
   setTimeout(()=>ask(`${confetti()}<div style="text-align:center;position:relative"><div style="font-size:40px">🎉</div><h3>${first?'你的徽章':'拿到新徽章了！'}</h3><div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px">${up.map(x=>`<div style="width:92px" class="pop">${medal(x.icon,x.tier,76,x.id)}<div class="bn">${esc(x.name)}</div><div class="bt t${x.tier}">${x.special?'特別徽章':TIERN[x.tier]}</div></div>`).join('')}</div></div>`,null,'太棒了！'),600)}
 // 排行榜
 let RK={p:'week'};
@@ -1079,14 +1080,15 @@ function buildDock(){$('#dock').innerHTML=TABS.map(t=>`<div data-p="${t[0]}" cla
   $$('#dock>div').forEach(d=>d.onclick=()=>go(d.dataset.p))}
 function go(p){if(p==='me')p=st.me||'badge';const inMe=ME.some(m=>m[0]===p);if(inMe)st.me=p;const dk=inMe?'me':(p==='math'||p==='gm')?'play':p;st.tab=p;
   $$('#dock>div').forEach(d=>d.classList.toggle('on',d.dataset.p===dk));$$('.page').forEach(s=>s.classList.toggle('on',s.id==='pg-'+p));window.scrollTo(0,0);
-  $('#meNav').classList.toggle('hidden',!inMe);if(inMe)chips($('#meNav'),ME.map(m=>m[0]),p,go,v=>ME.find(m=>m[0]===v)[1]);
+  $('#meNav').classList.toggle('hidden',!inMe);if(inMe){chips($('#meNav'),ME.map(m=>m[0]),p,go,v=>ME.find(m=>m[0]===v)[1]);$('#meNav').insertAdjacentHTML('beforeend',`<button class="chip" id="sndT" onclick="sndToggle()">${PSOUND?'🔊 音效：開':'🔇 音效：關'}</button>`)}
   if((p==='home'||p==='task'||p==='shop'||p==='pet')&&Date.now()-G_AT>20000)loadGame();if(p==='pet')drawPet();if(p==='bank')loadBank();if(p==='forum')loadForum();if(p==='badge')drawBadges();if(p==='rank')loadRank();if(p==='rec')refreshBal();if(p==='math')drawMath();if(p==='play')drawPlay()}
 function drawHud(){const p=prof(),g=G.me||{};$('#hud').innerHTML=`<div class="who" onclick="editProfile()">${avatar(p,40)}<div><b>${esc(p.nick||me())}</b><small>${g.lv?'Lv.'+g.lv+' '+titleOf(g.lv):''}</small></div></div><div class="coin">🪙 ${n(g.coins)}</div>`;loadImgs([p.photo])}
 
 /* ===== 遊戲資料 ===== */
 let G_AT=0;
 async function loadGame(){try{G=await call('getGame')}catch(e){return toast(errMsg(e),1)}showGame()}
-function showGame(g){if(g)G=g;G_AT=Date.now();if(G.pet){const zo=PET&&PET.zooOpen;petSet(G.pet);PET.zooOpen=zo}drawHud();drawHome();drawTasks();drawShop();if(st.tab==='pet')drawPet();if(st.tab==='badge')drawBadges();badgeCheck(G.badges,me())}
+let LAST_ME=null;
+function showGame(g){if(g)G=g;G_AT=Date.now();if(G.me){const m=G.me;if(LAST_ME&&m.lv>LAST_ME.lv){sfx('levelup');toast('🎉 升級了！Lv.'+m.lv)}else if(LAST_ME&&m.coins>LAST_ME.coins+0)sfx('coin');LAST_ME={lv:m.lv,coins:m.coins}}if(G.pet){const zo=PET&&PET.zooOpen;petSet(G.pet);PET.zooOpen=zo}drawHud();drawHome();drawTasks();drawShop();if(st.tab==='pet')drawPet();if(st.tab==='badge')drawBadges();badgeCheck(G.badges,me())}
 // 動作完成後，伺服器會順便送回最新資料，就不用再讀一次
 function after(r){if(!r)return;if(r.game)showGame(r.game);else loadGame()}
 function drawHome(){const g=G.me,p=prof(),e=eraOf(g.maxLv);
@@ -1120,7 +1122,7 @@ function drawTasks(){const own=G.tasks.filter(t=>t.type!=='團隊'),team=G.tasks
   $('#pg-task').innerHTML=h}
 async function doTask(id){const t=G.tasks.find(x=>x.id===id);
   if(!await ask(`<h3>${troubleSvg(t.diff,40)} 完成了嗎？</h3><b>${esc(t.name)}</b><br>${t.type==='團隊'?'<div class="mu">🤝 合作任務：完成後商品降價，三個人都得利</div>':''}爸媽確認後可以拿到 <b class="plus">+${t.exp} 經驗</b>、<b class="gold">+${n(t.coins)} 金幣</b>${t.cash?`、<b class="plus">+${n(t.cash)} 元（存進存摺）</b>`:''}`,'完成任務'))return;
-  after(await run(null,'submitTask',{id}))}
+  const rt=await run(null,'submitTask',{id});if(rt)sfx('ok');after(rt)}
 
 /* ===== 商店 ===== */
 function drawShop(){const c=G.me.coins;
@@ -1133,7 +1135,7 @@ function drawShop(){const c=G.me.coins;
 async function buy(id){const p=G.shop.find(x=>x.id===id);if(G.me.coins<p.price)return toast('金幣還差 '+(p.price-G.me.coins)+' 喔',1);
   const msg=p.type==='兌換'?`會扣 <b>${n(p.price)} 金幣</b>，爸媽確認後把 <b class="plus">${n(p.ntd)} 元</b> 存進你的存摺。<br><span class="mu">換成錢之後，就不能再換回金幣喔！</span>`:`會扣 <b>${n(p.price)} 金幣</b>，再請爸媽兌現給你。`;
   if(!await ask(`<h3>要買「${esc(p.name)}」嗎？</h3>${msg}<br>買完還剩 <b>${n(G.me.coins-p.price)}</b> 金幣`,'買！'))return;
-  after(await run(null,'buyItem',{id}))}
+  const rb=await run(null,'buyItem',{id});if(rb)sfx('coin');after(rb)}
 
 /* ===== 電子寵物 ===== */
 let PET=null;
@@ -1163,14 +1165,15 @@ function mNext(){MG.cur=mathQ(MG.lv);MG.inp='';$('#mQ').textContent=MG.cur.q+' =
 function mTick(){if(!MG||!MG.end)return;const left=Math.max(0,MG.end-Date.now()),e=$('#mTime');if(!e)return;e.textContent=Math.ceil(left/1000);$('#mBar').style.width=(left/600)+'%';if(left<=0)return mathEnd();requestAnimationFrame(mTick)}
 function mKey(k){if(!MG||!MG.end||MG.busy)return;if(k==='C')MG.inp='';else if(k==='⌫')MG.inp=MG.inp.slice(0,-1);else if(MG.inp.length<4)MG.inp+=k;
   $('#mA').textContent=MG.inp;const ans=String(MG.cur.ans);if(MG.inp.length<ans.length)return;MG.busy=true;
-  if(MG.inp===ans){MG.correct++;MG.combo++;$('#mA').className='ma ok';$('#mOk').textContent=MG.correct;$('#mCombo').textContent=MG.combo>=3?`🔥 ${MG.combo} 連對`:'';setTimeout(()=>{if(MG){MG.busy=false;mNext()}},180)}
-  else{MG.wrong++;MG.combo=0;$('#mNg').textContent=MG.wrong;$('#mCombo').textContent='';$('#mA').className='ma ng';$('#mA').textContent=MG.inp+' → '+ans;setTimeout(()=>{if(MG){MG.busy=false;mNext()}},900)}}
+  if(MG.inp===ans){MG.correct++;MG.combo++;MG.combo>=3?sfx('combo',MG.combo):sfx('ok');$('#mA').className='ma ok';$('#mOk').textContent=MG.correct;$('#mCombo').textContent=MG.combo>=3?`🔥 ${MG.combo} 連對`:'';setTimeout(()=>{if(MG){MG.busy=false;mNext()}},180)}
+  else{MG.wrong++;MG.combo=0;sfx('bad');$('#mNg').textContent=MG.wrong;$('#mCombo').textContent='';$('#mA').className='ma ng';$('#mA').textContent=MG.inp+' → '+ans;setTimeout(()=>{if(MG){MG.busy=false;mNext()}},900)}}
 document.addEventListener('keydown',e=>{if(!MG||!MG.end)return;if(/^[0-9]$/.test(e.key))mKey(e.key);else if(e.key==='Backspace')mKey('⌫')});
 async function mathQuit(){if(MG&&MG.end&&!await ask('<h3>要離開嗎？</h3>這一場不會算成績喔。','離開'))return;MG=null;drawMath()}
 async function mathEnd(){if(!MG||MG.done)return;MG.done=true;MG.end=0;const g=MG;
   $('#pg-math').innerHTML=`<div class="card" style="text-align:center"><div style="font-size:48px">⏰</div><h3>時間到！</h3><div class="mu">送出成績中…</div></div>`;
   let r=null;try{r=await call('submitMath',{lv:g.lv,correct:g.correct,wrong:g.wrong})}catch(e){toast(errMsg(e),1)}
   if(r&&G.math){G.math.left=r.left;G.math.best[g.lv]=r.best}if(r){const x=GI();x.left.math=r.left;(x.best.math=x.best.math||{})[g.lv]=r.best;x.coinsToday+=r.coins||0}
+  if(r&&(r.coins||r.exp))setTimeout(()=>{sfx('win');if(r.coins)setTimeout(()=>sfx('coin'),700)},200);
   const acc=g.correct+g.wrong?Math.round(g.correct/(g.correct+g.wrong)*100):0;
   $('#pg-math').innerHTML=`<div class="card" style="text-align:center;position:relative;overflow:hidden">${r&&r.newBest&&g.correct?confetti():''}<div style="font-size:52px">${g.correct>=20?'🏆':g.correct>=10?'🌟':'💪'}</div><h3>Lv${g.lv} ${MLV[g.lv][0]}</h3>
    <div class="mbig">${g.correct}<small> 題</small></div><div class="mu">答錯 ${g.wrong} 題・正確率 ${acc}%・分數 ${g.correct*g.lv}</div>
@@ -1211,7 +1214,7 @@ async function gmEnd(g,lv,c,w,t,line){if(!GM||GM.done)return;GM.done=true;GM.liv
   $('#pg-gm').innerHTML=`<div class="card" style="text-align:center"><div style="font-size:48px">⏳</div><h3>送出成績中…</h3></div>`;
   let r=null;try{r=await call('submitGame',{game:g,lv,correct:c,wrong:w,time:t})}catch(e){toast(errMsg(e),1)}
   const x=GI();if(r){x.left[g]=r.left;(x.best[g]=x.best[g]||{})[lv]=r.best;x.coinsToday+=r.coins||0}
-  const info=GMS.find(z=>z[0]===g);
+  const info=GMS.find(z=>z[0]===g);if(r&&(r.coins||r.exp))setTimeout(()=>{sfx('win');if(r.coins)setTimeout(()=>sfx('coin'),700)},200);
   $('#pg-gm').innerHTML=`<div class="card" style="text-align:center;position:relative;overflow:hidden">${r&&r.newBest&&c?confetti():''}<div style="font-size:52px">${info[1]}</div><h3>${info[2]} Lv${lv}</h3>${line}
    ${r?`${r.newBest&&c?'<div class="mnew">🎉 破紀錄了！</div>':''}${r.coins||r.exp?`<div class="mrw">🪙 +${r.coins} 金幣　⭐ +${r.exp} 經驗</div>`:`<div class="mu" style="margin-top:6px">${c?(r.left?'今天的金幣上限到了，經驗也拿完囉':'今天這個遊戲的獎勵拿完了，明天再來喔！'):'再試一次吧！'}</div>`}`:''}
    <button class="go wide" onclick="gmStart('${g}',${lv})">再玩一次</button><button class="go wide" style="background:#9a8670;box-shadow:0 4px 0 #6f5f4f" onclick="gmLevels('${g}')">換等級</button><button class="go wide" style="background:#4d8de6;box-shadow:0 4px 0 #2f6ab8" onclick="go('play')">回遊樂區</button></div>`;
@@ -1246,7 +1249,7 @@ function sdDraw(){const M=GM,C=M.C,n=C.n,s=M.sel,sr=Math.floor(s/n),sc=s%n,sv=s>
     return `<div class="${cls.join(' ')}" onclick="sdSel(${i})">${v?(C.sym?C.sym[v-1]:v):''}</div>`}).join('')}
 function sdSel(i){if(!GM||GM.done||GM.over)return;GM.sel=i;sdDraw()}
 function sdPut(v){const M=GM;if(!M||M.done||M.over||M.sel<0||M.giv[M.sel])return;const C=M.C,n=C.n;
-  if(v){M.a[M.sel]=0;if(!sdCan(M.a,n,C.br,C.bc,M.sel,v)){M.w++;$('#sdW').textContent=M.w}}
+  if(v){M.a[M.sel]=0;if(!sdCan(M.a,n,C.br,C.bc,M.sel,v)){M.w++;sfx('bad');$('#sdW').textContent=M.w}}
   M.a[M.sel]=v;sdDraw();
   if(M.a.every(x=>x)&&M.a.every((x,i)=>{M.a[i]=0;const ok=sdCan(M.a,n,C.br,C.bc,i,x);M.a[i]=x;return ok})){const t=Math.max(5,Math.round((Date.now()-M.t0)/1000));M.over=true;M.sel=-1;sdDraw();
     setTimeout(()=>gmEnd('sudoku',M.lv,1,M.w,t,`<div class="mbig" style="font-size:52px">${fmtT(t)}</div><div class="mu">完成時間・填錯 ${M.w} 次</div>`),600)}}
@@ -1281,7 +1284,7 @@ function p24Draw(msg){const M=GM;
 function p24Tap(i){const M=GM;if(!M||M.lock)return;if(M.sel<0||!M.op){M.sel=(M.sel===i?-1:i);return p24Draw()}
   if(i===M.sel)return;const a=M.cards[M.sel],b=M.cards[i],v=frOp(a.v,M.op,b.v);if(!v){M.op='';return p24Draw('不能除以 0 喔')}
   M.hist.push(M.cards.map(c=>({...c})));const nc=M.cards.filter((_,k)=>k!==M.sel&&k!==i);nc.splice(Math.min(i,M.sel),0,{id:Date.now(),v});M.cards=nc;M.sel=-1;M.op='';
-  if(nc.length===1){if(v[0]===24&&v[1]===1){M.c++;M.q++;M.lock=true;p24Draw('🎉 答對了！');setTimeout(()=>{if(GM===M&&!M.dead)p24Next()},900)}else p24Draw('算出來是 '+frS(v)+'，不是 24，按「上一步」再試試')}
+  if(nc.length===1){if(v[0]===24&&v[1]===1){sfx('win');M.c++;M.q++;M.lock=true;p24Draw('🎉 答對了！');setTimeout(()=>{if(GM===M&&!M.dead)p24Next()},900)}else{sfx('bad');p24Draw('算出來是 '+frS(v)+'，不是 24，按「上一步」再試試')}}
   else p24Draw()}
 function p24Op(o){const M=GM;if(!M||M.lock)return;if(M.sel<0)return p24Draw('先點一張牌');M.op=o;p24Draw()}
 function p24Undo(){const M=GM;if(!M||M.lock||!M.hist.length)return;M.cards=M.hist.pop();M.sel=-1;M.op='';p24Draw()}
@@ -1324,7 +1327,7 @@ function pzNext(){const M=GM;if(M.q>=10)return gmEnd('pizza',M.lv,M.c,M.w,0,`<di
   <div class="pzo">${M.Q.opts.map((o,i)=>`<button onclick="pzPick(this,${i})">${o.includes('/')?frH(...o.split('/')):o}</button>`).join('')}</div></div>`}
 function pzPick(btn,i){const M=GM;if(!M||M.lock)return;M.lock=true;const o=M.Q.opts[i],ok=o===M.Q.ans;
   btn.classList.add(ok?'ok':'ng');if(!ok){[...btn.parentNode.children].forEach((b,j)=>{if(M.Q.opts[j]===M.Q.ans)b.classList.add('ok')})}
-  if(ok)M.c++;else M.w++;M.q++;if(ok)setTimeout(()=>{if(GM===M&&!M.dead)pzNext()},700);else btn.closest('.pzcard').insertAdjacentHTML('beforeend',`<div class="mu" style="margin-top:10px">綠色的是正確答案</div>`+gmNextBtn('pzGo()'))}
+  if(ok)M.c++;else M.w++;sfx(ok?'ok':'bad');M.q++;if(ok)setTimeout(()=>{if(GM===M&&!M.dead)pzNext()},700);else btn.closest('.pzcard').insertAdjacentHTML('beforeend',`<div class="mu" style="margin-top:10px">綠色的是正確答案</div>`+gmNextBtn('pzGo()'))}
 function pzGo(){const M=GM;if(M&&!M.dead)pzNext()}
 
 // ----- 英文單字拼拼看 -----
@@ -1347,7 +1350,7 @@ function wdDraw(state){const M=GM,W=M.W;
   ${state==='ng'?`<div class="wdans">正確是 <b>${W.w}</b></div>`:''}
   <div class="wdt">${M.tiles.map((t,i)=>`<button class="${t.used?'used':''}" onclick="wdTap(${i})">${t.ch}</button>`).join('')}</div></div>`}
 function wdTap(i){const M=GM;if(!M||M.lock||M.tiles[i].used)return;const k=M.slots.indexOf(null);if(k<0)return;M.slots[k]=i;M.tiles[i].used=true;
-  if(M.slots.indexOf(null)<0){M.lock=true;const got=M.slots.map(t=>M.tiles[t].ch).join(''),ok=got===M.W.w;if(ok)M.c++;else M.w++;wdDraw(ok?'ok':'ng');M.q++;say(M.W.w);if(ok)setTimeout(()=>{if(GM===M&&!M.dead)wdNext()},1000);else $('.wdcard').insertAdjacentHTML('beforeend',gmNextBtn('wdGo()'))}
+  if(M.slots.indexOf(null)<0){M.lock=true;const got=M.slots.map(t=>M.tiles[t].ch).join(''),ok=got===M.W.w;if(ok)M.c++;else M.w++;sfx(ok?'ok':'bad');wdDraw(ok?'ok':'ng');M.q++;say(M.W.w);if(ok)setTimeout(()=>{if(GM===M&&!M.dead)wdNext()},1000);else $('.wdcard').insertAdjacentHTML('beforeend',gmNextBtn('wdGo()'))}
   else wdDraw()}
 function wdGo(){const M=GM;if(M&&!M.dead)wdNext()}
 function wdBack(k){const M=GM;if(!M||M.lock||M.slots[k]==null)return;M.tiles[M.slots[k]].used=false;M.slots[k]=null;wdDraw()}
@@ -1442,7 +1445,43 @@ function petVoice(sp,hi){if(!PSOUND)return;if(hi===undefined)hi=PET&&PET.now&&PE
    o.frequency.setValueAtTime(V.a*hi,t);o.frequency.exponentialRampToValueAtTime(V.b*hi,t+V.d*(V.c?.5:.9));if(V.c)o.frequency.exponentialRampToValueAtTime(V.c*hi,t+V.d);
    if(V.v){const l=PAC.createOscillator(),lg=PAC.createGain();l.frequency.value=V.v;lg.gain.value=V.a*.05;l.connect(lg);lg.connect(o.frequency);l.start(t);l.stop(t+V.d)}
    g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(Math.min(.7,V.g*4.5),t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+V.d);o.connect(g);g.connect(PAC.out);o.start(t);o.stop(t+V.d+.03)}}catch(e){}}
-function petSoundToggle(b){PSOUND=!PSOUND;try{localStorage.setItem('petSound',PSOUND?'1':'0')}catch(e){}b.textContent=PSOUND?'🔊':'🔇';if(PSOUND)petVoice(PET.now.species)}
+function petSoundToggle(b){sndToggle();if(PSOUND&&PET&&PET.now)petVoice(PET.now.species)}
+/* ===== 音效庫：全部用 Web Audio 合成，接到 PAC.out；PSOUND 是全部音效的總開關（「我的」和寵物舞台右上角都可以切） ===== */
+let NB=null;function noiseBuf(){if(NB)return NB;const n=Math.floor(PAC.sampleRate*1.5);NB=PAC.createBuffer(1,n,PAC.sampleRate);const d=NB.getChannelData(0);for(let i=0;i<n;i++)d[i]=Math.random()*2-1;return NB}
+function tone(t,f0,f1,dur,type,vol){const o=PAC.createOscillator(),g=PAC.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f0,t);if(f1)o.frequency.exponentialRampToValueAtTime(f1,t+dur);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g);g.connect(PAC.out);o.start(t);o.stop(t+dur+.03)}
+function noise(t,dur,vol,ft,f0,f1,q){const s=PAC.createBufferSource();s.buffer=noiseBuf();const f=PAC.createBiquadFilter();f.type=ft||'lowpass';f.frequency.setValueAtTime(f0||1000,t);if(f1)f.frequency.exponentialRampToValueAtTime(f1,t+dur);f.Q.value=q||1;
+  const g=PAC.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+dur);s.connect(f);f.connect(g);g.connect(PAC.out);s.start(t,Math.random()*.5);s.stop(t+dur+.03)}
+const SFX={
+  click:t=>tone(t,1500,900,.035,'triangle',.1),
+  coin:t=>{tone(t,1319,0,.09,'square',.26);tone(t+.08,1760,0,.28,'square',.26)},
+  ok:t=>{tone(t,880,0,.18,'triangle',.32);tone(t+.12,1320,0,.35,'triangle',.32)},
+  bad:t=>{tone(t,230,150,.3,'square',.32);tone(t,233,152,.3,'sawtooth',.15)},
+  combo:(t,n)=>{const b=660*Math.pow(1.06,Math.min(n||0,12));tone(t,b,0,.08,'triangle',.28);tone(t+.06,b*1.5,0,.18,'triangle',.28)},
+  win:t=>{[523,659,784,1047].forEach((f,i)=>tone(t+i*.11,f,0,.22,'triangle',.3));[523,659,784].forEach(f=>tone(t+.48,f,0,.7,'triangle',.18))},
+  levelup:t=>{[392,523,659,784,1047,1319].forEach((f,i)=>tone(t+i*.09,f,0,.2,'square',.12));[784,1047,1319].forEach(f=>tone(t+.6,f,0,.9,'triangle',.18))},
+  badge:t=>[1047,1319,1568,2093,2637].forEach((f,i)=>tone(t+i*.07,f,0,.35,'sine',.22)),
+  grow:t=>{[523,659,784].forEach((f,i)=>tone(t+i*.12,f,0,.25,'triangle',.28));[659,784,1047].forEach(f=>tone(t+.4,f,0,.8,'triangle',.18))},
+  chew:t=>{for(let i=0;i<3;i++)noise(t+i*.17,.08,1,'bandpass',900,600,1)},
+  bubble:t=>{for(let i=0;i<6;i++){const f=500+Math.random()*700;tone(t+i*.09,f,f*1.8,.07,'sine',.25)}},
+  bounce:t=>tone(t,260,80,.16,'sine',.8),
+  sweep:t=>noise(t,.45,.35,'highpass',800,3000,1),
+  pill:t=>{tone(t,1568,0,.4,'sine',.28);tone(t+.1,2093,0,.5,'sine',.2)},
+  slash:t=>noise(t,.16,.5,'highpass',2000,6000,1),
+  chomp:t=>{tone(t,150,70,.09,'square',.3);tone(t+.16,150,70,.09,'square',.3)},
+  fire:(t,d)=>{d=d||.6;noise(t,d,.55,'lowpass',400,2400,1);for(let i=0;i<Math.round(d*12);i++)noise(t+Math.random()*d,.03,.25,'highpass',3000,0,1)},
+  boom:t=>{noise(t,.6,.7,'lowpass',1200,80,1);tone(t,120,35,.5,'sine',.6)},
+  zap:t=>{tone(t,1800,300,.15,'sawtooth',.4);noise(t,.1,.5,'highpass',3000,0,1)},
+  thunder:t=>{noise(t,.08,.6,'highpass',2500,0,1);noise(t+.05,1.4,.75,'lowpass',600,60,1);tone(t+.05,70,35,1,'sine',.45)},
+  water:t=>tone(t,900,300,.14,'sine',.75),
+  laser:t=>{tone(t,2200,400,.6,'square',.3);tone(t,2205,410,.6,'sawtooth',.18)},
+  whoosh:t=>noise(t,.35,1,'bandpass',400,2000,.8)};
+function sfx(name,arg){if(!PSOUND)return;try{pacInit();if(PAC.state==='suspended')PAC.resume();(SFX[name]||SFX.click)(PAC.currentTime+.01,arg)}catch(e){}}
+window.sfx=sfx;
+function psfx(n,a){if(!PK.quiet)sfx(n,a)}
+function sndToggle(){PSOUND=!PSOUND;try{localStorage.setItem('petSound',PSOUND?'1':'0')}catch(e){}const b=$('.psnd');if(b)b.textContent=PSOUND?'🔊':'🔇';const m=$('#sndT');if(m)m.textContent=PSOUND?'🔊 音效：開':'🔇 音效：關';if(PSOUND){sfx('ok')}toast(PSOUND?'🔊 音效打開了':'🔇 音效關掉了')}
+/* 按按鈕的輕輕一聲 */
+document.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest('button,#dock>div,.chip');if(b&&!b.disabled&&!b.classList.contains('psnd'))sfx('click')},true);
+
 const pbSleep=ms=>new Promise(r=>setTimeout(r,ms));
 const pbPick=a=>a[Math.floor(Math.random()*a.length)];
 function pbNight(){const h=new Date().getHours();return h>=22||h<6}
@@ -1483,7 +1522,7 @@ function petStart(v){clearTimeout(PB.t);PB.seq++;PB.x=0;PB.turn=0;PB.pose='';pbF
   if(v.stage&&!v.ready)PB.t=setTimeout(pbIdle,1200)}
 async function pbGrow(v){const id=++PB.seq;await pbSleep(500);if(id!==PB.seq)return;
   for(let i=0;i<14;i++)setTimeout(()=>pfx(pbPick(['🎉','✨','⭐','🎊']),Math.random()*260-130,40+Math.random()*120,'up',1400),i*90);
-  pbSay(v.stage===1?'孵出來了！':'長大了！',2200);petVoice(v.species);await pbAct('hop',1400,id);
+  pbSay(v.stage===1?'孵出來了！':'長大了！',2200);sfx('grow');await pbAct('hop',1400,id);
   toast('🎉 '+v.name+' '+(v.stage===1?'孵化了！':'長大成「'+v.stageName+'」了！'));
   if(id===PB.seq&&v.stage&&!v.ready)PB.t=setTimeout(pbIdle,1800)}
 async function pbEgg(){const a=$('#petA');if(!a)return;a.className='pa squish';pbHearts(1);toast('蛋動了一下！');await pbSleep(500);a.className='pa'}
@@ -1509,15 +1548,15 @@ async function petPlay(a){const v=PET.now;if(!$('#petA'))return;clearTimeout(PB.
   try{
   if(a==='pat'){pfx('🤚',PB.x,128,'pat',1500);await pbAct('squish',500,id);petVoice(v.species);pbSay(pbPick(PSND[v.species]||['♪']),1300);pbHearts(3);await pbSleep(900)}
   else if(a==='feed'||a==='snack'){const s=PB.x>0?-1:1,fx=Math.max(-R-40,Math.min(R+40,PB.x+80*s));if(pbFr())await pbWalk(Math.max(-R+60,Math.min(R-60,PB.x)),id);const f=pbFr()?null:pfx(a==='feed'?'🍙':'🍰',fx,4,'food',0);pbFace(s);
-    await pbAct('sniff',500,id);pbCls('eat');for(const sc of [.8,.6,.35,0]){await pbSleep(600);if(id!==PB.seq)break;if(f)f.style.transform=`translate(-50%,0) scale(${sc})`}
+    await pbAct('sniff',500,id);pbCls('eat');for(const sc of [.8,.6,.35,0]){sfx('chew');await pbSleep(600);if(id!==PB.seq)break;if(f)f.style.transform=`translate(-50%,0) scale(${sc})`}
     if(f)f.remove();if(id===PB.seq){pbSay(a==='feed'?'好飽～':'好甜！',1400);pbHearts(2);await pbAct('hop',1400,id)}}
   else if(a==='play'){const s=PB.x>0?-1:1,b=pfx('⚽',PB.x+40*s,4,'ball',0);if(b){b.style.transition='left .9s ease-out'}
-    for(let i=0;i<3&&id===PB.seq;i++){const to=(i%2?-1:1)*s*R;if(b)b.style.left=`calc(50% + ${Math.round(to+(i%2?-1:1)*s*40)}px)`;await pbWalk(to,id,160)}
+    for(let i=0;i<3&&id===PB.seq;i++){sfx('bounce');const to=(i%2?-1:1)*s*R;if(b)b.style.left=`calc(50% + ${Math.round(to+(i%2?-1:1)*s*40)}px)`;await pbWalk(to,id,160)}
     if(b)b.remove();if(id===PB.seq){petVoice(v.species);pbSay(pbPick(PSND[v.species]||['♪']),1300);pbHearts(3);await pbAct('hop',1400,id)}}
-  else if(a==='bath'){for(let i=0;i<9;i++)setTimeout(()=>pfx('🫧',PB.x+Math.random()*120-60,10+Math.random()*70,'bub',1700),i*140);
+  else if(a==='bath'){sfx('bubble');setTimeout(()=>sfx('bubble'),800);for(let i=0;i<9;i++)setTimeout(()=>pfx('🫧',PB.x+Math.random()*120-60,10+Math.random()*70,'bub',1700),i*140);
     await pbAct('squish',600,id);await pbSleep(700);pbSay('甩甩～',1200);await pbAct('shake',1400,id);pbHearts(4,'✨')}
-  else if(a==='poop'){pfx('🧹',0,0,'sweep',1500);await pbSleep(700);pbPoo();pbHearts(3,'✨');await pbAct('hop',1400,id)}
-  else if(a==='doctor'){pfx('💊',PB.x,150,'drop',800);await pbSleep(700);await pbAct('shiver',800,id);pbSay('好多了！',1400);pbHearts(3,'✨');await pbAct('hop',1400,id)}
+  else if(a==='poop'){pfx('🧹',0,0,'sweep',1500);sfx('sweep');await pbSleep(700);pbPoo();pbHearts(3,'✨');await pbAct('hop',1400,id)}
+  else if(a==='doctor'){pfx('💊',PB.x,150,'drop',800);await pbSleep(700);sfx('pill');await pbAct('shiver',800,id);pbSay('好多了！',1400);pbHearts(3,'✨');await pbAct('hop',1400,id)}
   }finally{if(id===PB.seq){pbBase();PB.t=setTimeout(pbIdle,2200)}}}
 async function petByeBox(){const v=PET.now;if(!await ask(`<div style="text-align:center">${petSvg(v.species,v.stage,{shiny:v.shiny,mood:90},120)}<h3>送 ${esc(v.name)} 去島上動物園</h3>謝謝你這 10 天的照顧！<br>${esc(v.name)} 會搬進動物園，以後隨時可以去看牠，還會留下紀念品給你。</div>`,'送牠去動物園','再看一下'))return;
   const r=await run(null,'petBye',{id:v.id});if(!r)return;
@@ -1563,39 +1602,39 @@ function pkShake(ms){const S=$('#petStage');if(!S)return;try{S.animate([{transfo
 function pkBoom(x,yb,n,cols,r){for(let i=0;i<n;i++){const a=Math.random()*6.28,d=(r||40)*(.5+Math.random()*.6);pkPart(x,yb,4+Math.random()*6,cols[i%cols.length],Math.cos(a)*d,Math.sin(a)*d,500+Math.random()*300)}}
 const PKSVG=(w,h,body)=>`<svg width="100%" height="100%" viewBox="0 0 ${w} ${h}" shape-rendering="crispEdges">${body}</svg>`;
 async function pkClaw(G){const sx=G.d<0?-1:1;let b='';for(let k=0;k<3;k++)for(let t=0;t<9;t++)b+=`<rect x="${9-t*0.8+k*3.4}" y="${1+t*1.5}" width="1.6" height="1.6" fill="${t%3?'#ffffff':'#ff5a5a'}"/>`;
-  for(let r=0;r<2;r++){const e=pkEl(PKSVG(18,16,b),G.fx+G.d*(30+r*16),G.my-34+r*6,96,86,5);if(e)e.style.transform=`scaleX(${sx})`;
+  for(let r=0;r<2;r++){psfx('slash');const e=pkEl(PKSVG(18,16,b),G.fx+G.d*(30+r*16),G.my-34+r*6,96,86,5);if(e)e.style.transform=`scaleX(${sx})`;
   await pkAnim(e,[{transform:`scaleX(${sx}) scale(.4)`,opacity:0},{transform:`scaleX(${sx}) scale(1.1)`,opacity:1,offset:.3},{transform:`scaleX(${sx}) scale(1.1)`,opacity:1,offset:.7},{transform:`scaleX(${sx}) scale(1.2)`,opacity:0}],520,'ease-out')}pkBoom(G.fx+G.d*28,G.my,6,['#fff','#ffd0d0'],26)}
 async function pkBite(G){const sx=G.d<0?-1:1;const tooth=y=>Array.from({length:5},(_,i)=>`<rect x="${1+i*3}" y="${y}" width="2" height="3" fill="#fff" stroke="#10141c" stroke-width=".4"/>`).join('');
-  for(let r=0;r<2;r++){const top=pkEl(PKSVG(16,4,tooth(0)),G.fx+G.d*26,G.my+4,56,16,5),bot=pkEl(PKSVG(16,4,tooth(1)),G.fx+G.d*26,G.my-22,56,16,5);
+  for(let r=0;r<2;r++){psfx('chomp');const top=pkEl(PKSVG(16,4,tooth(0)),G.fx+G.d*26,G.my+4,56,16,5),bot=pkEl(PKSVG(16,4,tooth(1)),G.fx+G.d*26,G.my-22,56,16,5);
     pkAnim(top,[{transform:'translateY(-14px)'},{transform:'translateY(6px)',offset:.6},{transform:'translateY(6px)',opacity:0}],380,'ease-in');await pkAnim(bot,[{transform:'translateY(14px)'},{transform:'translateY(-6px)',offset:.6},{transform:'translateY(-6px)',opacity:0}],380,'ease-in')}
   pkBoom(G.fx+G.d*26,G.my-8,6,['#fff','#2affe0'],24)}
 async function pkFireball(G){const ball=PKSVG(5,5,'<rect x="1" y="0" width="3" height="5" fill="#ff8a1a"/><rect x="0" y="1" width="5" height="3" fill="#ff8a1a"/><rect x="1" y="1" width="3" height="3" fill="#ffd23f"/><rect x="2" y="2" width="1" height="1" fill="#fff8c0"/>');
   const e=pkEl(ball,G.fx,G.my-12,28,28,5),dx=G.d*Math.min(150,G.W/2+40-Math.abs(G.fx));
   const trail=setInterval(()=>{if(!e||!e.isConnected)return clearInterval(trail);const r=e.getBoundingClientRect(),S=G.S.getBoundingClientRect();pkPart(r.left+r.width/2-S.left-S.width/2,S.bottom-r.bottom+10,6,Math.random()<.5?'#ff8a1a':'#ffd23f',-G.d*14,Math.random()*10-5,300)},45);
-  await pkAnim(e,[{transform:'translate(0,0) scale(.6)'},{transform:`translate(${dx}px,-6px) scale(1.1)`}],620,'ease-in');clearInterval(trail);pkBoom(G.fx+dx,G.my-6,12,['#ff8a1a','#ffd23f','#ff4a1a'],40)}
-async function pkBreath(G){const cols=['#fff36a','#ffd23f','#ff8a1a','#ff4a1a','#e8221a'];const end=Date.now()+1500;
+  psfx('fire',.45);await pkAnim(e,[{transform:'translate(0,0) scale(.6)'},{transform:`translate(${dx}px,-6px) scale(1.1)`}],620,'ease-in');clearInterval(trail);psfx('boom');pkBoom(G.fx+dx,G.my-6,12,['#ff8a1a','#ffd23f','#ff4a1a'],40)}
+async function pkBreath(G){const cols=['#fff36a','#ffd23f','#ff8a1a','#ff4a1a','#e8221a'];const end=Date.now()+1500;psfx('fire',1.5);
   while(Date.now()<end){for(let i=0;i<3;i++){const s=8+Math.random()*10,len=110+Math.random()*90;pkPart(G.fx,G.my-12+Math.random()*10,s,cols[Math.floor(Math.random()*cols.length)],G.d*len,(Math.random()*2-1)*len*.35,500+Math.random()*300,5)}await pbSleep(40)}
   pkFlash('#ff8a1a',300,.25)}
-async function pkHell(G){pkDark(2800);pkShake(900);await pbSleep(300);const cols=['#ff3a7a','#c04aff','#ff2a2a','#ffd23f','#7a1aff'];const end=Date.now()+2000,n=7;
+async function pkHell(G){pkDark(2800);pkShake(900);psfx('boom');psfx('fire',2.2);await pbSleep(300);const cols=['#ff3a7a','#c04aff','#ff2a2a','#ffd23f','#7a1aff'];const end=Date.now()+2000,n=7;
   while(Date.now()<end){for(let k=0;k<n;k++){const x=(k/(n-1)-.5)*(G.W-30)+Math.random()*10;pkPart(x,6,8+Math.random()*10,cols[Math.floor(Math.random()*cols.length)],(Math.random()*2-1)*8,90+Math.random()*90,600+Math.random()*300,6)}await pbSleep(70)}
-  pkShake(600);pkFlash('#ff3a7a',400,.4)}
+  pkShake(600);psfx('boom');pkFlash('#ff3a7a',400,.4)}
 const PKBOLT=(c1,c2)=>PKSVG(10,30,`<path d="M6 0 L1 13 H5 L2 30 L9 11 H5 L8 0Z" fill="${c1}" stroke="${c2}" stroke-width=".8" stroke-linejoin="miter"/>`);
-async function pkSpark(G){for(let r=0;r<3;r++){const e=pkEl(PKBOLT('#ffe23a','#ffffff'),G.fx+G.d*(20+r*14),G.my-10+r*4,22,44,5);pkAnim(e,[{opacity:1},{opacity:.2},{opacity:1},{opacity:0}],300);pkBoom(G.fx+G.d*(22+r*14),G.my,4,['#ffe23a','#fff'],22);await pbSleep(160)}}
-async function pkBolt(G){const x=G.fx+G.d*60,e=pkEl(PKBOLT('#fff36a','#ffffff'),x,6,60,G.H-10,6);pkFlash('#ffffff',250,.85);pkShake(400);
+async function pkSpark(G){for(let r=0;r<3;r++){psfx('zap');const e=pkEl(PKBOLT('#ffe23a','#ffffff'),G.fx+G.d*(20+r*14),G.my-10+r*4,22,44,5);pkAnim(e,[{opacity:1},{opacity:.2},{opacity:1},{opacity:0}],300);pkBoom(G.fx+G.d*(22+r*14),G.my,4,['#ffe23a','#fff'],22);await pbSleep(160)}}
+async function pkBolt(G){psfx('thunder');const x=G.fx+G.d*60,e=pkEl(PKBOLT('#fff36a','#ffffff'),x,6,60,G.H-10,6);pkFlash('#ffffff',250,.85);pkShake(400);
   await pkAnim(e,[{opacity:1},{opacity:.3,offset:.3},{opacity:1,offset:.5},{opacity:0}],600);pkBoom(x,10,14,['#fff36a','#ffffff','#7affff'],46)}
 async function pkStorm(G){pkDark(2600,'linear-gradient(#0a0e2add,#1a1a3aaa)');await pbSleep(250);
-  for(let r=0;r<5;r++){const x=(Math.random()*.9-.45)*G.W,e=pkEl(PKBOLT(r%2?'#ffffff':'#fff36a','#7affff'),x,6,50+Math.random()*20,G.H-10,6);pkFlash('#ffffff',200,.7);pkShake(300);pkAnim(e,[{opacity:1},{opacity:.3,offset:.3},{opacity:1,offset:.5},{opacity:0}],500);pkBoom(x,10,10,['#fff36a','#7affff'],40);await pbSleep(330)}}
-async function pkWater(G){for(let r=0;r<5;r++){const e=pkEl('',G.fx,G.my-10,12,12,5);if(e){e.style.background='#4ac8ff';e.style.boxShadow='0 0 0 2px #e8faff inset'}
+  for(let r=0;r<5;r++){psfx('thunder');const x=(Math.random()*.9-.45)*G.W,e=pkEl(PKBOLT(r%2?'#ffffff':'#fff36a','#7affff'),x,6,50+Math.random()*20,G.H-10,6);pkFlash('#ffffff',200,.7);pkShake(300);pkAnim(e,[{opacity:1},{opacity:.3,offset:.3},{opacity:1,offset:.5},{opacity:0}],500);pkBoom(x,10,10,['#fff36a','#7affff'],40);await pbSleep(330)}}
+async function pkWater(G){for(let r=0;r<5;r++){psfx('water');const e=pkEl('',G.fx,G.my-10,12,12,5);if(e){e.style.background='#4ac8ff';e.style.boxShadow='0 0 0 2px #e8faff inset'}
     const dx=G.d*(110+r*14);pkAnim(e,[{transform:'translate(0,0)'},{transform:`translate(${dx*.5}px,-26px)`,offset:.5},{transform:`translate(${dx}px,10px)`}],520,'ease-out').then(()=>pkBoom(G.fx+dx,G.my-2,5,['#4ac8ff','#e8faff'],18));await pbSleep(120)}await pbSleep(500)}
 async function pkLaser(G){const len=Math.max(60,G.W/2+40-G.d*G.fx),e=pkEl('',G.fx+G.d*len/2,G.my-14,len,10,5);if(e){e.style.transformOrigin=G.d>0?'0 50%':'100% 50%';e.style.background='linear-gradient(#bffff6,#2affe0,#bffff6)';e.style.boxShadow='0 0 10px #2affe0'}
-  pkFlash('#2affe0',200,.3);await pkAnim(e,[{transform:'scaleX(0)'},{transform:'scaleX(1)',offset:.2},{transform:'scaleX(1) scaleY(1.6)',offset:.5},{transform:'scaleX(1) scaleY(.4)',opacity:.6,offset:.85},{transform:'scaleX(1) scaleY(0)',opacity:0}],1000);
+  pkFlash('#2affe0',200,.3);psfx('laser');await pkAnim(e,[{transform:'scaleX(0)'},{transform:'scaleX(1)',offset:.2},{transform:'scaleX(1) scaleY(1.6)',offset:.5},{transform:'scaleX(1) scaleY(.4)',opacity:.6,offset:.85},{transform:'scaleX(1) scaleY(0)',opacity:0}],1000);
   pkBoom(G.d*(G.W/2-20),G.my-10,10,['#2affe0','#ffffff'],36)}
 async function pkMissile(G){const R=PKSVG(8,4,'<rect x="1" y="1" width="5" height="2" fill="#d8e2f0"/><rect x="6" y="1" width="2" height="2" fill="#ff2a4a"/><rect x="0" y="0" width="2" height="1" fill="#5a7090"/><rect x="0" y="3" width="2" height="1" fill="#5a7090"/><rect x="0" y="1" width="1" height="2" fill="#ffd23f"/>');pkShake(300);
   const ps=[];for(let r=0;r<5;r++){const e=pkEl(R,G.fx-G.d*10,G.my+4,30,15,6);if(e)e.style.transform=`scaleX(${G.d})`;const tx=G.d*(60+Math.random()*(G.W/2)),ty=-(G.my-10)+Math.random()*20;
-    ps.push(pkAnim(e,[{transform:`translate(0,0) scaleX(${G.d})`},{transform:`translate(${tx*.4}px,${-50-Math.random()*30}px) scaleX(${G.d})`,offset:.45},{transform:`translate(${tx}px,${-ty}px) scaleX(${G.d})`}],700+r*90,'ease-in').then(()=>{pkBoom(G.fx+tx,G.my+ty,12,['#ff8a1a','#ffd23f','#ff2a4a','#fff'],38);pkShake(260)}));await pbSleep(140)}
+    psfx('whoosh');ps.push(pkAnim(e,[{transform:`translate(0,0) scaleX(${G.d})`},{transform:`translate(${tx*.4}px,${-50-Math.random()*30}px) scaleX(${G.d})`,offset:.45},{transform:`translate(${tx}px,${-ty}px) scaleX(${G.d})`}],700+r*90,'ease-in').then(()=>{pkBoom(G.fx+tx,G.my+ty,12,['#ff8a1a','#ffd23f','#ff2a4a','#fff'],38);pkShake(260);psfx('boom')}));await pbSleep(140)}
   await Promise.all(ps);pkFlash('#ff8a1a',300,.3)}
 const PKFX={claw:pkClaw,bite:pkBite,fireball:pkFireball,breath:pkBreath,hellfire:pkHell,spark:pkSpark,bolt:pkBolt,storm:pkStorm,water:pkWater,laser:pkLaser,missile:pkMissile};
-async function petSkill(auto){const v=PET&&PET.now,sk=v&&v.skill;if(!sk||!$('#petStage')||v.ready)return;if(Date.now()-PK.at<2600&&!auto)return;PK.at=Date.now();
+async function petSkill(auto){const v=PET&&PET.now,sk=v&&v.skill;if(!sk||!$('#petStage')||v.ready)return;if(Date.now()-PK.at<2600&&!auto)return;PK.at=Date.now();PK.quiet=!!auto;
   clearTimeout(PB.t);pbFreeze();const id=++PB.seq;
   try{pbSay(sk.n+'！',1400);if(!auto)petVoice(v.species);await pbAct('squish',380,id);if(id!==PB.seq)return;
     const G=pkGeo();const a=$('#petA');if(a)a.className='pa '+(sk.fx==='claw'||sk.fx==='bite'?'lunge':'cast')+(pbPose()?' fr':'');pbImg(sk.fx==='claw'||sk.fx==='bite'?'walk1':'jump');
