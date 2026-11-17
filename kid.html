@@ -1431,11 +1431,17 @@ const PSND={honeydog:['汪！','汪汪～','嗚嗚？'],shiba:['汪！','汪汪�
 const PVOX={dog:{w:'square',a:620,b:420,d:.09,n:2,g:.07},cat:{w:'sine',a:520,b:880,c:560,d:.5,g:.12},bunny:{w:'sine',a:900,b:1300,d:.07,n:3,g:.08},sheep:{w:'triangle',a:440,b:400,c:380,d:.6,v:16,g:.14},mon:{w:'triangle',a:320,b:760,d:.18,n:2,g:.12},bubble:{w:'sine',a:300,b:1200,d:.12,n:3,g:.1},roar:{w:'sawtooth',a:190,b:90,d:.45,v:25,g:.07},robot:{w:'square',a:980,b:960,d:.06,n:3,g:.05},star:{w:'sine',a:880,b:1760,d:.25,n:2,g:.09}};
 const PVK={honeydog:'dog',shiba:'dog',corgi:'dog',pxwolf:'dog',kitty:'cat',bunny:'bunny',sheep:'sheep',fire:'mon',leaf:'mon',dino:'roar',pxdragon:'roar',water:'bubble',narwhal:'bubble',pxshark:'robot',star:'star'};
 let PAC=null;
-function petVoice(sp,hi){if(!PSOUND)return;if(hi===undefined)hi=PET&&PET.now&&PET.now.species===sp&&PET.now.stage<=2?1.35:1;try{PAC=PAC||new (window.AudioContext||window.webkitAudioContext)();if(PAC.state==='suspended')PAC.resume();
+/* 音效總開關：音量放大＋壓縮器（大聲但不爆音）；iPhone 靜音模式下也能出聲（audioSession＝playback，舊版用一段無聲音檔切換） */
+function pacInit(){if(PAC)return PAC;try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+  PAC=new (window.AudioContext||window.webkitAudioContext)();const cp=PAC.createDynamicsCompressor();cp.threshold.value=-12;cp.knee.value=12;cp.ratio.value=8;cp.attack.value=.003;cp.release.value=.2;
+  PAC.out=PAC.createGain();PAC.out.gain.value=1.4;PAC.out.connect(cp);cp.connect(PAC.destination);
+  try{if(!navigator.audioSession){const a=document.createElement('audio');a.setAttribute('playsinline','');a.loop=true;a.volume=.01;a.src='data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';a.play().catch(function(){})}}catch(e){}
+  return PAC}
+function petVoice(sp,hi){if(!PSOUND)return;if(hi===undefined)hi=PET&&PET.now&&PET.now.species===sp&&PET.now.stage<=2?1.35:1;try{pacInit();if(PAC.state==='suspended')PAC.resume();
   const V=PVOX[PVK[sp]]||PVOX.mon,t0=PAC.currentTime+.02;for(let i=0;i<(V.n||1);i++){const t=t0+i*(V.d+.06),o=PAC.createOscillator(),g=PAC.createGain();o.type=V.w;
    o.frequency.setValueAtTime(V.a*hi,t);o.frequency.exponentialRampToValueAtTime(V.b*hi,t+V.d*(V.c?.5:.9));if(V.c)o.frequency.exponentialRampToValueAtTime(V.c*hi,t+V.d);
    if(V.v){const l=PAC.createOscillator(),lg=PAC.createGain();l.frequency.value=V.v;lg.gain.value=V.a*.05;l.connect(lg);lg.connect(o.frequency);l.start(t);l.stop(t+V.d)}
-   g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(V.g,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+V.d);o.connect(g);g.connect(PAC.destination);o.start(t);o.stop(t+V.d+.03)}}catch(e){}}
+   g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(Math.min(.7,V.g*4.5),t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+V.d);o.connect(g);g.connect(PAC.out);o.start(t);o.stop(t+V.d+.03)}}catch(e){}}
 function petSoundToggle(b){PSOUND=!PSOUND;try{localStorage.setItem('petSound',PSOUND?'1':'0')}catch(e){}b.textContent=PSOUND?'🔊':'🔇';if(PSOUND)petVoice(PET.now.species)}
 const pbSleep=ms=>new Promise(r=>setTimeout(r,ms));
 const pbPick=a=>a[Math.floor(Math.random()*a.length)];
