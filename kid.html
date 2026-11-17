@@ -1317,7 +1317,7 @@ function petMini(v){if(!v)return `<div class="card" onclick="go('pet')" style="c
   return `<div class="card" onclick="go('pet')" style="cursor:pointer;display:flex;align-items:center;gap:10px">${petSvg(v.species,v.stage,{shiny:v.shiny,sick:v.sick,mood:v.mood,crack:v.stage===0&&v.hatchIn<3},60)}<div style="flex:1"><b>${esc(v.name)}</b> <span class="mu">${v.typeName}・${v.stageName}</span>${warn?`<div style="color:#e5484d;font-size:14px">${warn}</div>`:`<div class="mu">${v.stage?'精神很好！':'還要 '+Math.ceil(v.hatchIn)+' 小時孵化'}</div>`}</div><span class="mu">去照顧 ›</span></div>`}
 function drawPet(){const el=$('#pg-pet');if(!PET){el.innerHTML='<div class="card empty">⏳ 讀取中…</div>';return}
   const v=PET.now,TY=PET.types,c=(G.me||{}).coins||0;
-  if(!v){clearTimeout(PB.t);PB.key='';el.innerHTML=`<div class="sign"><h3>🥚 領養一顆蛋</h3></div><div class="card mu">選一顆喜歡的蛋，取個名字，12 小時後就會孵化。牠會長大 14 天，要每天餵飯、陪牠玩、清大便喔！</div>
+  if(!v){clearTimeout(PB.t);PB.key='';el.innerHTML=`<div class="sign"><h3>🥚 領養一顆蛋</h3></div><div class="card mu">選一顆喜歡的蛋，取個名字，12 小時後就會孵化。牠會長大 10 天，要每天餵飯、陪牠玩、清大便喔！</div>
     ${[['小動物','🐶 可愛小動物'],['怪獸','🐲 小怪獸'],['稀有怪獸','🌟 稀有怪獸'],['像素傳說','👾 像素傳說・超稀有'],['水彩繪本','🎨 水彩繪本・新登場']].map(([kd,tt])=>{const ks=Object.keys(TY).filter(k=>TY[k].kind===kd&&!TY[k].retired);return ks.length?`<div class="sign" style="margin-top:6px"><h3>${tt}</h3></div><div class="grid">${ks.map(k=>`<div class="prod ${c<TY[k].price?'poor':''}" style="text-align:center">${petSvg(k,0,{},110)}<div class="pn"><b>${TY[k].name}</b><br><span class="mu">長大會變成</span></div><div style="display:flex;justify-content:center">${petSvg(k,5,{},80)}</div><div class="pp">🪙 ${n(TY[k].price)}</div><button class="go" onclick="adopt('${k}')">${c<TY[k].price?'金幣不夠':'領養'}</button></div>`).join('')}</div>`:''}).join('')}`;return}
   const key=[v.id,v.stage,v.shiny,v.sick,v.mood<30,v.ready].join('|');
   if(PB.key===key&&$('#petStage')){petPanel();pbPoo();return}
@@ -1436,7 +1436,7 @@ async function petPlay(a){const v=PET.now;if(!$('#petA'))return;clearTimeout(PB.
   else if(a==='poop'){pfx('🧹',0,0,'sweep',1500);await pbSleep(700);pbPoo();pbHearts(3,'✨');await pbAct('hop',1400,id)}
   else if(a==='doctor'){pfx('💊',PB.x,150,'drop',800);await pbSleep(700);await pbAct('shiver',800,id);pbSay('好多了！',1400);pbHearts(3,'✨');await pbAct('hop',1400,id)}
   }finally{if(id===PB.seq){pbBase();PB.t=setTimeout(pbIdle,2200)}}}
-async function petByeBox(){const v=PET.now;if(!await ask(`<div style="text-align:center">${petSvg(v.species,v.stage,{shiny:v.shiny,mood:90},120)}<h3>要跟 ${esc(v.name)} 說再見了</h3>謝謝你這 14 天的照顧！<br>${esc(v.name)} 會留下紀念品給你。</div>`,'說再見','再看一下'))return;
+async function petByeBox(){const v=PET.now;if(!await ask(`<div style="text-align:center">${petSvg(v.species,v.stage,{shiny:v.shiny,mood:90},120)}<h3>要跟 ${esc(v.name)} 說再見了</h3>謝謝你這 10 天的照顧！<br>${esc(v.name)} 會留下紀念品給你。</div>`,'說再見','再看一下'))return;
   const r=await run(null,'petBye');if(!r)return;
   await ask(`<div style="text-align:center"><div style="font-size:40px">💝</div><h3>${esc(r.msg)}</h3>你得到了：<div class="mgrid" style="margin-top:8px">${r.memos.map(m=>memoCard({name:m,species:r.species,shiny:/閃亮/.test(m)||(/合照/.test(m)&&r.shiny)})).join('')}</div><div class="mu" style="margin-top:6px">紀念品放在「我的 → 徽章」的紀念品櫃</div></div>`,null,'好');
   PET=null;loadGame()}
