@@ -820,9 +820,9 @@ const SHAPE2={corgi:1,dino:1,narwhal:1};
 
 // ---------- 圖片寵物（用 AI 繪圖工具畫好的圖，放在網站 pets/ 資料夾） ----------
 const PETIMG_HOST='https:/'+'/boyi05.github.io/pets/';
-const IMGPET={sheep:{dir:PETIMG_HOST+'sheep/',v:1,frames:{2:'f',3:'f',4:'f4',5:'f5'},front:{2:1,3:1,4:1,5:1},fv:1}};
-Object.assign(PETPAL,{sheep:[{m:'#f6e6c8',l:'#fffaf0',d:'#a07850',a:'#ffd86a',o:'#6a4a32',e:'#6a4a32',g:'#ffe9a0'},{m:'#f6c8ec',l:'#fff0fa',d:'#a0508a',a:'#ff9ad8',o:'#5a2a4a',e:'#5a2a4a',g:'#ffb0e8'}]});
-PEMO.sheep='☁️';PCOL.sheep=['#f6e6c8','#fffaf0','#a07850','#f6c8ec','#a0508a','#fff0fa'];
+const IMGPET={sheep:{dir:PETIMG_HOST+'sheep/',v:2,frames:{2:'f',3:'f',4:'f4',5:'f5'},front:{2:1,3:1,4:1,5:1},fv:2}};
+Object.assign(PETPAL,{sheep:[{m:'#f6e6c8',l:'#fffaf0',d:'#a07850',a:'#ffd86a',o:'#6a4a32',e:'#6a4a32',g:'#ffe9a0'},{m:'#f8dde4',l:'#fff4f6',d:'#c08a96',a:'#ffc4d2',o:'#6a4450',e:'#6a4450',g:'#ffd4de'}]});
+PEMO.sheep='☁️';PCOL.sheep=['#f6e6c8','#fffaf0','#a07850','#f8dde4','#c08a96','#fff4f6'];
 function imgPet(sp,stage,o,u){const P=IMGPET[sp],C=PETPAL[sp][o.shiny?1:0],sh=!!o.shiny,mood=o.mood==null?80:o.mood;
  const k=[.82,.72,.8,.86,.92,.98][stage],S=118*k,x=60-S/2,y=110-S;
  let defs=rad(u+'g',.5,.5,.5,[[0,'#000',.28],[1,'#000',0]])+lin(u+'cr',0,0,0,1,[[0,'#fff3a8'],[.5,'#ffc91f'],[1,'#d98a00']]),aura='',fx='';
@@ -839,9 +839,9 @@ MEMO_ART.sheep=u=>`<path d="M6 16 C-14 16 -18 -6 -4 -14 C10 -22 22 -8 14 2 C8 10
 MEMO_GRAD.sheep=[['#f2d8b0'],['#a07850']];
 
 /* 蜜糖垂耳犬（2026/11/17，使用者用 AI 畫的水彩圖） */
-IMGPET.honeydog={dir:PETIMG_HOST+'honeydog/',v:1};
-Object.assign(PETPAL,{honeydog:[{m:'#e8c89a',l:'#fbf0dc',d:'#a8703c',a:'#ffc94a',o:'#6a4022',e:'#3a2416',g:'#ffd98a'},{m:'#e6c4e8',l:'#fbeefc',d:'#9a5aa0',a:'#b06ad8',o:'#5a2a5a',e:'#3a1a3a',g:'#f0b8f0'}]});
-PEMO.honeydog='🍯';PCOL.honeydog=['#e8c89a','#fbf0dc','#a8703c','#e6c4e8','#9a5aa0','#fbeefc'];
+IMGPET.honeydog={dir:PETIMG_HOST+'honeydog/',v:2};
+Object.assign(PETPAL,{honeydog:[{m:'#e8c89a',l:'#fbf0dc',d:'#a8703c',a:'#ffc94a',o:'#6a4022',e:'#3a2416',g:'#ffd98a'},{m:'#f2d4dc',l:'#fdf2f4',d:'#b88290',a:'#ffc4d2',o:'#5a3a44',e:'#3a2228',g:'#ffd4de'}]});
+PEMO.honeydog='🍯';PCOL.honeydog=['#e8c89a','#fbf0dc','#a8703c','#f2d4dc','#b88290','#fdf2f4'];
 MEMO_ART.honeydog=u=>`<path d="M-18 -8 Q0 -14 18 -8 L4 16 Q0 20 -4 16Z" fill="#e0443c" stroke="#7a1e18" stroke-width="2" stroke-linejoin="round"/><path d="M-18 -8 Q0 -14 18 -8 Q0 -4 -18 -8Z" fill="#c4302a" stroke="#7a1e18" stroke-width="1.6"/><circle cx="0" cy="-9" r="4.6" fill="#e0443c" stroke="#7a1e18" stroke-width="1.6"/><path d="M3 -7 L12 4 M-3 -7 L-11 3" stroke="#7a1e18" stroke-width="1.6" stroke-linecap="round"/><path d="M-8 -2 Q-2 0 2 8" stroke="#fff" stroke-width="1.4" fill="none" opacity=".55" stroke-linecap="round"/>`;
 MEMO_GRAD.honeydog=[['#f2c890'],['#a8703c']];
 SCENE2.honeydog=u=>`${lin(u+'s',0,0,0,1,[[0,'#ffe6b0'],[1,'#fff8e8']])}|<rect width="120" height="120" fill="url(#${u}s)"/><circle cx="96" cy="24" r="10" fill="#ffd86a" opacity=".85"/><path d="M0 80 C30 70 70 82 120 72 V120 H0Z" fill="#c8e49a"/><path d="M0 94 C40 88 80 98 120 90 V120 H0Z" fill="#b0d880"/><g transform="translate(18 70)"><path d="M-7 0 Q-9 -10 0 -11 Q9 -10 7 0Z" fill="#e8a43c" stroke="#8a5a1c" stroke-width="1.4"/><rect x="-5" y="-14" width="10" height="4" rx="1.5" fill="#c47a2a"/><path d="M-3 -4 q3 3 6 0" stroke="#fff" stroke-width="1" fill="none" opacity=".6"/></g>${[[30,104,'#ffb0c0'],[50,110,'#fff'],[88,106,'#ffd86a'],[106,100,'#ffb0c0'],[70,100,'#fff']].map(([x,y,cl])=>`<g transform="translate(${x} ${y})"><circle r="2.6" fill="${cl}"/><circle r="1" fill="#e8a43c"/></g>`).join('')}`;
