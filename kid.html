@@ -436,8 +436,22 @@ function petG(sp,stage,o){o=o||{};const u=artId();if(IMGPET[sp])return imgPet(sp
   mouth=`<path d="M-6.5 -26.5 Q0 -16.5 6.5 -26.5 Z" fill="#8a2236" stroke="${O}" stroke-width="1.8" stroke-linejoin="round"/><path d="M-3.6 -21.6 Q0 -18.6 3.6 -21.6 Q0 -24.4 -3.6 -21.6Z" fill="#ff8aa0"/>`+(sp==='bunny'?`<rect x="-2.6" y="-26.6" width="5.2" height="3.4" rx="1" fill="#fff" stroke="${O}" stroke-width=".9"/>`:'')}
  else{eyes=eye(-11,dl)+eye(11,dl);mouth=`<path d="M-6 -25.5 q3 4 6 0 q3 4 6 0" fill="none" stroke="${O}" stroke-width="2.2" stroke-linecap="round"/>`+(sp==='bunny'?`<rect x="-2.4" y="-23.4" width="4.8" height="3.2" rx="1" fill="#fff" stroke="${O}" stroke-width=".9"/>`:'')}
  const cheeks=`<ellipse cx="-22" cy="-26" rx="7" ry="4.6" fill="url(#${u}k)"/><ellipse cx="22" cy="-26" rx="7" ry="4.6" fill="url(#${u}k)"/><path d="M-25 -25 l1.8 -3 M-21.6 -25 l1.8 -3 M21.6 -25 l1.8 -3 M25 -25 l1.8 -3" stroke="#ff5a7e" stroke-width="1" opacity=".55" stroke-linecap="round"/>`;
- const feet=stage>=2?[-14,14].map(x=>`<ellipse cx="${x}" cy="-3" rx="9.5" ry="5.5" fill="${B}" stroke="${O}" stroke-width="${sw}"/><path d="M${x-3} -4.5 v-2.6 M${x+2} -4.5 v-2.6" stroke="${O}" stroke-width="1.1" opacity=".45" stroke-linecap="round"/>`).join(''):'';
- const arms=stage>=3?`<ellipse cx="-31" cy="-22" rx="6" ry="9" fill="${B}" stroke="${O}" stroke-width="${sw}" transform="rotate(25 -31 -22)"/><ellipse cx="31" cy="-22" rx="6" ry="9" fill="${B}" stroke="${O}" stroke-width="${sw}" transform="rotate(-25 31 -22)"/>`:'';
+ const ftf=(x,dy)=>`<ellipse cx="${x}" cy="${-3+dy}" rx="9.5" ry="5.5" fill="${B}" stroke="${O}" stroke-width="${sw}"/><path d="M${x-3} ${-4.5+dy} v-2.6 M${x+2} ${-4.5+dy} v-2.6" stroke="${O}" stroke-width="1.1" opacity=".45" stroke-linecap="round"/>`;
+ let feet=stage>=2?ftf(-14,0)+ftf(14,0):'';
+ let arms=stage>=3?`<ellipse cx="-31" cy="-22" rx="6" ry="9" fill="${B}" stroke="${O}" stroke-width="${sw}" transform="rotate(25 -31 -22)"/><ellipse cx="31" cy="-22" rx="6" ry="9" fill="${B}" stroke="${O}" stroke-width="${sw}" transform="rotate(-25 31 -22)"/>`:'';
+ /* 動作姿勢（寵物舞台用）：眨眼、睡覺、吃東西、開心、走路換腳、抓癢 */
+ const P=o.pose;if(P&&!sick){const lid=(x,up)=>`<path d="M${x-6} -32 q6 ${up?-7:6} 12 0" fill="none" stroke="${O}" stroke-width="2.6" stroke-linecap="round"/>`;
+  if(P==='blink'||P==='sleep')eyes=lid(-11,0)+lid(11,0);
+  if(P==='eat'||P==='jump'||P==='happy'||P==='scratch')eyes=lid(-11,1)+lid(11,1);
+  if(P==='eat')mouth=`<ellipse cx="0" cy="-22" rx="5" ry="4.6" fill="#8a2236" stroke="${O}" stroke-width="1.8"/><ellipse cx="0" cy="-20.4" rx="2.6" ry="1.6" fill="#ff8aa0"/>`;
+  if(P==='sleep')mouth=`<ellipse cx="0" cy="-23" rx="2.2" ry="1.8" fill="none" stroke="${O}" stroke-width="1.6"/>`;
+  if(P==='jump'||P==='happy')mouth=`<path d="M-6.5 -26.5 Q0 -16.5 6.5 -26.5 Z" fill="#8a2236" stroke="${O}" stroke-width="1.8" stroke-linejoin="round"/><path d="M-3.6 -21.6 Q0 -18.6 3.6 -21.6 Q0 -24.4 -3.6 -21.6Z" fill="#ff8aa0"/>`;
+  if(stage>=2&&P==='walk1')feet=ftf(-15,-6)+ftf(14,0);
+  if(stage>=2&&P==='walk2')feet=ftf(-14,0)+ftf(15,-6);
+  if(stage>=2&&P==='jump')feet=ftf(-12,-7)+ftf(12,-7);
+  if(stage>=2&&P==='sleep')feet=ftf(-16,-1)+ftf(16,-1);
+  if(stage>=3&&P==='scratch')arms=`<ellipse cx="-31" cy="-22" rx="6" ry="9" fill="${B}" stroke="${O}" stroke-width="${sw}" transform="rotate(25 -31 -22)"/><ellipse cx="30" cy="-44" rx="6" ry="9" fill="${B}" stroke="${O}" stroke-width="${sw}" transform="rotate(-150 30 -44)"/>`;
+  if(stage>=3&&P==='jump')arms=`<ellipse cx="-33" cy="-38" rx="6" ry="9" fill="${B}" stroke="${O}" stroke-width="${sw}" transform="rotate(150 -33 -38)"/><ellipse cx="33" cy="-38" rx="6" ry="9" fill="${B}" stroke="${O}" stroke-width="${sw}" transform="rotate(-150 33 -38)"/>`}
  const body=`<path d="${BODY}" fill="${B}" stroke="${O}" stroke-width="${sw}"/><ellipse cx="0" cy="-15" rx="18" ry="11" fill="url(#${u}w)"/>${deco}${sh?`<path d="${BODY}" fill="url(#${u}h)"/>`:''}<ellipse cx="-15" cy="-49" rx="8" ry="4.4" fill="#fff" opacity=".5" transform="rotate(-28 -15 -49)"/><circle cx="-23" cy="-42" r="1.8" fill="#fff" opacity=".8"/><path d="M27 -44 C33 -34 32 -16 18 -7" stroke="#fff" stroke-width="2.4" opacity=".28" fill="none" stroke-linecap="round"/>`;
  const sickX=sick?`<ellipse cx="0" cy="-48" rx="22" ry="8" fill="#6a8cff" opacity=".22"/><g transform="translate(24 -50) rotate(35)"><rect x="-11" y="-3.4" width="22" height="6.8" rx="3.4" fill="#fff" stroke="${O}" stroke-width="1.4"/><rect x="-11" y="-3.4" width="8" height="6.8" rx="3.4" fill="#ff5a5a"/><path d="M0 -3.4 v6.8 M4 -3.4 v6.8" stroke="#ccc" stroke-width="1"/></g><path d="M-30 -50 q4 6 0 9 q-4 -3 0 -9z" fill="#8fd3ff" stroke="#3a8ad0" stroke-width=".8"/>`:'';
  const spark=sh?[[-46,-62,6,0],[46,-54,7,.5],[-44,-14,5,1],[48,-18,5,1.5],[0,-92,6,.8]].map(([x,y,r,d])=>spk(x,y,r,'#ffe066',d)).join(''):'';
@@ -763,12 +777,23 @@ omlwowowowowlmmmmo.omo
 ....oo....oo..........`]};
 function pxRects(rows,pal,c,ox,oy,only){let s='';rows.forEach((r,y)=>{let x=0;while(x<r.length){const ch=r[x];if(ch==='.'){x++;continue}let e=x;while(e<r.length&&r[e]===ch)e++;
   const col=only||pal[ch]||pal.m;s+=`<rect x="${(ox+x*c).toFixed(2)}" y="${(oy+y*c).toFixed(2)}" width="${((e-x)*c+.15).toFixed(2)}" height="${(c+.15).toFixed(2)}" fill="${col}"${ch==='e'&&!only?' class="pxeye"':''}/>`;x=e}});return s}
+/* 像素寵物的動作姿勢：閉眼（眨眼、睡覺、吃東西）、趴下（睡覺）、縮腳（跳）、兩隻腳前後換（走路、抓癢） */
+function pxPose(R,p){if(!p)return R;R=R.slice();const n=R.length;
+ const sh=(s,d)=>d>0?'.'.repeat(d)+s.slice(0,s.length-d):s.slice(-d)+'.'.repeat(-d);
+ if(p==='blink'||p==='sleep'||p==='eat')R=R.map(r=>r.replace(/we/g,'mm').replace(/oe/g,'oo').replace(/e/g,'o'));
+ if(p==='sleep')return R.slice(0,n-2);
+ if(p==='jump')return R.slice(0,n-1);
+ if(p==='walk1'||p==='walk2'||p==='scratch'){const t=R[n-1];let a=-1,b=-1,best=0,i=t.search(/[^.]/);const e=t.length-1-t.split('').reverse().join('').search(/[^.]/);
+  while(i>=0&&i<=e){if(t[i]==='.'){let j=i;while(j<=e&&t[j]==='.')j++;if(j-i>best){best=j-i;a=i;b=j}i=j}else i++}
+  if(a<0)return R;const m=Math.floor((a+b)/2),d=p==='walk2'?1:-1;
+  for(let k=n-2;k<n;k++)R[k]=sh(R[k].slice(0,m),d)+sh(R[k].slice(m),-d)}
+ return R}
 function pxPet(sp,stage,o,u){const C=PETPAL[sp][o.shiny?1:0],sh=!!o.shiny,sick=!!o.sick,mood=o.mood==null?80:o.mood;
  const big=stage>=3,rows0=PXS[sp][big?1:0].split(String.fromCharCode(10)),W=Math.max(...rows0.map(r=>r.length)),H=rows0.length;
  const pal={o:C.o,m:C.m,d:C.d,l:C.l,a:C.a,e:sick?'#9a7ab0':C.e,w:C.w,x:C.x,g:C.g};
- const rows=rows0.map(r=>sick?r.replace(/e/g,'o'):r);
+ const rows=pxPose(rows0.map(r=>sick?r.replace(/e/g,'o'):r),sick?'':o.pose);
  const target=[0,56,64,82,90,98][stage],c=target/Math.max(W,H*1.05),wpx=W*c,hpx=H*c;
- const ox=60-wpx/2,oy=106-hpx;
+ const ox=60-wpx/2,oy=106-rows.length*c;
  let defs=rad(u+'g',.5,.5,.5,[[0,'#000',.35],[1,'#000',0]])+rad(u+'gl',.5,.5,.5,[[0,C.g,.55],[1,C.g,0]])+lin(u+'cr',0,0,0,1,[[0,'#fff3a8'],[.5,'#ffc91f'],[1,'#d98a00']]);
  if(sh)defs+=`<linearGradient id="${u}h" x1="0" y1="0" x2="1" y2="1">${stp([[0,'#fff',0],[.4,'#fff',.0],[.5,'#fff',.55],[.6,'#fff',0],[1,'#fff',0]])}<animateTransform attributeName="gradientTransform" type="translate" values="-1 -1;1 1" dur="2.4s" repeatCount="indefinite"/></linearGradient>`;
  let aura='',fx='';
@@ -1285,14 +1310,14 @@ function petMini(v){if(!v)return `<div class="card" onclick="go('pet')" style="c
 function drawPet(){const el=$('#pg-pet');if(!PET){el.innerHTML='<div class="card empty">⏳ 讀取中…</div>';return}
   const v=PET.now,TY=PET.types,c=(G.me||{}).coins||0;
   if(!v){clearTimeout(PB.t);PB.key='';el.innerHTML=`<div class="sign"><h3>🥚 領養一顆蛋</h3></div><div class="card mu">選一顆喜歡的蛋，取個名字，12 小時後就會孵化。牠會長大 14 天，要每天餵飯、陪牠玩、清大便喔！</div>
-    ${[['小動物','🐶 可愛小動物'],['怪獸','🐲 小怪獸'],['稀有怪獸','🌟 稀有怪獸'],['像素傳說','👾 像素傳說・超稀有'],['水彩繪本','🎨 水彩繪本・新登場']].map(([kd,tt])=>{const ks=Object.keys(TY).filter(k=>TY[k].kind===kd);return ks.length?`<div class="sign" style="margin-top:6px"><h3>${tt}</h3></div><div class="grid">${ks.map(k=>`<div class="prod ${c<TY[k].price?'poor':''}" style="text-align:center">${petSvg(k,0,{},110)}<div class="pn"><b>${TY[k].name}</b><br><span class="mu">長大會變成</span></div><div style="display:flex;justify-content:center">${petSvg(k,5,{},80)}</div><div class="pp">🪙 ${n(TY[k].price)}</div><button class="go" onclick="adopt('${k}')">${c<TY[k].price?'金幣不夠':'領養'}</button></div>`).join('')}</div>`:''}).join('')}`;return}
+    ${[['小動物','🐶 可愛小動物'],['怪獸','🐲 小怪獸'],['稀有怪獸','🌟 稀有怪獸'],['像素傳說','👾 像素傳說・超稀有'],['水彩繪本','🎨 水彩繪本・新登場']].map(([kd,tt])=>{const ks=Object.keys(TY).filter(k=>TY[k].kind===kd&&!TY[k].retired);return ks.length?`<div class="sign" style="margin-top:6px"><h3>${tt}</h3></div><div class="grid">${ks.map(k=>`<div class="prod ${c<TY[k].price?'poor':''}" style="text-align:center">${petSvg(k,0,{},110)}<div class="pn"><b>${TY[k].name}</b><br><span class="mu">長大會變成</span></div><div style="display:flex;justify-content:center">${petSvg(k,5,{},80)}</div><div class="pp">🪙 ${n(TY[k].price)}</div><button class="go" onclick="adopt('${k}')">${c<TY[k].price?'金幣不夠':'領養'}</button></div>`).join('')}</div>`:''}).join('')}`;return}
   const key=[v.id,v.stage,v.shiny,v.sick,v.mood<30,v.ready].join('|');
   if(PB.key===key&&$('#petStage')){petPanel();pbPoo();return}
   PB.key=key;
   el.innerHTML=`<div class="card" style="text-align:center;background:linear-gradient(#cdeeff,#e9fbff 58%,#bfe8b0 58%);padding-top:4px">
    <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:19px">${esc(v.name)}</b><span class="mini">${v.typeName}・${v.stageName}${v.shiny?' ✨':''}</span></div>
    <div id="petStage" class="pst" onclick="petTap()"><svg class="pgnd" viewBox="0 0 120 120" preserveAspectRatio="xMidYMax meet">${petPoo(v.poops)}</svg>
-    <div class="pw" id="petW"><div class="pf" id="petF"><div class="pt" id="petT"><div class="pa" id="petA">${petSvg(v.species,v.stage,{shiny:v.shiny,sick:v.sick,mood:v.mood,poops:0,crack:v.stage===0&&v.hatchIn<3,wobble:v.stage===0},170)}</div></div></div><div class="pbub" id="petBub"></div></div>
+    <div class="pw" id="petW"><div class="pf" id="petF"><div class="pt" id="petT"><div class="pa" id="petA">${petSvg(v.species,v.stage,petOpt(v),170)}</div></div></div><div class="pbub" id="petBub"></div></div>
     <div id="petFx"></div>${v.stage&&!v.ready?`<button class="psnd" onclick="event.stopPropagation();petSoundToggle(this)">${PSOUND?'🔊':'🔇'}</button>`:''}</div>
    <div class="mu" id="petCap"></div></div><div id="petPanel"></div>`;
   petPanel();petStart(v)}
@@ -1355,9 +1380,14 @@ function pbFace(d,now){PB.dir=d;const f=$('#petF'),fc=PFACE[PET&&PET.now&&PET.no
 const PFACE={sheep:-1,narwhal:-1,pxshark:-1};
 const PFR={walk:'walk',run:'walk',hop:'jump',dance:'jump',eat:'eat',sniff:'eat',sleep:'sleep',scratch:'scratch',yawn:'blink',squish:'blink'};
 function pbFr(){const v=PET&&PET.now,P=v&&IMGPET[v.species];return P&&P.frames&&P.frames[v.stage]?P:null}
-function pbImg(n){const P=pbFr(),im=$('#petA .pimg');if(!P||!im)return;if(n!=='front')PB.cur=n;if(PB.turn&&n!=='front')return;im.setAttribute('href',P.dir+P.frames[PET.now.stage]+'/'+n+(PET.now.shiny?'s':'')+'.webp?v='+P.fv)}
-let pbWI;function pbCls(c){const a=$('#petA');if(!a)return;const F=pbFr();a.className='pa '+c+(F?' fr':'');clearInterval(pbWI);if(!F)return;
-  if(c==='walk'||c==='run'){let k=0;pbImg('walk1');pbWI=setInterval(()=>pbImg((k++%2)?'walk1':'walk2'),c==='run'?150:230)}else pbImg(c==='squish'&&pbFront()?'front2':PFR[c]||'stand')}
+/* 程式畫的寵物（像素三隻、星星龍）：換姿勢時重畫寵物 */
+const PPOSE={pxdragon:1,pxwolf:1,pxshark:1,star:1};
+function pbPose(){const v=PET&&PET.now;return !!(v&&v.stage&&PPOSE[v.species])}
+function petOpt(v,pose){return {shiny:v.shiny,sick:v.sick,mood:v.mood,poops:0,crack:v.stage===0&&v.hatchIn<3,wobble:v.stage===0,pose:pose||''}}
+function pbImg(n){if(pbPose()){const a=$('#petA'),p=n==='stand'?'':n;if(a&&PB.pose!==p){PB.pose=p;a.innerHTML=petSvg(PET.now.species,PET.now.stage,petOpt(PET.now,p),170)}return}
+  const P=pbFr(),im=$('#petA .pimg');if(!P||!im)return;if(n!=='front')PB.cur=n;if(PB.turn&&n!=='front')return;im.setAttribute('href',P.dir+P.frames[PET.now.stage]+'/'+n+(PET.now.shiny?'s':'')+'.webp?v='+P.fv)}
+let pbWI;function pbCls(c){const a=$('#petA');if(!a)return;const F=pbFr()||pbPose();a.className='pa '+c+(F?' fr':'');clearInterval(pbWI);if(!F)return;
+  if(c==='walk'||c==='run'){let k=0;pbImg('walk1');pbWI=setInterval(()=>pbImg((k++%2)?'walk1':'walk2'),c==='run'?150:230)}else pbImg(c==='squish'?(pbFront()?'front2':pbPose()?'happy':'blink'):PFR[c]||'stand')}
 function pbFreeze(){const w=$('#petW');if(!w)return;const m=getComputedStyle(w).transform;let x=PB.x;if(m&&m!=='none'){const p=m.split(',');x=parseFloat(p[4])||0}w.style.transitionDuration='0ms';w.style.transform=`translateX(${x}px)`;PB.x=x}
 function pbMove(x,ms){const w=$('#petW');if(!w)return;if(Math.abs(x-PB.x)>2)pbFace(x<PB.x?-1:1);w.style.transitionDuration=ms+'ms';w.style.transform=`translateX(${x}px)`;PB.x=x}
 async function pbWalk(x,id,sp){const R=pbRange();x=Math.max(-R,Math.min(R,x));const d=Math.abs(x-PB.x);if(d<6)return;const ms=Math.round(d/(sp||85)*1000),a=$('#petA');if(!a)return;
@@ -1366,10 +1396,10 @@ async function pbAct(c,ms,id){const a=$('#petA');if(!a)return;pbCls(c);await pbS
 let pbBT;function pbSay(t,ms){const b=$('#petBub');if(!b)return;b.textContent=t;b.classList.toggle('lft',PB.x>0);b.classList.add('on');clearTimeout(pbBT);pbBT=setTimeout(()=>b.classList.remove('on'),ms||1400)}
 function pfx(t,x,y,c,ms){const L=$('#petFx');if(!L)return null;const e=document.createElement('div');e.className='pfx '+(c||'');e.textContent=t;e.style.left=`calc(50% + ${Math.round(x)}px)`;e.style.bottom=Math.round(y)+'px';L.appendChild(e);if(ms)setTimeout(()=>e.remove(),ms);return e}
 function pbHearts(n,ic){for(let i=0;i<n;i++)setTimeout(()=>pfx(ic||'💗',PB.x+Math.random()*90-45,95+Math.random()*40,'up',1300),i*170)}
-function petStart(v){clearTimeout(PB.t);PB.seq++;PB.x=0;PB.turn=0;pbFace(PFACE[v.species]||1,1);const F=pbFr();if(F)['stand','blink','walk1','walk2','eat','sleep','jump','scratch'].concat(pbFront()?['front','front2']:[]).forEach(n=>{const i=new Image();i.src=F.dir+F.frames[v.stage]+'/'+n+(v.shiny?'s':'')+'.webp?v='+F.fv});pbBase();if(v.stage&&!v.ready)PB.t=setTimeout(pbIdle,1200)}
+function petStart(v){clearTimeout(PB.t);PB.seq++;PB.x=0;PB.turn=0;PB.pose='';pbFace(PFACE[v.species]||1,1);const F=pbFr();if(F)['stand','blink','walk1','walk2','eat','sleep','jump','scratch'].concat(pbFront()?['front','front2']:[]).forEach(n=>{const i=new Image();i.src=F.dir+F.frames[v.stage]+'/'+n+(v.shiny?'s':'')+'.webp?v='+F.fv});pbBase();if(v.stage&&!v.ready)PB.t=setTimeout(pbIdle,1200)}
 async function pbEgg(){const a=$('#petA');if(!a)return;a.className='pa squish';pbHearts(1);toast('蛋動了一下！');await pbSleep(500);a.className='pa'}
 async function pbIdle(){if(!$('#petA')||st.tab!=='pet'||!PET||!PET.now)return;const v=PET.now,id=++PB.seq;let next=2600+Math.random()*3800;
-  if(pbFr()&&!pbNight()&&Math.random()<.5){pbImg('blink');await pbSleep(200);if(id!==PB.seq)return;pbBase();await pbSleep(300)}
+  if((pbFr()||pbPose())&&!pbNight()&&Math.random()<.5){pbImg('blink');await pbSleep(200);if(id!==PB.seq)return;pbBase();await pbSleep(300)}
   if(pbNight()){pbBase();if(Math.random()<.6)pfx('💤',PB.x+30,120,'zz',2400);next=3500}
   else if(v.sick){pbSay(pbPick(['咳咳…','不舒服…','頭暈暈…']),1600);await pbAct('shiver',900,id)}
   else if(v.mood<30){pbSay(pbPick(['好無聊…','陪我玩嘛…','唉…']),1600)}
