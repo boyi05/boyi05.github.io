@@ -107,7 +107,7 @@ input.amt{font-size:24px;text-align:right;color:var(--red)}
 .pst.night:before{content:'';position:absolute;inset:0;background:linear-gradient(#1c2a5cdd,#1c2a5c55 70%,#1c2a5c33);pointer-events:none}
 .pgnd{position:absolute;left:0;bottom:0;width:100%;height:100%;pointer-events:none}
 .pw{position:absolute;left:50%;bottom:0;width:170px;height:170px;margin-left:-85px;transition-property:transform;transition-timing-function:linear;z-index:1}
-.pf{transition:transform .25s}.pf.l{transform:scaleX(-1)}
+.pf.l{transform:scaleX(-1)}.pt{transform-origin:50% 92%}.pt.turn{animation:pturn .26s ease-out}@keyframes pturn{0%{transform:translateY(-7px) scale(.94,1.06)}100%{transform:none}}
 .pa{transform-origin:50% 92%}
 .pa.idle{animation:pidle 2.6s ease-in-out infinite}@keyframes pidle{0%,100%{transform:scale(1,1)}50%{transform:scale(1.02,.98)}}
 .pa.walk{animation:pwalk .4s ease-in-out infinite}@keyframes pwalk{0%,50%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-7px) rotate(-3deg)}75%{transform:translateY(-7px) rotate(3deg)}}
@@ -1292,7 +1292,7 @@ function drawPet(){const el=$('#pg-pet');if(!PET){el.innerHTML='<div class="card
   el.innerHTML=`<div class="card" style="text-align:center;background:linear-gradient(#cdeeff,#e9fbff 58%,#bfe8b0 58%);padding-top:4px">
    <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:19px">${esc(v.name)}</b><span class="mini">${v.typeName}・${v.stageName}${v.shiny?' ✨':''}</span></div>
    <div id="petStage" class="pst" onclick="petTap()"><svg class="pgnd" viewBox="0 0 120 120" preserveAspectRatio="xMidYMax meet">${petPoo(v.poops)}</svg>
-    <div class="pw" id="petW"><div class="pf" id="petF"><div class="pa" id="petA">${petSvg(v.species,v.stage,{shiny:v.shiny,sick:v.sick,mood:v.mood,poops:0,crack:v.stage===0&&v.hatchIn<3,wobble:v.stage===0},170)}</div></div><div class="pbub" id="petBub"></div></div>
+    <div class="pw" id="petW"><div class="pf" id="petF"><div class="pt" id="petT"><div class="pa" id="petA">${petSvg(v.species,v.stage,{shiny:v.shiny,sick:v.sick,mood:v.mood,poops:0,crack:v.stage===0&&v.hatchIn<3,wobble:v.stage===0},170)}</div></div></div><div class="pbub" id="petBub"></div></div>
     <div id="petFx"></div>${v.stage&&!v.ready?`<button class="psnd" onclick="event.stopPropagation();petSoundToggle(this)">${PSOUND?'🔊':'🔇'}</button>`:''}</div>
    <div class="mu" id="petCap"></div></div><div id="petPanel"></div>`;
   petPanel();petStart(v)}
@@ -1345,14 +1345,19 @@ function pbNight(){const h=new Date().getHours();return h>=22||h<6}
 function pbRange(){const s=$('#petStage');return Math.max(20,((s?s.clientWidth:320)-170)/2+20)}
 function pbPoo(){const g=$('#petStage .pgnd');if(g)g.innerHTML=petPoo(PET.now.poops)}
 function pbBase(){const a=$('#petA'),v=PET&&PET.now;if(!a||!v)return;const s=$('#petStage');if(s)s.classList.toggle('night',v.stage>0&&pbNight());pbCls(!v.stage?'':pbNight()?'sleep':v.sick||v.mood<30?'sad':'idle')}
-function pbFace(d){PB.dir=d;const f=$('#petF'),fc=PFACE[PET&&PET.now&&PET.now.species]||1;if(f)f.classList.toggle('l',d*fc<0)}
+/* 轉身：不再左右壓扁（會變成一片），改成瞬間翻面＋小跳一下；有正面圖的寵物會先轉成正面再轉過去 */
+function pbFront(){const F=pbFr();return !!(F&&F.front&&F.front[PET.now.stage])}
+function pbFace(d,now){PB.dir=d;const f=$('#petF'),fc=PFACE[PET&&PET.now&&PET.now.species]||1,flip=d*fc<0;if(!f||f.classList.contains('l')===flip)return;
+  if(now){f.classList.toggle('l',flip);return}
+  if(pbFront()){PB.turn=1;pbImg('front');setTimeout(()=>{f.classList.toggle('l',flip);PB.turn=0;pbImg(PB.cur||'stand')},180);return}
+  f.classList.toggle('l',flip);const t=$('#petT');if(t){t.classList.remove('turn');void t.offsetWidth;t.classList.add('turn')}}
 /* 圖片寵物的動作圖：有畫的階段會換圖（走路兩張輪流），沒畫的就只用位移、翻面、壓扁拉長 */
 const PFACE={sheep:-1,narwhal:-1,pxshark:-1};
 const PFR={walk:'walk',run:'walk',hop:'jump',dance:'jump',eat:'eat',sniff:'eat',sleep:'sleep',scratch:'scratch',yawn:'blink',squish:'blink'};
 function pbFr(){const v=PET&&PET.now,P=v&&IMGPET[v.species];return P&&P.frames&&P.frames[v.stage]?P:null}
-function pbImg(n){const P=pbFr(),im=$('#petA .pimg');if(!P||!im)return;im.setAttribute('href',P.dir+'f/'+n+(PET.now.shiny?'s':'')+'.webp?v='+P.fv)}
+function pbImg(n){const P=pbFr(),im=$('#petA .pimg');if(!P||!im)return;if(n!=='front')PB.cur=n;if(PB.turn&&n!=='front')return;im.setAttribute('href',P.dir+'f/'+n+(PET.now.shiny?'s':'')+'.webp?v='+P.fv)}
 let pbWI;function pbCls(c){const a=$('#petA');if(!a)return;const F=pbFr();a.className='pa '+c+(F?' fr':'');clearInterval(pbWI);if(!F)return;
-  if(c==='walk'||c==='run'){let k=0;pbImg('walk1');pbWI=setInterval(()=>pbImg((k++%2)?'walk1':'walk2'),c==='run'?150:230)}else pbImg(PFR[c]||'stand')}
+  if(c==='walk'||c==='run'){let k=0;pbImg('walk1');pbWI=setInterval(()=>pbImg((k++%2)?'walk1':'walk2'),c==='run'?150:230)}else pbImg(c==='squish'&&pbFront()?'front':PFR[c]||'stand')}
 function pbFreeze(){const w=$('#petW');if(!w)return;const m=getComputedStyle(w).transform;let x=PB.x;if(m&&m!=='none'){const p=m.split(',');x=parseFloat(p[4])||0}w.style.transitionDuration='0ms';w.style.transform=`translateX(${x}px)`;PB.x=x}
 function pbMove(x,ms){const w=$('#petW');if(!w)return;if(Math.abs(x-PB.x)>2)pbFace(x<PB.x?-1:1);w.style.transitionDuration=ms+'ms';w.style.transform=`translateX(${x}px)`;PB.x=x}
 async function pbWalk(x,id,sp){const R=pbRange();x=Math.max(-R,Math.min(R,x));const d=Math.abs(x-PB.x);if(d<6)return;const ms=Math.round(d/(sp||85)*1000),a=$('#petA');if(!a)return;
@@ -1361,7 +1366,7 @@ async function pbAct(c,ms,id){const a=$('#petA');if(!a)return;pbCls(c);await pbS
 let pbBT;function pbSay(t,ms){const b=$('#petBub');if(!b)return;b.textContent=t;b.classList.toggle('lft',PB.x>0);b.classList.add('on');clearTimeout(pbBT);pbBT=setTimeout(()=>b.classList.remove('on'),ms||1400)}
 function pfx(t,x,y,c,ms){const L=$('#petFx');if(!L)return null;const e=document.createElement('div');e.className='pfx '+(c||'');e.textContent=t;e.style.left=`calc(50% + ${Math.round(x)}px)`;e.style.bottom=Math.round(y)+'px';L.appendChild(e);if(ms)setTimeout(()=>e.remove(),ms);return e}
 function pbHearts(n,ic){for(let i=0;i<n;i++)setTimeout(()=>pfx(ic||'💗',PB.x+Math.random()*90-45,95+Math.random()*40,'up',1300),i*170)}
-function petStart(v){clearTimeout(PB.t);PB.seq++;PB.x=0;pbFace(PFACE[v.species]||1);const F=pbFr();if(F)['stand','blink','walk1','walk2','eat','sleep','jump','scratch'].forEach(n=>{const i=new Image();i.src=F.dir+'f/'+n+(v.shiny?'s':'')+'.webp?v='+F.fv});pbBase();if(v.stage&&!v.ready)PB.t=setTimeout(pbIdle,1200)}
+function petStart(v){clearTimeout(PB.t);PB.seq++;PB.x=0;PB.turn=0;pbFace(PFACE[v.species]||1,1);const F=pbFr();if(F)['stand','blink','walk1','walk2','eat','sleep','jump','scratch'].concat(pbFront()?['front']:[]).forEach(n=>{const i=new Image();i.src=F.dir+'f/'+n+(v.shiny?'s':'')+'.webp?v='+F.fv});pbBase();if(v.stage&&!v.ready)PB.t=setTimeout(pbIdle,1200)}
 async function pbEgg(){const a=$('#petA');if(!a)return;a.className='pa squish';pbHearts(1);toast('蛋動了一下！');await pbSleep(500);a.className='pa'}
 async function pbIdle(){if(!$('#petA')||st.tab!=='pet'||!PET||!PET.now)return;const v=PET.now,id=++PB.seq;let next=2600+Math.random()*3800;
   if(pbFr()&&!pbNight()&&Math.random()<.5){pbImg('blink');await pbSleep(200);if(id!==PB.seq)return;pbBase();await pbSleep(300)}
