@@ -136,6 +136,9 @@ input.amt{font-size:24px;text-align:right;color:var(--red)}
 .pfx.pat{font-size:38px;animation:ppat .3s ease-in-out 5 alternate}@keyframes ppat{from{transform:translate(-75%,0) rotate(-15deg)}to{transform:translate(-25%,0) rotate(15deg)}}
 .pfx.sweep{font-size:40px;animation:pswp 1.5s ease-in-out forwards}@keyframes pswp{from{transform:translate(-50%,0) translateX(-170px) rotate(-10deg)}to{transform:translate(-50%,0) translateX(170px) rotate(10deg)}}
 .pfx.drop{animation:pdrop .7s ease-in forwards}@keyframes pdrop{0%{transform:translate(-50%,-80px);opacity:0}30%{opacity:1}100%{transform:translate(-50%,-10px);opacity:0}}
+.pa.fr.walk{animation:pfwalk .46s ease-in-out infinite}.pa.fr.run{animation:pfwalk .3s ease-in-out infinite}@keyframes pfwalk{0%,50%,100%{transform:translateY(0)}25%,75%{transform:translateY(-3px)}}
+.pa.fr.eat,.pa.fr.sniff{animation:pfeat .5s ease-in-out infinite}@keyframes pfeat{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+.pa.fr.scratch{animation:pshv .12s linear 12}.pa.fr.sleep{animation:pslp 3.2s ease-in-out infinite}
 .psnd{position:absolute;top:4px;right:4px;width:34px;height:34px;border:0;border-radius:50%;background:#ffffffb0;font-size:17px;z-index:4;padding:0}
 </style></head><body>
 <header id="hud"></header>
@@ -853,7 +856,7 @@ const SHAPE2={corgi:1,dino:1,narwhal:1};
 
 // ---------- 圖片寵物（用 AI 繪圖工具畫好的圖，放在網站 pets/ 資料夾） ----------
 const PETIMG_HOST='https:/'+'/boyi05.github.io/pets/';
-const IMGPET={sheep:{dir:PETIMG_HOST+'sheep/',v:1}};
+const IMGPET={sheep:{dir:PETIMG_HOST+'sheep/',v:1,frames:{2:1,3:1},fv:1}};
 Object.assign(PETPAL,{sheep:[{m:'#f6e6c8',l:'#fffaf0',d:'#a07850',a:'#ffd86a',o:'#6a4a32',e:'#6a4a32',g:'#ffe9a0'},{m:'#f6c8ec',l:'#fff0fa',d:'#a0508a',a:'#ff9ad8',o:'#5a2a4a',e:'#5a2a4a',g:'#ffb0e8'}]});
 PEMO.sheep='☁️';PCOL.sheep=['#f6e6c8','#fffaf0','#a07850','#f6c8ec','#a0508a','#fff0fa'];
 function imgPet(sp,stage,o,u){const P=IMGPET[sp],C=PETPAL[sp][o.shiny?1:0],sh=!!o.shiny,mood=o.mood==null?80:o.mood;
@@ -865,7 +868,7 @@ function imgPet(sp,stage,o,u){const P=IMGPET[sp],C=PETPAL[sp][o.shiny?1:0],sh=!!
  if(o.sick)fx+=`<g transform="translate(${60+S*.18} ${y+S*.18})">${sickBits(C.o,0,0)}</g>`+`<g transform="translate(60 ${y+4})">${[0,1,2].map(i=>`<circle class="dizzy" style="animation-delay:${i*.4}s" cx="${(i-1)*9}" cy="0" r="2.6" fill="#ffd23f" stroke="${C.o}" stroke-width=".8"/>`).join('')}</g>`;
  else if(stage&&mood<30)fx+=`<g transform="translate(${60-S*.3} ${y+S*.12})"><path d="M-12 0 C-14 -8 -4 -12 0 -6 C4 -12 14 -8 12 0Z" fill="#b8c4d8" stroke="#6a7a90" stroke-width="1"/><path class="drip" d="M-6 4 v5 M0 4 v7 M6 4 v5" stroke="#6aa8e8" stroke-width="1.6" stroke-linecap="round"/></g>`;
  const href=P.dir+stage+(sh?'s':'')+'.webp?v='+P.v;
- const img=`<image href="${href}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${S.toFixed(1)}" height="${S.toFixed(1)}" preserveAspectRatio="xMidYMax meet"/>`;
+ const img=`<image class="pimg" href="${href}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${S.toFixed(1)}" height="${S.toFixed(1)}" preserveAspectRatio="xMidYMax meet"/>`;
  const cls=stage===0?(o.wobble||o.crack?'wob':''):'bob';
  return `<defs>${defs}</defs>${aura}<ellipse cx="60" cy="108" rx="${S*.34}" ry="5.5" fill="url(#${u}g)"/>${petPoo(o.poops)}<g class="${cls}" style="transform-origin:60px 108px">${img}</g>${fx}`}
 MEMO_ART.sheep=u=>`<path d="M6 16 C-14 16 -18 -6 -4 -14 C10 -22 22 -8 14 2 C8 10 -4 6 -2 -2 C0 -8 8 -6 7 -1" fill="none" stroke="#6a4a32" stroke-width="9.5" stroke-linecap="round"/><path d="M6 16 C-14 16 -18 -6 -4 -14 C10 -22 22 -8 14 2 C8 10 -4 6 -2 -2 C0 -8 8 -6 7 -1" fill="none" stroke="url(#${u}it)" stroke-width="6.5" stroke-linecap="round"/><path d="M-10 4 C-12 -6 -4 -12 4 -12" stroke="#fff" stroke-width="1.6" fill="none" opacity=".6" stroke-linecap="round"/>`;
@@ -1341,19 +1344,27 @@ const pbPick=a=>a[Math.floor(Math.random()*a.length)];
 function pbNight(){const h=new Date().getHours();return h>=22||h<6}
 function pbRange(){const s=$('#petStage');return Math.max(20,((s?s.clientWidth:320)-170)/2+20)}
 function pbPoo(){const g=$('#petStage .pgnd');if(g)g.innerHTML=petPoo(PET.now.poops)}
-function pbBase(){const a=$('#petA'),v=PET&&PET.now;if(!a||!v)return;const s=$('#petStage');if(s)s.classList.toggle('night',v.stage>0&&pbNight());a.className='pa '+(!v.stage?'':pbNight()?'sleep':v.sick||v.mood<30?'sad':'idle')}
-function pbFace(d){PB.dir=d;const f=$('#petF');if(f)f.classList.toggle('l',d<0)}
+function pbBase(){const a=$('#petA'),v=PET&&PET.now;if(!a||!v)return;const s=$('#petStage');if(s)s.classList.toggle('night',v.stage>0&&pbNight());pbCls(!v.stage?'':pbNight()?'sleep':v.sick||v.mood<30?'sad':'idle')}
+function pbFace(d){PB.dir=d;const f=$('#petF'),fc=PFACE[PET&&PET.now&&PET.now.species]||1;if(f)f.classList.toggle('l',d*fc<0)}
+/* 圖片寵物的動作圖：有畫的階段會換圖（走路兩張輪流），沒畫的就只用位移、翻面、壓扁拉長 */
+const PFACE={sheep:-1,narwhal:-1,pxshark:-1};
+const PFR={walk:'walk',run:'walk',hop:'jump',dance:'jump',eat:'eat',sniff:'eat',sleep:'sleep',scratch:'scratch',yawn:'blink',squish:'blink'};
+function pbFr(){const v=PET&&PET.now,P=v&&IMGPET[v.species];return P&&P.frames&&P.frames[v.stage]?P:null}
+function pbImg(n){const P=pbFr(),im=$('#petA .pimg');if(!P||!im)return;im.setAttribute('href',P.dir+'f/'+n+(PET.now.shiny?'s':'')+'.webp?v='+P.fv)}
+let pbWI;function pbCls(c){const a=$('#petA');if(!a)return;const F=pbFr();a.className='pa '+c+(F?' fr':'');clearInterval(pbWI);if(!F)return;
+  if(c==='walk'||c==='run'){let k=0;pbImg('walk1');pbWI=setInterval(()=>pbImg((k++%2)?'walk1':'walk2'),c==='run'?150:230)}else pbImg(PFR[c]||'stand')}
 function pbFreeze(){const w=$('#petW');if(!w)return;const m=getComputedStyle(w).transform;let x=PB.x;if(m&&m!=='none'){const p=m.split(',');x=parseFloat(p[4])||0}w.style.transitionDuration='0ms';w.style.transform=`translateX(${x}px)`;PB.x=x}
 function pbMove(x,ms){const w=$('#petW');if(!w)return;if(Math.abs(x-PB.x)>2)pbFace(x<PB.x?-1:1);w.style.transitionDuration=ms+'ms';w.style.transform=`translateX(${x}px)`;PB.x=x}
 async function pbWalk(x,id,sp){const R=pbRange();x=Math.max(-R,Math.min(R,x));const d=Math.abs(x-PB.x);if(d<6)return;const ms=Math.round(d/(sp||85)*1000),a=$('#petA');if(!a)return;
-  a.className='pa '+(sp>120?'run':'walk');pbMove(x,ms);await pbSleep(ms);if(id===PB.seq)pbBase()}
-async function pbAct(c,ms,id){const a=$('#petA');if(!a)return;a.className='pa '+c;await pbSleep(ms);if(id===PB.seq)pbBase()}
+  pbCls(sp>120?'run':'walk');pbMove(x,ms);await pbSleep(ms);if(id===PB.seq)pbBase()}
+async function pbAct(c,ms,id){const a=$('#petA');if(!a)return;pbCls(c);await pbSleep(ms);if(id===PB.seq)pbBase()}
 let pbBT;function pbSay(t,ms){const b=$('#petBub');if(!b)return;b.textContent=t;b.classList.toggle('lft',PB.x>0);b.classList.add('on');clearTimeout(pbBT);pbBT=setTimeout(()=>b.classList.remove('on'),ms||1400)}
 function pfx(t,x,y,c,ms){const L=$('#petFx');if(!L)return null;const e=document.createElement('div');e.className='pfx '+(c||'');e.textContent=t;e.style.left=`calc(50% + ${Math.round(x)}px)`;e.style.bottom=Math.round(y)+'px';L.appendChild(e);if(ms)setTimeout(()=>e.remove(),ms);return e}
 function pbHearts(n,ic){for(let i=0;i<n;i++)setTimeout(()=>pfx(ic||'💗',PB.x+Math.random()*90-45,95+Math.random()*40,'up',1300),i*170)}
-function petStart(v){clearTimeout(PB.t);PB.seq++;PB.x=0;PB.dir=1;pbBase();if(v.stage&&!v.ready)PB.t=setTimeout(pbIdle,1200)}
+function petStart(v){clearTimeout(PB.t);PB.seq++;PB.x=0;pbFace(PFACE[v.species]||1);const F=pbFr();if(F)['stand','blink','walk1','walk2','eat','sleep','jump','scratch'].forEach(n=>{const i=new Image();i.src=F.dir+'f/'+n+(v.shiny?'s':'')+'.webp?v='+F.fv});pbBase();if(v.stage&&!v.ready)PB.t=setTimeout(pbIdle,1200)}
 async function pbEgg(){const a=$('#petA');if(!a)return;a.className='pa squish';pbHearts(1);toast('蛋動了一下！');await pbSleep(500);a.className='pa'}
 async function pbIdle(){if(!$('#petA')||st.tab!=='pet'||!PET||!PET.now)return;const v=PET.now,id=++PB.seq;let next=2600+Math.random()*3800;
+  if(pbFr()&&!pbNight()&&Math.random()<.5){pbImg('blink');await pbSleep(200);if(id!==PB.seq)return;pbBase();await pbSleep(300)}
   if(pbNight()){pbBase();if(Math.random()<.6)pfx('💤',PB.x+30,120,'zz',2400);next=3500}
   else if(v.sick){pbSay(pbPick(['咳咳…','不舒服…','頭暈暈…']),1600);await pbAct('shiver',900,id)}
   else if(v.mood<30){pbSay(pbPick(['好無聊…','陪我玩嘛…','唉…']),1600)}
@@ -1371,8 +1382,8 @@ async function pbIdle(){if(!$('#petA')||st.tab!=='pet'||!PET||!PET.now)return;co
 async function petPlay(a){const v=PET.now;if(!$('#petA'))return;clearTimeout(PB.t);pbFreeze();const id=++PB.seq;const R=pbRange();
   try{
   if(a==='pat'){pfx('🤚',PB.x,128,'pat',1500);await pbAct('squish',500,id);petVoice(v.species);pbSay(pbPick(PSND[v.species]||['♪']),1300);pbHearts(3);await pbSleep(900)}
-  else if(a==='feed'||a==='snack'){const s=PB.x>0?-1:1,fx=Math.max(-R-40,Math.min(R+40,PB.x+80*s));const f=pfx(a==='feed'?'🍙':'🍰',fx,4,'food',0);pbFace(s);
-    await pbAct('sniff',500,id);const ea=$('#petA');if(ea)ea.className='pa eat';for(const sc of [.8,.6,.35,0]){await pbSleep(600);if(id!==PB.seq)break;if(f)f.style.transform=`translate(-50%,0) scale(${sc})`}
+  else if(a==='feed'||a==='snack'){const s=PB.x>0?-1:1,fx=Math.max(-R-40,Math.min(R+40,PB.x+80*s));if(pbFr())await pbWalk(Math.max(-R+60,Math.min(R-60,PB.x)),id);const f=pbFr()?null:pfx(a==='feed'?'🍙':'🍰',fx,4,'food',0);pbFace(s);
+    await pbAct('sniff',500,id);pbCls('eat');for(const sc of [.8,.6,.35,0]){await pbSleep(600);if(id!==PB.seq)break;if(f)f.style.transform=`translate(-50%,0) scale(${sc})`}
     if(f)f.remove();if(id===PB.seq){pbSay(a==='feed'?'好飽～':'好甜！',1400);pbHearts(2);await pbAct('hop',1400,id)}}
   else if(a==='play'){const s=PB.x>0?-1:1,b=pfx('⚽',PB.x+40*s,4,'ball',0);if(b){b.style.transition='left .9s ease-out'}
     for(let i=0;i<3&&id===PB.seq;i++){const to=(i%2?-1:1)*s*R;if(b)b.style.left=`calc(50% + ${Math.round(to+(i%2?-1:1)*s*40)}px)`;await pbWalk(to,id,160)}
