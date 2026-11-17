@@ -147,12 +147,12 @@ input.amt{font-size:24px;text-align:right;color:var(--red)}
 .pslot.on{border-color:#f0a030;background:#fff1cf;box-shadow:0 0 0 2px #ffd27a}
 .pslot.empty{border-style:dashed;opacity:.9}.pslot.lock{background:#eee6da;opacity:.85}
 .pdot{position:absolute;top:4px;right:6px;width:10px;height:10px;border-radius:50%;background:#e5484d;box-shadow:0 0 0 2px #fff}
-.zoo{position:relative;border-radius:16px;overflow:hidden;background:linear-gradient(#bfe6ff,#eaf8ff);margin-bottom:10px}
-.zbg{position:absolute;inset:0;width:100%;height:100%}
-.zan{position:absolute;width:92px;transition-property:left;transition-timing-function:linear;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.zoowrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:16px;margin-bottom:10px}.zoo{position:relative;overflow:hidden;min-width:100%}
+.zbg{position:absolute;left:0;top:0}
+.zan{position:absolute;width:84px;transition-property:left;transition-timing-function:linear;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .zf.l{transform:scaleX(-1)}.za{transform-origin:50% 92%}
 .za.walk{animation:pwalk .4s ease-in-out infinite}.za.hop{animation:phop .7s cubic-bezier(.3,.7,.4,1) 1}
-.zname{text-align:center;font-size:12px;font-weight:700;background:#ffffffd0;border-radius:8px;margin:-8px auto 0;width:max-content;max-width:92px;overflow:hidden;white-space:nowrap;padding:0 6px;color:#4a3b2a}
+.zname{text-align:center;font-size:12px;font-weight:700;background:#ffffffd0;border-radius:8px;margin:-8px auto 0;width:max-content;max-width:84px;overflow:hidden;white-space:nowrap;padding:0 6px;color:#4a3b2a}
 .zbub{position:absolute;left:50%;top:6px;transform:translate(-50%,-100%) scale(0);background:#fff;border:2px solid #4a3b2a;border-radius:12px;padding:1px 8px;font-weight:700;font-size:13px;white-space:nowrap;transition:transform .2s;z-index:3;color:#4a3b2a}
 .zbub.on{transform:translate(-50%,-100%) scale(1)}
 .pk{position:absolute;pointer-events:none}
@@ -161,6 +161,19 @@ input.amt{font-size:24px;text-align:right;color:var(--red)}
 .pa.cast{animation:pcast 1.2s ease-in-out}@keyframes pcast{0%,100%{transform:none}20%{transform:scale(1.08,.92)}40%,80%{transform:translateY(-4px) scale(1.04)}}
 .skb{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:8px;padding:10px;border:0;border-radius:14px;font:inherit;font-weight:800;font-size:16px;color:#fff;background:linear-gradient(#ff7a3a,#e8452e);box-shadow:0 3px 0 #9a1c1c}
 .skb.wolf{background:linear-gradient(#5a8ad8,#2a4a9a);box-shadow:0 3px 0 #0e1430}.skb.shark{background:linear-gradient(#5a7090,#2a3a52);box-shadow:0 3px 0 #10141c}
+.ppc{padding:10px 12px}
+.phd{display:flex;align-items:center;gap:6px;font-weight:800;font-size:16px}
+.pslots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:6px}
+.pslot{position:relative;box-sizing:border-box;min-width:0;height:62px;border:2px solid #e3d3b8;background:#fffaf0;border-radius:12px;padding:2px;display:flex;flex-direction:column;align-items:center;justify-content:center;font:inherit;color:#4a3b2a;cursor:pointer}
+.pslot svg{display:block}.pslot b{font-size:20px;line-height:34px}
+.pslot span{font-size:11px;font-weight:700;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pslot.on{border-color:#f0a030;background:#fff1cf;box-shadow:0 0 0 2px #ffd27a}
+.pslot.empty{border-style:dashed}.pslot.lock{background:#eee6da;opacity:.85}
+.pdot{position:absolute;top:3px;right:5px;width:9px;height:9px;border-radius:50%;background:#e5484d;box-shadow:0 0 0 2px #fff}
+.eggrow{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+.egg{flex:0 0 92px;scroll-snap-align:start;background:#fffaf0;border:2px solid #f0e2c8;border-radius:12px;padding:4px 4px 6px;display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center}
+.egg b{font-size:12px;line-height:1.2}.egg .mu{font-size:12px}.egg .go{padding:4px 0;width:100%;font-size:13px;margin-top:3px}
+.skb{margin-top:6px;padding:8px}.skb small{font-weight:600;opacity:.85;font-size:12px}
 </style></head><body>
 <header id="hud"></header>
 <main>
@@ -1345,46 +1358,50 @@ function petMini(v){const L=(PET&&PET.list)||[];if(!v)return `<div class="card" 
 /* 多隻寵物：PET.list 是正在養的、PET.now 是現在選的那隻（照顧按鈕、舞台都看 PET.now） */
 function petSet(p,sel){const old=sel||(PET&&PET.sel);PET=p;const L=p.list||(p.now?[p.now]:[]);p.list=L;const f=L.find(x=>x.id===old)||L[0]||null;p.sel=f&&f.id;p.now=f;return p}
 function petPick(id){if(!PET||!PET.list)return;const f=PET.list.find(x=>x.id===id);if(!f)return;PET.sel=id;PET.now=f;PET.zooOpen=false;PB.key='';if(st.tab==='pet')drawPet()}
-function petSlotsHtml(){const L=PET.list||[],S=PET.slots||1,SP=PET.slotPrice||[0,200,400],c=(G.me||{}).coins||0;let h='';
+function petSlotsHtml(){const L=PET.list||[],S=PET.slots||1,SP=PET.slotPrice||[0,200,400];let h='';
   for(let i=0;i<SP.length;i++){
     if(i<L.length){const x=L[i],on=PET.now&&x.id===PET.now.id,al=x.ready||x.sick||x.poops>=2||(x.stage&&(x.full<30||x.mood<30));
-      h+=`<button class="pslot ${on?'on':''}" onclick="petPick('${x.id}')">${al?'<i class="pdot"></i>':''}${petSvg(x.species,x.stage,{shiny:x.shiny,sick:x.sick,mood:x.mood,poops:0},46)}<span>${esc(x.name)}</span></button>`}
-    else if(i<S)h+=`<button class="pslot empty" onclick="petShopGo()"><div style="font-size:26px;line-height:46px">🥚</div><span>空位・去領養</span></button>`;
-    else h+=`<button class="pslot lock" onclick="petUnlockBox()"><div style="font-size:24px;line-height:46px">🔒</div><span>${i===S?'解鎖 🪙'+SP[i]:'飼養區 '+(i+1)}</span></button>`}
-  return `<div class="pslots">${h}</div>`}
-function petShopGo(){const e=$('#petShop');if(e)e.scrollIntoView({behavior:'smooth',block:'start'})}
+      h+=`<button class="pslot ${on?'on':''}" onclick="petPick('${x.id}')">${al?'<i class="pdot"></i>':''}${petSvg(x.species,x.stage,{shiny:x.shiny,sick:x.sick,mood:x.mood,poops:0},34)}<span>${esc(x.name)}</span></button>`}
+    else if(i<S)h+=`<button class="pslot empty" onclick="petShopGo()"><b>🥚</b><span>空位</span></button>`;
+    else h+=`<button class="pslot lock" onclick="petUnlockBox()"><b>🔒</b><span>${i===S?'🪙'+SP[i]:'第 '+(i+1)+' 格'}</span></button>`}
+  return `<div class="card ppc"><div class="phd">🏡 我的寵物 <span class="mu">${L.length}/${S}</span></div><div class="pslots">${h}</div></div>`}
+function petShopGo(){PET.shopOpen=true;const e=$('#petShop');if(e){e.outerHTML=petShopHtml();const n=$('#petShop');n&&n.scrollIntoView({behavior:'smooth',block:'center'})}}
+function petShopToggle(){PET.shopOpen=!PET.shopOpen;const e=$('#petShop');if(e)e.outerHTML=petShopHtml()}
 async function petUnlockBox(){const S=PET.slots||1,SP=PET.slotPrice||[0,200,400];if(S>=SP.length)return toast('飼養區已經全部解鎖了');
   const p=SP[S],c=(G.me||{}).coins||0;if(c<p)return toast('解鎖第 '+(S+1)+' 個飼養區要 '+p+' 金幣，還差 '+(p-c),1);
   if(!await ask(`<div style="text-align:center"><div style="font-size:44px">🏡</div><h3>解鎖第 ${S+1} 個飼養區</h3>花 <b class="gold">${p} 金幣</b>，就可以同時多養一隻寵物。<br><span class="mu">每多養一隻，每天要餵、要陪玩、要清大便喔！</span></div>`,'解鎖！'))return;
   const r=await run(null,'petUnlock');if(r){petSet(r.pet);if(G.me&&r.coins!=null){G.me.coins=r.coins;drawHud()}PB.key='';drawPet();toast(r.msg)}}
-function petShopHtml(){const TY=PET.types,c=(G.me||{}).coins||0,full=(PET.list||[]).length>=(PET.slots||1);
-  return `<div id="petShop"><div class="sign" style="margin-top:6px"><h3>🥚 領養商店</h3></div>${full?`<div class="card" style="background:#fff4d6;text-align:center">🏡 飼養區滿了！<br><span class="mu">等寵物長大搬進動物園，或${(PET.slots||1)<(PET.slotPrice||[0,200,400]).length?'<a href="#" onclick="petUnlockBox();return false">解鎖新的飼養區</a>':'先好好照顧現在的寵物'}，就能再領養。</span></div>`:'<div class="card mu">選一顆喜歡的蛋，取個名字，12 小時後就會孵化。牠會長大 10 天，要每天餵飯、陪牠玩、清大便喔！</div>'}
-    ${[['小動物','🐶 可愛小動物'],['怪獸','🐲 小怪獸'],['稀有怪獸','🌟 稀有怪獸'],['像素傳說','👾 像素傳說・超稀有'],['水彩繪本','🎨 水彩繪本・新登場']].map(([kd,tt])=>{const ks=Object.keys(TY).filter(k=>TY[k].kind===kd&&!TY[k].retired);return ks.length?`<div class="sign" style="margin-top:6px"><h3>${tt}</h3></div><div class="grid">${ks.map(k=>`<div class="prod ${c<TY[k].price||full?'poor':''}" style="text-align:center">${petSvg(k,0,{},110)}<div class="pn"><b>${TY[k].name}</b><br><span class="mu">長大會變成</span></div><div style="display:flex;justify-content:center">${petSvg(k,5,{photo:1},80)}</div><div class="pp">🪙 ${n(TY[k].price)}</div><button class="go" ${full?'disabled':''} onclick="adopt('${k}')">${full?'飼養區已滿':c<TY[k].price?'金幣不夠':'領養'}</button></div>`).join('')}</div>`:''}).join('')}</div>`}
-function petZooEntry(){const Z=PET.zoo||[];return `<div class="card" onclick="zooOpen()" style="cursor:pointer;display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#e4f7d4,#fff)"><div style="font-size:40px">🏞️</div><div style="flex:1"><b>島上動物園</b><div class="mu">${Z.length?'住了 '+Z.length+' 隻你養大的寵物，去看看牠們':'寵物養大以後會搬進來住'}</div></div><span class="mu">›</span></div>`}
+function petPeek(k){const T=PET.types[k];ask(`<div style="text-align:center"><h3>${T.name}</h3><div style="display:flex;justify-content:center;align-items:flex-end;gap:6px">${petSvg(k,0,{},80)}<span style="font-size:22px">➜</span>${petSvg(k,3,{photo:1},96)}<span style="font-size:22px">➜</span>${petSvg(k,5,{photo:1},120)}</div><div class="mu" style="margin-top:6px">蛋 ➜ 少年 ➜ 完全體</div></div>`,null,'好')}
+function petShopHtml(){const TY=PET.types,c=(G.me||{}).coins||0,L=PET.list||[],full=L.length>=(PET.slots||1),open=PET.shopOpen!=null?PET.shopOpen:!L.length;
+  const ks=Object.keys(TY).filter(k=>!TY[k].retired).sort((a,b)=>TY[a].price-TY[b].price);
+  return `<div class="card ppc" id="petShop"><div class="phd" onclick="petShopToggle()" style="cursor:pointer">🥚 領養商店 <span class="mu">${ks.length} 種${full?'・飼養區滿了':''}</span><span style="margin-left:auto" class="mu">${open?'收起 ▴':'打開 ▾'}</span></div>
+   ${open?`${full?`<div class="mu" style="margin:4px 0 6px">等寵物長大搬進動物園，或${(PET.slots||1)<(PET.slotPrice||[0,200,400]).length?'<a href="#" onclick="petUnlockBox();return false">解鎖新的飼養區</a>':'先好好照顧現在的寵物'}，就能再領養。</div>`:'<div class="mu" style="margin:4px 0 6px">12 小時孵化、10 天長大。點蛋看牠長大的樣子。</div>'}
+   <div class="eggrow">${ks.map(k=>`<div class="egg"><div onclick="petPeek('${k}')" style="cursor:pointer">${petSvg(k,0,{},60)}</div><b>${TY[k].name}</b><span class="mu">🪙${TY[k].price}</span><button class="go" ${full||c<TY[k].price?'disabled':''} onclick="adopt('${k}')">${full?'已滿':c<TY[k].price?'不夠':'領養'}</button></div>`).join('')}</div>`:''}</div>`}
+function petZooEntry(){const Z=PET.zoo||[];return `<div class="card ppc" onclick="zooOpen()" style="cursor:pointer;display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#e4f7d4,#fff)"><div style="font-size:32px">🏞️</div><div style="flex:1"><b>島上動物園</b><div class="mu">${Z.length?'住了 '+Z.length+' 隻你養大的寵物':'寵物養大以後會搬進來住'}</div></div><span class="mu">›</span></div>`}
 function drawPet(){const el=$('#pg-pet');if(!PET){el.innerHTML='<div class="card empty">⏳ 讀取中…</div>';return}
   if(PET.zooOpen){drawZoo();return}
   const v=PET.now;
-  if(!v){clearTimeout(PB.t);PB.key='';el.innerHTML=petSlotsHtml()+petShopHtml()+petZooEntry();return}
+  if(!v){clearTimeout(PB.t);PB.key='';el.innerHTML=`<div class="card mu" style="text-align:center">還沒有寵物，從下面挑一顆蛋開始吧！</div>`+petShopHtml()+petSlotsHtml()+petZooEntry();return}
   const key=[v.id,v.stage,v.shiny,v.sick,v.mood<30,v.ready].join('|');
   if(PB.key===key&&$('#petStage')){petPanel();pbPoo();return}
   PB.key=key;
-  el.innerHTML=`<div id="petSlots"></div><div class="card" style="text-align:center;background:linear-gradient(#cdeeff,#e9fbff 58%,#bfe8b0 58%);padding-top:4px">
+  el.innerHTML=`<div class="card" style="text-align:center;background:linear-gradient(#cdeeff,#e9fbff 58%,#bfe8b0 58%);padding-top:4px">
    <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:19px">${esc(v.name)}</b><span class="mini">${v.typeName}・${v.stageName}${v.shiny?' ✨':''}</span></div>
    <div id="petStage" class="pst" onclick="petTap()"><svg class="pgnd" viewBox="0 0 120 120" preserveAspectRatio="xMidYMax meet">${petPoo(v.poops)}</svg>
     <div class="pw" id="petW"><div class="pf${v.stage===2&&((IMGPET[v.species]||{}).frames||{})[2]!=='f2'?' baby':''}" id="petF"><div class="pt" id="petT"><div class="pa" id="petA">${petSvg(v.species,v.stage,petOpt(v),170)}</div></div></div><div class="pbub" id="petBub"></div></div>
     <div id="petFx"></div>${v.stage&&!v.ready?`<button class="psnd" onclick="event.stopPropagation();petSoundToggle(this)">${PSOUND?'🔊':'🔇'}</button>`:''}</div>
-   <div class="mu" id="petCap"></div></div><div id="petPanel"></div><div id="petMore"></div>`;
+   <div class="mu" id="petCap"></div><div id="petSkill"></div></div><div id="petPanel"></div><div id="petMore"></div>`;
   petPanel();petStart(v)}
 function petPanel(){const v=PET.now,AC=PET.acts,c=(G.me||{}).coins||0,P=$('#petPanel');if(!P)return;
-  const sl=$('#petSlots');if(sl)sl.innerHTML=petSlotsHtml();const mo=$('#petMore');if(mo)mo.innerHTML=petShopHtml()+petZooEntry();
+  const mo=$('#petMore');if(mo)mo.innerHTML=petSlotsHtml()+petShopHtml()+petZooEntry();
   const cap=$('#petCap');if(cap)cap.innerHTML=v.stage===0?'還要 <b>'+Math.ceil(v.hatchIn)+'</b> 小時孵化，點蛋摸摸牠':v.ready?'':'第 '+(v.ageDays+1)+' 天・還有 '+v.daysLeft+' 天長大・點牠可以摸摸';
+  const sk=$('#petSkill');if(sk)sk.innerHTML=v.skill&&!v.ready?`<button class="skb ${v.species==='pxwolf'?'wolf':v.species==='pxshark'?'shark':''}" onclick="petSkill()">⚔️ ${v.skill.n} <small>威力 ${v.skill.p}</small></button>`:'';
   const full={feed:v.full>=95&&'吃飽了',snack:v.full>=95&&'吃飽了',play:v.mood>=95&&'很開心',bath:v.clean>=95&&'很乾淨',poop:!v.poops&&'沒有大便',doctor:!v.sick&&'很健康'};
-  const btn=(a,ic)=>{const A=AC[a],why=full[a]||(c<A[1]&&'金幣不夠');return `<button class="go" style="padding:10px 4px" ${why?'disabled':''} onclick="petDo('${a}')"><div style="font-size:24px">${ic}</div>${A[0]}<div style="font-size:11px;opacity:.9">${why||(A[1]?A[1]+' 🪙':'免費')}</div></button>`};
+  const btn=(a,ic)=>{const A=AC[a],why=full[a]||(c<A[1]&&'金幣不夠');return `<button class="go" style="padding:8px 4px" ${why?'disabled':''} onclick="petDo('${a}')"><div style="font-size:22px">${ic}</div>${A[0]}<div style="font-size:11px;opacity:.9">${why||(A[1]?A[1]+' 🪙':'免費')}</div></button>`};
   P.innerHTML=v.ready?`<div class="card" style="text-align:center"><div style="font-size:16px"><b>${esc(v.name)}</b> 已經完全長大了！<br>牠要搬進島上動物園了，以後隨時可以去看牠。</div><button class="go wide" onclick="petByeBox()">🏞️ 送 ${esc(v.name)} 去動物園</button></div>`:v.stage===0?'':`
+  <div class="card"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${btn('feed','🍙')}${btn('snack','🍰')}${btn('play','⚽')}${btn('bath','🛁')}${btn('poop','💩')}${btn('doctor','💊')}</div><div class="mu" style="text-align:center;margin-top:6px">我有 🪙 ${n(c)}</div></div>
   <div class="card">${v.sick?'<div style="background:#ffe8e6;border-radius:12px;padding:8px;margin-bottom:6px;color:#c0392b">🤒 生病了！快帶牠去看醫生</div>':''}${petBars(v)}<div class="mu" style="margin-top:4px">💩 大便 ${v.poops} 坨${v.poops>=2?'　<b style="color:#e5484d">快清乾淨，不然會生病！</b>':''}</div></div>
-  <div class="card"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${btn('feed','🍙')}${btn('snack','🍰')}${btn('play','⚽')}${btn('bath','🛁')}${btn('poop','💩')}${btn('doctor','💊')}</div><div class="mu" style="text-align:center;margin-top:8px">我有 🪙 ${n(c)}</div></div>
-  ${v.skill||v.nextSkill?`<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><b>⚔️ 技能：${v.skill?v.skill.n:'還沒學會'}</b>${v.skill?`<span class="mini">威力 ${v.skill.p}</span>`:''}</div><div class="mu" style="margin-top:2px">${v.nextSkill?`長到「${v.nextSkill.stage}」會學會「${v.nextSkill.skill.n}」（威力 ${v.nextSkill.skill.p}）`:'已經學會最強的招式了！'}</div>${v.skill?`<button class="skb ${v.species==='pxwolf'?'wolf':v.species==='pxshark'?'shark':''}" onclick="petSkill()">⚔️ 放技能：${v.skill.n}</button>`:''}</div>`:''}
-  <div class="card mu">${v.nextStage?`🌱 再 <b>${v.nextStage.inHours}</b> 小時會長成「${v.nextStage.name}」<br>`:''}${v.stage<4?`✨ 照顧分數 <b>${v.avg}</b>（成年前保持 75 以上，會變成閃亮型！）`:v.shiny?'✨ 照顧得很好，變成閃亮型了！':'照顧分數 '+v.avg}</div>`}
+  <div class="card mu">${v.nextStage?`🌱 再 <b>${v.nextStage.inHours}</b> 小時會長成「${v.nextStage.name}」${v.nextSkill?`，學會「${v.nextSkill.skill.n}」`:''}<br>`:''}${v.stage<4?`✨ 照顧分數 <b>${v.avg}</b>（成年前保持 75 以上，會變成閃亮型！）`:v.shiny?'✨ 照顧得很好，變成閃亮型了！':'照顧分數 '+v.avg}</div>`}
 async function adopt(k){const T=PET.types[k];if((PET.list||[]).length>=(PET.slots||1))return toast('飼養區滿了',1);if(((G.me||{}).coins||0)<T.price)return toast('金幣不夠喔',1);
   const ok=await ask(`<div style="text-align:center">${petSvg(k,0,{},100)}<h3>領養${T.name}的蛋</h3>花 <b class="gold">${T.price} 金幣</b></div><label>幫牠取個名字</label><input id="petName" maxlength="10" placeholder="例如：小火">`,'領養！');
   if(!ok)return;const nm=$('#petName').value.trim();if(!nm)return toast('請幫牠取名字',1);
@@ -1504,23 +1521,28 @@ async function petByeBox(){const v=PET.now;if(!await ask(`<div style="text-align
 const ZOO={t:null,a:[]};
 function zooOpen(){PET.zooOpen=true;clearTimeout(PB.t);PB.key='';drawPet();window.scrollTo(0,0)}
 function zooClose(){PET.zooOpen=false;clearInterval(ZOO.t);PB.key='';drawPet()}
-function zooBg(){return `<svg class="zbg" viewBox="0 0 400 300" preserveAspectRatio="xMidYMax slice"><g fill="#fff" opacity=".85"><ellipse cx="70" cy="40" rx="30" ry="11"/><ellipse cx="88" cy="32" rx="18" ry="11"/><ellipse cx="300" cy="56" rx="26" ry="9"/></g>
- <path d="M0 132 C60 118 120 128 200 122 C280 116 340 126 400 120 V300 H0Z" fill="#9ed67a"/><path d="M0 132 C60 118 120 128 200 122 C280 116 340 126 400 120" fill="none" stroke="#7cbd5a" stroke-width="3"/>
- ${[[30,118,1],[360,114,1.2],[250,120,.8]].map(([x,y,s])=>`<g transform="translate(${x} ${y}) scale(${s})"><rect x="-4" y="-26" width="8" height="28" fill="#a0703c"/><circle cx="0" cy="-36" r="18" fill="#5cb85c"/><circle cx="-10" cy="-28" r="12" fill="#6cc86a"/><circle cx="10" cy="-30" r="13" fill="#4fae50"/></g>`).join('')}
- <g stroke="#c89a62" stroke-width="3" fill="none">${Array.from({length:21},(_,i)=>`<path d="M${i*20} 126 v-16"/>`).join('')}<path d="M0 114 H400 M0 121 H400"/></g>
- <g transform="translate(150 96)"><rect x="-2" y="0" width="4" height="26" fill="#a0703c"/><rect x="-34" y="-14" width="68" height="18" rx="4" fill="#fff4d6" stroke="#a0703c" stroke-width="2"/><text x="0" y="0" text-anchor="middle" font-size="11" font-weight="700" fill="#7a4a1c">島上動物園</text></g>
- <ellipse cx="330" cy="250" rx="48" ry="14" fill="#8fd3f4" stroke="#6ab8de" stroke-width="2"/>
- ${[[40,200,'#ffb0c0'],[110,270,'#fff'],[200,230,'#ffd86a'],[270,280,'#ffb0c0'],[380,200,'#fff'],[60,290,'#ffd86a']].map(([x,y,c])=>`<g transform="translate(${x} ${y})"><circle r="3.4" fill="${c}"/><circle r="1.4" fill="#e8a43c"/></g>`).join('')}</svg>`}
-function drawZoo(){const el=$('#pg-pet'),Z=PET.zoo||[];clearInterval(ZOO.t);const lanes=Math.max(2,Math.min(4,Math.ceil(Z.length/3))),H=190+lanes*44;
+function zooBg(W,H){const g=110;let t='',f='',fl='';
+  for(let x=30;x<W;x+=150+((x*7)%60))t+=`<g transform="translate(${x} ${g-2})"><rect x="-4" y="-26" width="8" height="28" fill="#a0703c"/><circle cx="0" cy="-36" r="18" fill="#5cb85c"/><circle cx="-10" cy="-28" r="12" fill="#6cc86a"/><circle cx="10" cy="-30" r="13" fill="#4fae50"/></g>`;
+  for(let x=0;x<=W;x+=20)f+=`<path d="M${x} ${g+4} v-16"/>`;
+  for(let i=0;i<Math.ceil(W/40);i++){const x=(i*97)%W,y=g+30+((i*53)%(H-g-40)),c=['#ffb0c0','#fff','#ffd86a'][i%3];fl+=`<g transform="translate(${x} ${y})"><circle r="3.4" fill="${c}"/><circle r="1.4" fill="#e8a43c"/></g>`}
+  return `<svg class="zbg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><rect width="${W}" height="${H}" fill="#cdeeff"/>${[[.12,34],[.55,24],[.85,44]].map(([p,y])=>`<g fill="#fff" opacity=".9" transform="translate(${W*p} ${y})"><ellipse rx="28" ry="10"/><ellipse cx="16" cy="-7" rx="16" ry="10"/></g>`).join('')}
+   <path d="M0 ${g} C${W*.25} ${g-12} ${W*.5} ${g+4} ${W*.75} ${g-6} S${W} ${g} ${W} ${g} V${H} H0Z" fill="#9ed67a"/>${t}
+   <g stroke="#c89a62" stroke-width="3" fill="none">${f}<path d="M0 ${g-8} H${W} M0 ${g-1} H${W}"/></g>
+   <g transform="translate(${Math.min(150,W*.4)} ${g-26})"><rect x="-2" y="0" width="4" height="26" fill="#a0703c"/><rect x="-36" y="-14" width="72" height="18" rx="4" fill="#fff4d6" stroke="#a0703c" stroke-width="2"/><text x="0" y="0" text-anchor="middle" font-size="11" font-weight="700" fill="#7a4a1c">島上動物園</text></g>
+   ${W>500?`<ellipse cx="${W-90}" cy="${H-40}" rx="54" ry="15" fill="#8fd3f4" stroke="#6ab8de" stroke-width="2"/>`:''}${fl}</svg>`}
+function drawZoo(){const el=$('#pg-pet'),Z=PET.zoo||[];clearInterval(ZOO.t);const AW=84,lanes=4,laneH=58,H=130+lanes*laneH;
   el.innerHTML=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><button class="go" style="padding:6px 12px" onclick="zooClose()">‹ 回寵物</button><b style="font-size:19px">🏞️ 島上動物園</b><span class="mu" style="margin-left:auto">${Z.length} 隻</span></div>
-  <div class="zoo" id="zoo" style="height:${H}px">${zooBg()}${Z.map((z,i)=>`<div class="zan" id="za${i}" onclick="zooTap(${i})"><div class="zbub" id="zb${i}"></div><div class="zf" id="zf${i}"><div class="za" id="zz${i}">${petSvg(z.species,5,{shiny:z.shiny,mood:90,poops:0,photo:1},92)}</div></div><div class="zname">${esc(z.name)}</div></div>`).join('')}</div>
+  <div class="zoowrap" id="zoowrap"><div class="zoo" id="zoo" style="height:${H}px"></div></div><div class="mu" id="zoohint" style="text-align:center;margin:-4px 0 8px"></div>
   <div class="card mu">${Z.length?'這些都是你親手養大的寵物！牠們在這裡不用照顧，點一下可以摸摸牠們。':'還沒有寵物住進來。把寵物養到第 10 天，就可以送牠來動物園。'}</div>
   ${Z.length?`<div class="card"><b>📖 入住紀錄</b>${Z.slice().reverse().map(z=>`<div class="mu" style="display:flex;justify-content:space-between;margin-top:4px"><span>${esc(z.name)}（${(PET.types[z.species]||{}).name||''}${z.shiny?'・✨閃亮':''}）</span><span>${z.date||''}</span></div>`).join('')}</div>`:''}`;
-  const box=$('#zoo');if(!box||!Z.length)return;const W=box.clientWidth||340;
-  ZOO.a=Z.map((z,i)=>{const lane=i%lanes,x=Math.random()*(W-92),e=$('#za'+i);e.style.left=x+'px';e.style.bottom=(8+(lanes-1-lane)*44)+'px';e.style.zIndex=10+lane;return {z,x,lane}});
+  const wrap=$('#zoowrap'),box=$('#zoo');if(!box)return;const VW=wrap.clientWidth||340,per=Math.ceil(Z.length/lanes)||1,W=Math.max(VW,per*140+40);
+  box.style.width=W+'px';box.innerHTML=zooBg(W,H)+Z.map((z,i)=>`<div class="zan" id="za${i}" onclick="zooTap(${i})"><div class="zbub" id="zb${i}"></div><div class="zf" id="zf${i}"><div class="za" id="zz${i}">${petSvg(z.species,5,{shiny:z.shiny,mood:90,poops:0,photo:1},AW)}</div></div><div class="zname">${esc(z.name)}</div></div>`).join('');
+  if(W>VW+10)$('#zoohint').textContent='← 左右滑動，看更多寵物 →';
+  if(!Z.length)return;
+  ZOO.W=W;ZOO.a=Z.map((z,i)=>{const lane=i%lanes,slot=Math.floor(i/lanes),x=Math.max(0,Math.min(W-AW,(slot+.5)*(W/per)-AW/2+(Math.random()*40-20))),e=$('#za'+i);e.style.left=x+'px';e.style.bottom=(6+(lanes-1-lane)*laneH)+'px';e.style.zIndex=10+lane;return {z,x}});
   ZOO.t=setInterval(()=>{if(!$('#zoo')||st.tab!=='pet'||!PET||!PET.zooOpen){clearInterval(ZOO.t);return}
-    const k=Math.floor(Math.random()*ZOO.a.length),A=ZOO.a[k],nx=Math.max(0,Math.min(W-92,A.x+(Math.random()*2-1)*W*.5)),d=Math.abs(nx-A.x),ms=Math.round(d/55*1000),e=$('#za'+k),f=$('#zf'+k),a=$('#zz'+k);if(!e||d<10)return;
-    f.classList.toggle('l',(nx<A.x?-1:1)*(PFACE[A.z.species]||1)<0);e.style.transitionDuration=ms+'ms';e.style.left=nx+'px';A.x=nx;a.className='za walk';setTimeout(()=>{if(a.className==='za walk')a.className='za'},ms)},1600)}
+    for(let m=0;m<Math.max(1,Math.round(ZOO.a.length/6));m++){const k=Math.floor(Math.random()*ZOO.a.length),A=ZOO.a[k],nx=Math.max(0,Math.min(ZOO.W-AW,A.x+(Math.random()*2-1)*130)),d=Math.abs(nx-A.x),ms=Math.round(d/55*1000),e=$('#za'+k),f=$('#zf'+k),a=$('#zz'+k);if(!e||d<10)continue;
+      f.classList.toggle('l',(nx<A.x?-1:1)*(PFACE[A.z.species]||1)<0);e.style.transitionDuration=ms+'ms';e.style.left=nx+'px';A.x=nx;a.className='za walk';setTimeout(()=>{if(a.className==='za walk')a.className='za'},ms)}},1500)}
 function zooTap(i){const A=ZOO.a[i];if(!A)return;const a=$('#zz'+i),b=$('#zb'+i);if(a){a.className='za hop';setTimeout(()=>{if(a.className==='za hop')a.className='za'},750)}
   petVoice(A.z.species);if(b){b.textContent=pbPick(PSND[A.z.species]||['♪']);b.classList.add('on');setTimeout(()=>b.classList.remove('on'),1300)}}
 /* ===== 像素寵物技能（幼年起每個階段一招，越長大越強） ===== */
