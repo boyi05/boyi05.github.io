@@ -856,7 +856,7 @@ const SHAPE2={corgi:1,dino:1,narwhal:1};
 
 // ---------- 圖片寵物（用 AI 繪圖工具畫好的圖，放在網站 pets/ 資料夾） ----------
 const PETIMG_HOST='https:/'+'/boyi05.github.io/pets/';
-const IMGPET={sheep:{dir:PETIMG_HOST+'sheep/',v:1,frames:{2:1,3:1},front:{2:1,3:1},fv:1}};
+const IMGPET={sheep:{dir:PETIMG_HOST+'sheep/',v:1,frames:{2:'f',3:'f',4:'f4'},front:{2:1,3:1,4:1},fv:1}};
 Object.assign(PETPAL,{sheep:[{m:'#f6e6c8',l:'#fffaf0',d:'#a07850',a:'#ffd86a',o:'#6a4a32',e:'#6a4a32',g:'#ffe9a0'},{m:'#f6c8ec',l:'#fff0fa',d:'#a0508a',a:'#ff9ad8',o:'#5a2a4a',e:'#5a2a4a',g:'#ffb0e8'}]});
 PEMO.sheep='☁️';PCOL.sheep=['#f6e6c8','#fffaf0','#a07850','#f6c8ec','#a0508a','#fff0fa'];
 function imgPet(sp,stage,o,u){const P=IMGPET[sp],C=PETPAL[sp][o.shiny?1:0],sh=!!o.shiny,mood=o.mood==null?80:o.mood;
@@ -1355,7 +1355,7 @@ function pbFace(d,now){PB.dir=d;const f=$('#petF'),fc=PFACE[PET&&PET.now&&PET.no
 const PFACE={sheep:-1,narwhal:-1,pxshark:-1};
 const PFR={walk:'walk',run:'walk',hop:'jump',dance:'jump',eat:'eat',sniff:'eat',sleep:'sleep',scratch:'scratch',yawn:'blink',squish:'blink'};
 function pbFr(){const v=PET&&PET.now,P=v&&IMGPET[v.species];return P&&P.frames&&P.frames[v.stage]?P:null}
-function pbImg(n){const P=pbFr(),im=$('#petA .pimg');if(!P||!im)return;if(n!=='front')PB.cur=n;if(PB.turn&&n!=='front')return;im.setAttribute('href',P.dir+'f/'+n+(PET.now.shiny?'s':'')+'.webp?v='+P.fv)}
+function pbImg(n){const P=pbFr(),im=$('#petA .pimg');if(!P||!im)return;if(n!=='front')PB.cur=n;if(PB.turn&&n!=='front')return;im.setAttribute('href',P.dir+P.frames[PET.now.stage]+'/'+n+(PET.now.shiny?'s':'')+'.webp?v='+P.fv)}
 let pbWI;function pbCls(c){const a=$('#petA');if(!a)return;const F=pbFr();a.className='pa '+c+(F?' fr':'');clearInterval(pbWI);if(!F)return;
   if(c==='walk'||c==='run'){let k=0;pbImg('walk1');pbWI=setInterval(()=>pbImg((k++%2)?'walk1':'walk2'),c==='run'?150:230)}else pbImg(c==='squish'&&pbFront()?'front2':PFR[c]||'stand')}
 function pbFreeze(){const w=$('#petW');if(!w)return;const m=getComputedStyle(w).transform;let x=PB.x;if(m&&m!=='none'){const p=m.split(',');x=parseFloat(p[4])||0}w.style.transitionDuration='0ms';w.style.transform=`translateX(${x}px)`;PB.x=x}
@@ -1366,7 +1366,7 @@ async function pbAct(c,ms,id){const a=$('#petA');if(!a)return;pbCls(c);await pbS
 let pbBT;function pbSay(t,ms){const b=$('#petBub');if(!b)return;b.textContent=t;b.classList.toggle('lft',PB.x>0);b.classList.add('on');clearTimeout(pbBT);pbBT=setTimeout(()=>b.classList.remove('on'),ms||1400)}
 function pfx(t,x,y,c,ms){const L=$('#petFx');if(!L)return null;const e=document.createElement('div');e.className='pfx '+(c||'');e.textContent=t;e.style.left=`calc(50% + ${Math.round(x)}px)`;e.style.bottom=Math.round(y)+'px';L.appendChild(e);if(ms)setTimeout(()=>e.remove(),ms);return e}
 function pbHearts(n,ic){for(let i=0;i<n;i++)setTimeout(()=>pfx(ic||'💗',PB.x+Math.random()*90-45,95+Math.random()*40,'up',1300),i*170)}
-function petStart(v){clearTimeout(PB.t);PB.seq++;PB.x=0;PB.turn=0;pbFace(PFACE[v.species]||1,1);const F=pbFr();if(F)['stand','blink','walk1','walk2','eat','sleep','jump','scratch'].concat(pbFront()?['front','front2']:[]).forEach(n=>{const i=new Image();i.src=F.dir+'f/'+n+(v.shiny?'s':'')+'.webp?v='+F.fv});pbBase();if(v.stage&&!v.ready)PB.t=setTimeout(pbIdle,1200)}
+function petStart(v){clearTimeout(PB.t);PB.seq++;PB.x=0;PB.turn=0;pbFace(PFACE[v.species]||1,1);const F=pbFr();if(F)['stand','blink','walk1','walk2','eat','sleep','jump','scratch'].concat(pbFront()?['front','front2']:[]).forEach(n=>{const i=new Image();i.src=F.dir+F.frames[v.stage]+'/'+n+(v.shiny?'s':'')+'.webp?v='+F.fv});pbBase();if(v.stage&&!v.ready)PB.t=setTimeout(pbIdle,1200)}
 async function pbEgg(){const a=$('#petA');if(!a)return;a.className='pa squish';pbHearts(1);toast('蛋動了一下！');await pbSleep(500);a.className='pa'}
 async function pbIdle(){if(!$('#petA')||st.tab!=='pet'||!PET||!PET.now)return;const v=PET.now,id=++PB.seq;let next=2600+Math.random()*3800;
   if(pbFr()&&!pbNight()&&Math.random()<.5){pbImg('blink');await pbSleep(200);if(id!==PB.seq)return;pbBase();await pbSleep(300)}
