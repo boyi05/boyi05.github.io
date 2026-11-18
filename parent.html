@@ -911,11 +911,13 @@ function go(p){st.tab=p;$$('#dock>div').forEach(d=>d.classList.toggle('on',d.dat
   if(p==='home'&&Date.now()-H_AT>20000)loadHome();if(p==='forum')loadForum();if(p==='rec'){if(st.rec==='r')loadRecur();else loadRecent()}if(p==='kids')loadKid();if(p==='stat')loadStats();if(p==='set')loadSet()}
 
 /* ===== 總覽＋審核收件匣 ===== */
-let H_AT=0,LAST_MS=null;
+let H_AT=0,LAST_MS=null,INB_RAW=null;
+// 按下通過／退回後先把那一筆從畫面拿掉，伺服器在背景處理；處理中的不會被舊資料又顯示回來
+const RV_BUSY=new Set();
 async function loadHome(pre){
   const [from,to]=rangeOf('this');
   let inb,ms;if(pre&&pre.inbox&&(pre.ms||LAST_MS)){inb=pre.inbox;ms=pre.ms||LAST_MS}else{try{[inb,ms]=await Promise.all([call('getInbox'),call('getStats',{book:'__parent',from,to,noFixed:false})])}catch(e){return toast(errMsg(e),1)}}
-  H_AT=Date.now();LAST_MS=ms;INB=inb;S.profiles=Object.assign(S.profiles||{},inb.profiles);
+  H_AT=Date.now();LAST_MS=ms;if(!pre||!pre.keep)INB_RAW=inb;inb=Object.assign({},inb,{items:inb.items.filter(i=>!RV_BUSY.has(i.id))});INB=inb;S.profiles=Object.assign(S.profiles||{},inb.profiles);
   const tasks=inb.items.filter(x=>x.status==='待審核'),buys=inb.items.filter(x=>x.status==='待兌現');
   const bd=$('#bd-home');bd.textContent=inb.items.length;bd.classList.toggle('hidden',!inb.items.length);
   $('#homeTop').innerHTML=`<div class="row"><div class="hi">${av(S.me,30)} 你好，${esc(PF(S.me).nick||S.me)}</div><small>${S.today}</small></div>
@@ -933,10 +935,15 @@ async function loadHome(pre){
    <div class="t"><b>${esc(PF(k).nick||k)}</b> <span class="mu">${esc(k)}</span><div class="mu">Lv.${g.lv||1} ${titleOf(g.lv||1)}${g.pending?`・⏳ ${g.pending} 個待審核`:''}</div></div>
    <div style="text-align:right"><b class="gold">🪙 ${n(g.coins)}</b><div class="mu">💵 ${n(g.ntd)} 元</div></div></div>`}).join('')}</div>`;
   loadImgs(Object.values(S.profiles).map(p=>p.photo))}
-async function rv(id,ok){const x=INB.items.find(i=>i.id===id);
+async function rv(id,ok){const x=INB.items.find(i=>i.id===id);if(!x||RV_BUSY.has(id))return;
   if(!ok&&!await ask(`<h3>退回這一筆？</h3>${esc(x.kid)}：${esc(x.name)}${x.status==='待兌現'?'<br><span class="mu">金幣會還給小孩</span>':''}`,'退回'))return;
-  const r=await run(null,'review',{id,ok:!!ok});if(r)loadHome({inbox:r.inbox})}
-async function okAll(){if(!await ask('<h3>全部通過？</h3>所有待審核的任務都會通過（購買不會）','全部通過'))return;const r=await run(null,'approveAll');if(r)loadHome({inbox:r.inbox})}
+  rvSend([id],'review',{id,ok:!!ok},ok?'✅ '+x.kid+'：'+x.name+' 通過':'↩️ 已退回')}
+async function okAll(){if(!await ask('<h3>全部通過？</h3>所有待審核的任務都會通過（購買不會）','全部通過'))return;
+  rvSend(INB.items.filter(x=>x.status==='待審核').map(x=>x.id),'approveAll',undefined,'✅ 全部通過')}
+async function rvSend(ids,fn,arg,hint){ids.forEach(i=>RV_BUSY.add(i));loadHome({inbox:INB_RAW,keep:1});toast(hint+'（處理中…）');
+  let r=null;try{r=await call(fn,arg);if(r&&r.msg)toast(r.msg)}catch(e){toast(errMsg(e),1)}
+  ids.forEach(i=>RV_BUSY.delete(i));
+  if(r&&r.inbox)loadHome({inbox:r.inbox});else if(r)loadHome();else loadHome({inbox:INB_RAW,keep:1})}
 
 /* ===== 發金幣／處罰／團隊 ===== */
 let pickKids=[];
