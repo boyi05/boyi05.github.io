@@ -77,6 +77,7 @@ h3{margin:0 0 8px;font-size:17px}
 .mini{background:#fff;border:2px solid #eadcc4;border-radius:10px;padding:2px 8px;font-size:13px}
 .tr{display:flex;align-items:center;gap:10px;margin-bottom:4px}.stars{color:var(--gold);font-size:13px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.sit{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:2px dashed #f0e2cc}.sit:last-child{border-bottom:0}.sit.poor{opacity:.55}.sth{width:48px;height:48px;flex:none;border-radius:10px;object-fit:cover;background:#f3ead9;display:block}.sth.ph{display:flex;align-items:center;justify-content:center;font-size:26px}.sn{flex:1;min-width:0;font-size:15px}.sn .pp{margin:2px 0 0;font-size:14px}.go.sb{width:auto;padding:6px 14px;font-size:14px;margin:0}.sbig{width:100%;max-height:60vh;object-fit:contain;border-radius:12px;background:#f3ead9}
 .prod{background:var(--cream);border-radius:18px;padding:10px;box-shadow:0 5px 0 #7cbf9c;display:flex;flex-direction:column}
 .prod.poor{opacity:.6}.pimg{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;background:#f3ead9}
 .pimg.ph{display:flex;align-items:center;justify-content:center;font-size:48px}
@@ -1103,7 +1104,7 @@ function drawHome(){const g=G.me,p=prof(),e=eraOf(g.maxLv);
    <div class="card wal"><div class="mu">💵 活存</div><div class="big">${n(g.ntd)}</div><div class="mu">元</div></div>
    <div class="card wal" onclick="go('bank')" style="cursor:pointer"><div class="mu">🌱 定存中</div><div class="big dep">${n(g.dep||0)}</div><div class="mu">元</div></div></div>
   ${pend.length?`<div class="card"><h3>⏳ 等爸媽確認（${pend.length}）</h3>${pend.map(recRow).join('')}</div>`:''}
-  <div class="card"><h3>📜 最近紀錄</h3>${G.records.filter(r=>r.status!=='待審核'&&r.status!=='待兌現'&&r.type!=='寵物'&&r.type!=='遊戲').slice(0,15).map(recRow).join('')||'<div class="empty">還沒有紀錄，去做任務吧！</div>'}</div>`;loadImgs([p.photo])}
+  <div class="card"><h3>📜 最近紀錄</h3>${G.records.filter(r=>r.status!=='待審核'&&r.status!=='待兌現'&&r.type!=='寵物'&&r.type!=='遊戲').slice(0,7).map(recRow).join('')||'<div class="empty">還沒有紀錄，去做任務吧！</div>'}</div>`;loadImgs([p.photo])}
 const ST_ICON={'通過':'✅','退回':'↩️','待審核':'⏳','待兌現':'⏳','已兌現':'🎉','取消':'✖️'};
 const TY_ICON={'遊戲':'🧮','任務':'🧹','團隊':'🤝','購買':'🛒','兌換':'💵','處罰':'⚠️','獎勵':'🎁','搬家':'🚚','寵物':'🐾'};
 // 個人資料卡裡的徽章列，點了去徽章牆
@@ -1130,12 +1131,15 @@ async function doTask(id){const t=G.tasks.find(x=>x.id===id);
 
 /* ===== 商店 ===== */
 function drawShop(){const c=G.me.coins;
-  $('#pg-shop').innerHTML=`<div class="sign"><h3>🛒 小島商店</h3></div><div class="card wal" style="text-align:center"><div class="mu">我有</div><div class="big gold">🪙 ${n(c)}</div></div>
-  <div class="grid">${G.shop.map(p=>`<div class="prod ${c<p.price?'poor':''}">${p.photo?imgTag(p.photo,'pimg'):`<div class="pimg ph">${p.type==='兌換'?'💵':'🎁'}</div>`}
-   <div class="pn">${esc(p.name)}</div><div class="pp">🪙 ${n(p.price)}${p.type==='兌換'?`<span class="mu">→ ${n(p.ntd)} 元</span>`:''}</div>
-   <button class="go" onclick="buy('${p.id}')">${c<p.price?'金幣不夠':'買這個'}</button></div>`).join('')}</div>
+  $('#pg-shop').innerHTML=`<div class="sign"><h3>🛒 小島商店</h3></div>
+  <div class="card"><div class="row" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px"><b>🛍️ 商品</b><span class="mu">我有 <b class="gold">🪙 ${n(c)}</b></span></div>
+  ${G.shop.map(p=>`<div class="sit ${c<p.price?'poor':''}">${p.photo?`<span onclick="shopPic('${p.id}')">${imgTag(p.photo,'sth')}</span>`:`<div class="sth ph">${p.type==='兌換'?'💵':'🎁'}</div>`}
+   <div class="sn"><b>${esc(p.name)}</b><div class="pp">🪙 ${n(p.price)}${p.type==='兌換'?` <span class="mu">→ ${n(p.ntd)} 元</span>`:''}</div></div>
+   <button class="go sb" onclick="buy('${p.id}')">${c<p.price?'不夠':'買'}</button></div>`).join('')||'<div class="empty">商店還沒有東西</div>'}</div>
   <div class="card"><h3>🧾 我買的東西</h3>${G.records.filter(r=>r.type==='購買'||r.type==='兌換').slice(0,20).map(recRow).join('')||'<div class="empty">還沒買過東西</div>'}</div>`;
   loadImgs(G.shop.map(p=>p.photo))}
+// 點商品小圖看大圖
+function shopPic(id){const p=G.shop.find(x=>x.id===id);if(!p)return;ask(`<h3>${esc(p.name)}</h3>${imgTag(p.photo,'sbig')}`,null,'關閉');loadImgs([p.photo])}
 async function buy(id){const p=G.shop.find(x=>x.id===id);if(G.me.coins<p.price)return toast('金幣還差 '+(p.price-G.me.coins)+' 喔',1);
   const msg=p.type==='兌換'?`會扣 <b>${n(p.price)} 金幣</b>，爸媽確認後把 <b class="plus">${n(p.ntd)} 元</b> 存進你的存摺。<br><span class="mu">換成錢之後，就不能再換回金幣喔！</span>`:`會扣 <b>${n(p.price)} 金幣</b>，再請爸媽兌現給你。`;
   if(!await ask(`<h3>要買「${esc(p.name)}」嗎？</h3>${msg}<br>買完還剩 <b>${n(G.me.coins-p.price)}</b> 金幣`,'買！'))return;
