@@ -85,7 +85,7 @@ input.amt{font-size:24px;font-weight:700;text-align:right}
  <div id="recP"><div class="card"><label>金額</label><input id="pAmt" class="amt" type="number" inputmode="numeric" placeholder="0">
   <label>分類</label><div class="chips cats" id="pCats"></div><label>誰付的</label><div class="chips" id="pPayer"></div><div class="two"><div><label>日期</label><input id="pDate" type="date"></div><div><label>備註</label><input id="pNote" placeholder="例如：午餐"></div></div>
   <button class="btn" onclick="sendParent(this)">記一筆支出</button></div>
-  <div class="card"><div class="row"><h3>最近 50 筆</h3><button class="sbtn" onclick="loadRecent()">重新整理</button></div><div id="recentList"></div></div></div>
+  <div class="card"><div class="row"><h3>最近兩天</h3><button class="sbtn" onclick="loadRecent()">重新整理</button></div><div id="recentList"></div></div></div>
  <div id="recR" class="hidden"></div>
  <div id="recK" class="hidden"><div class="card"><label>小孩</label><div class="chips" id="kKids"></div><label>類型</label><div class="chips" id="kType"></div>
   <label>金額（台幣）</label><input id="kAmt" class="amt" type="number" inputmode="numeric" placeholder="0">
@@ -976,7 +976,7 @@ async function delRec(id){const it=delItems[id];const sync=it.book==='kid'&&it.t
   if(st.tab==='rec')loadRecent();if(st.tab==='kids')loadKid();if(st.tab==='stat')loadStats()}
 async function loadRecent(){$('#recentList').innerHTML='<div class="empty">讀取中…</div>';let r;try{r=await call('recentParent')}catch(e){return toast(errMsg(e),1)}
   $('#recentList').innerHTML=r.map(x=>`<div class="it"><div class="ic">${em(x.cat)}</div><div class="t">${esc(x.note)||esc(x.cat)}<div class="mu">${x.date.slice(5)}・${esc(x.cat)}・${payLab(x)}${x.src&&x.src!=='手動'?'・'+esc(x.src):''}</div></div>
-   <b>-${n(x.amount)}</b>${editBtn(x)}</div>`).join('')||'<div class="empty">還沒有紀錄</div>'}
+   <b>-${n(x.amount)}</b>${editBtn(x)}</div>`).join('')||'<div class="empty">今天和昨天都還沒有記帳</div>'}
 /* ===== 修改爸媽帳本的一筆 ===== */
 function payLab(x){return x.payer?av(x.payer,16)+' '+esc(x.payer):(x.src==='小孩消費'?'小孩花的':'<span class="red">未分支出者</span>')}
 function editBtn(x){const id='e'+Math.random().toString(36).slice(2);delItems[id]=x;return `<button class="del" onclick="editRec('${id}')">✏️</button>`}
