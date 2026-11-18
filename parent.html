@@ -975,6 +975,7 @@ async function delRec(id){const it=delItems[id];const sync=it.book==='kid'&&it.t
   if(await run(null,'deleteRecord',{book:it.book,row:it.row,date:it.date,amount:it.amount})===null)return;
   if(st.tab==='rec')loadRecent();if(st.tab==='kids')loadKid();if(st.tab==='stat')loadStats()}
 async function loadRecent(){$('#recentList').innerHTML='<div class="empty">讀取中…</div>';let r;try{r=await call('recentParent')}catch(e){return toast(errMsg(e),1)}
+  {const t=new Date(S.today+'T12:00:00');t.setDate(t.getDate()-1);const y=t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');r=r.filter(x=>x.date>=y)}
   $('#recentList').innerHTML=r.map(x=>`<div class="it"><div class="ic">${em(x.cat)}</div><div class="t">${esc(x.note)||esc(x.cat)}<div class="mu">${x.date.slice(5)}・${esc(x.cat)}・${payLab(x)}${x.src&&x.src!=='手動'?'・'+esc(x.src):''}</div></div>
    <b>-${n(x.amount)}</b>${editBtn(x)}</div>`).join('')||'<div class="empty">今天和昨天都還沒有記帳</div>'}
 /* ===== 修改爸媽帳本的一筆 ===== */
