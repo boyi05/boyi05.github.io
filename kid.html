@@ -38,7 +38,7 @@ h3{margin:0 0 8px;font-size:17px}
 .xp{position:relative;height:22px;background:#fff;border:3px solid #eadcc4;border-radius:99px;overflow:hidden;margin:10px 0 6px}
 .xp i{display:block;height:100%;background:linear-gradient(90deg,#ffd966,#ffb020);border-radius:99px}
 .xp span{position:absolute;inset:0;text-align:center;font-size:12px;line-height:16px}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.wal{text-align:center}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.wal{text-align:center}.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.three .wal{padding:12px 4px}.three .big{font-size:24px;white-space:nowrap}.big.dep{color:#2e9d5b}.pbdg{margin-top:10px;padding-top:10px;border-top:2px dashed #eadfc8;cursor:pointer}
 .big{font-size:30px;font-weight:900}.gold{color:var(--gold)}.plus{color:#2f9e55}.minus{color:var(--red)}
 .mu{color:var(--mu);font-size:13px;font-weight:500}
 .it{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:2px dashed #f0e2cc}.it:last-child{border:0}.it>div:first-child{flex:1;min-width:0}
@@ -1081,14 +1081,14 @@ function buildDock(){$('#dock').innerHTML=TABS.map(t=>`<div data-p="${t[0]}" cla
 function go(p){if(p==='me')p=st.me||'badge';const inMe=ME.some(m=>m[0]===p);if(inMe)st.me=p;const dk=inMe?'me':(p==='math'||p==='gm')?'play':p;st.tab=p;
   $$('#dock>div').forEach(d=>d.classList.toggle('on',d.dataset.p===dk));$$('.page').forEach(s=>s.classList.toggle('on',s.id==='pg-'+p));window.scrollTo(0,0);
   $('#meNav').classList.toggle('hidden',!inMe);if(inMe){chips($('#meNav'),ME.map(m=>m[0]),p,go,v=>ME.find(m=>m[0]===v)[1]);$('#meNav').insertAdjacentHTML('beforeend',`<button class="chip" id="sndT" onclick="sndToggle()">${PSOUND?'🔊 音效：開':'🔇 音效：關'}</button>`)}
-  if((p==='home'||p==='task'||p==='shop'||p==='pet')&&Date.now()-G_AT>20000)loadGame();if(p==='pet')drawPet();if(p==='bank')loadBank();if(p==='forum')loadForum();if(p==='badge')drawBadges();if(p==='rank')loadRank();if(p==='rec')refreshBal();if(p==='math')drawMath();if(p==='play')drawPlay()}
+  if((p==='home'||p==='task'||p==='shop'||p==='pet'||p==='play')&&Date.now()-G_AT>20000)loadGame();if(p==='pet')drawPet();if(p==='bank')loadBank();if(p==='forum')loadForum();if(p==='badge')drawBadges();if(p==='rank')loadRank();if(p==='rec')refreshBal();if(p==='math')drawMath();if(p==='play')drawPlay()}
 function drawHud(){const p=prof(),g=G.me||{};$('#hud').innerHTML=`<div class="who" onclick="editProfile()">${avatar(p,40)}<div><b>${esc(p.nick||me())}</b><small>${g.lv?'Lv.'+g.lv+' '+titleOf(g.lv):''}</small></div></div><div class="coin">🪙 ${n(g.coins)}</div>`;loadImgs([p.photo])}
 
 /* ===== 遊戲資料 ===== */
 let G_AT=0;
 async function loadGame(){try{G=await call('getGame')}catch(e){return toast(errMsg(e),1)}showGame()}
 let LAST_ME=null;
-function showGame(g){if(g)G=g;G_AT=Date.now();if(G.me){const m=G.me;if(LAST_ME&&m.lv>LAST_ME.lv){sfx('levelup');toast('🎉 升級了！Lv.'+m.lv)}else if(LAST_ME&&m.coins>LAST_ME.coins+0)sfx('coin');LAST_ME={lv:m.lv,coins:m.coins}}if(G.pet){const zo=PET&&PET.zooOpen;petSet(G.pet);PET.zooOpen=zo}drawHud();drawHome();drawTasks();drawShop();if(st.tab==='pet')drawPet();if(st.tab==='badge')drawBadges();badgeCheck(G.badges,me())}
+function showGame(g){if(g)G=g;G_AT=Date.now();if(G.me){const m=G.me;if(LAST_ME&&m.lv>LAST_ME.lv){sfx('levelup');toast('🎉 升級了！Lv.'+m.lv)}else if(LAST_ME&&m.coins>LAST_ME.coins+0)sfx('coin');LAST_ME={lv:m.lv,coins:m.coins}}if(G.pet){const zo=PET&&PET.zooOpen;petSet(G.pet);PET.zooOpen=zo}drawHud();drawHome();drawTasks();drawShop();if(st.tab==='pet')drawPet();if(st.tab==='play')drawPlay();if(st.tab==='badge')drawBadges();badgeCheck(G.badges,me())}
 // 動作完成後，伺服器會順便送回最新資料，就不用再讀一次
 function after(r){if(!r)return;if(r.game)showGame(r.game);else loadGame()}
 function drawHome(){const g=G.me,p=prof(),e=eraOf(g.maxLv);
@@ -1098,14 +1098,18 @@ function drawHome(){const g=G.me,p=prof(),e=eraOf(g.maxLv);
   ${pinsHtml()}<div class="card prof"><div class="row">${avatar(p,64)}<div style="flex:1"><div class="nick">${esc(p.nick||me())} <button class="mini" onclick="editProfile()">✏️</button></div>
    <div class="ttl">${titleOf(g.lv)}</div></div><div class="lv">Lv.<b>${g.lv}</b></div></div>
    <div class="xp"><i style="width:${Math.round(g.into/g.need*100)}%"></i><span>${g.into} / ${g.need} 經驗</span></div>
-   <div class="mu">🎁 ${nextUnlock(g.maxLv)}</div></div>
-  <div class="two"><div class="card wal"><div class="mu">🪙 金幣</div><div class="big gold">${n(g.coins)}</div><div class="mu">2 金幣可以換 1 元</div></div>
-   <div class="card wal"><div class="mu">💵 存摺活存</div><div class="big">${n(g.ntd)}</div><div class="mu">真的錢，元</div></div></div>
-  ${petMini(pv)}${playMini()}${badgeShelf(G.badges)}
+   <div class="mu">🎁 ${nextUnlock(g.maxLv)}</div>${profBadges(G.badges)}</div>
+  <div class="three"><div class="card wal"><div class="mu">🪙 金幣</div><div class="big gold">${n(g.coins)}</div><div class="mu">2 枚換 1 元</div></div>
+   <div class="card wal"><div class="mu">💵 活存</div><div class="big">${n(g.ntd)}</div><div class="mu">元</div></div>
+   <div class="card wal" onclick="go('bank')" style="cursor:pointer"><div class="mu">🌱 定存中</div><div class="big dep">${n(g.dep||0)}</div><div class="mu">元</div></div></div>
   ${pend.length?`<div class="card"><h3>⏳ 等爸媽確認（${pend.length}）</h3>${pend.map(recRow).join('')}</div>`:''}
-  <div class="card"><h3>📜 最近紀錄</h3>${G.records.filter(r=>r.status!=='待審核'&&r.status!=='待兌現'&&r.type!=='寵物').slice(0,15).map(recRow).join('')||'<div class="empty">還沒有紀錄，去做任務吧！</div>'}</div>`;loadImgs([p.photo])}
+  <div class="card"><h3>📜 最近紀錄</h3>${G.records.filter(r=>r.status!=='待審核'&&r.status!=='待兌現'&&r.type!=='寵物'&&r.type!=='遊戲').slice(0,15).map(recRow).join('')||'<div class="empty">還沒有紀錄，去做任務吧！</div>'}</div>`;loadImgs([p.photo])}
 const ST_ICON={'通過':'✅','退回':'↩️','待審核':'⏳','待兌現':'⏳','已兌現':'🎉','取消':'✖️'};
 const TY_ICON={'遊戲':'🧮','任務':'🧹','團隊':'🤝','購買':'🛒','兌換':'💵','處罰':'⚠️','獎勵':'🎁','搬家':'🚚','寵物':'🐾'};
+// 個人資料卡裡的徽章列，點了去徽章牆
+function profBadges(b){if(!b)return '';const L=b.list.filter(x=>x.tier).sort((x,y)=>y.tier-x.tier);
+  return `<div class="pbdg" onclick="go('badge')"><div class="row" style="display:flex;justify-content:space-between;align-items:center"><b>🏅 我的徽章 ${b.earned} 個</b><span class="mu">看全部 ›</span></div>
+  <div class="shelf">${L.length?L.slice(0,8).map(x=>medal(x.icon,x.tier,42,x.id)).join(''):'<div class="mu" style="padding:6px 0">做任務、照顧寵物，就能拿到徽章喔！</div>'}</div></div>`}
 function recRow(r){const can=r.status==='待審核'||r.status==='待兌現';const dim=r.status==='退回'||r.status==='取消';
   return `<div class="it" style="${dim?'opacity:.5':''}"><div><div>${TY_ICON[r.type]||'•'} ${esc(r.name)}</div><div class="mu">${r.time.slice(5)}・${ST_ICON[r.status]||''} ${r.status}${r.note?'・'+esc(r.note):''}</div></div>
   <div style="text-align:right">${r.coins?`<b class="${r.coins>0?'plus':'minus'}">${r.coins>0?'+':''}${n(r.coins)} 🪙</b>`:''}${r.exp?`<div class="mu">${r.exp>0?'+':''}${r.exp} 經驗</div>`:''}</div>
@@ -1202,7 +1206,8 @@ function fmtT(s){s=Math.round(s);return Math.floor(s/60)+':'+String(s%60).padSta
 function playMini(){const x=GI(),left=x.coinCap?Math.max(0,x.coinCap-x.coinsToday):-1;return `<div class="card mcard" onclick="go('play')"><div class="mico" style="background:linear-gradient(135deg,#8fd3ff,#b07aff)">🎡</div><div style="flex:1"><b>遊樂區</b><div class="mu">${left<0?`心算、數獨、24 點、英文單字…${x.coinsToday?`今天已拿 <b class="gold">${x.coinsToday}</b> 金幣`:'玩遊戲賺金幣！'}`:left?`心算、數獨、24 點…今天還可以拿 <b class="gold">${left}</b> 金幣`:'今天的金幣拿完了，還可以練習破紀錄'}</div></div><span class="go">去玩 ›</span></div>`}
 function drawPlay(){MG=null;GM=null;const x=GI();
   $('#pg-play').innerHTML=`<div class="sign"><h3>🎡 遊樂區</h3></div><div class="card"><div class="mu">每天前幾場有金幣和經驗：英文單字 ${x.dailyBy.word||x.daily} 場，其他遊戲各 ${x.daily} 場${x.coinCap?`，全部加起來一天最多 ${x.coinCap} 金幣`:''}。今天已拿 <b class="gold">${x.coinsToday}</b> 金幣。</div></div>
-  <div class="pgrid">${GMS.map(g=>`<button class="ptile" style="--c:${g[4]}" onclick="${g[0]==='math'?"go('math')":`gmLevels('${g[0]}')`}"><div class="pi">${g[1]}</div><b>${g[2]}</b><small>${g[3]}</small><span class="pl">${x.left[g[0]]==null||x.left[g[0]]?`還有 ${x.left[g[0]]==null?(x.dailyBy[g[0]]||x.daily):x.left[g[0]]} 場有獎勵`:'今天獎勵拿完了'}</span></button>`).join('')}</div>`}
+  <div class="pgrid">${GMS.map(g=>`<button class="ptile" style="--c:${g[4]}" onclick="${g[0]==='math'?"go('math')":`gmLevels('${g[0]}')`}"><div class="pi">${g[1]}</div><b>${g[2]}</b><small>${g[3]}</small><span class="pl">${x.left[g[0]]==null||x.left[g[0]]?`還有 ${x.left[g[0]]==null?(x.dailyBy[g[0]]||x.daily):x.left[g[0]]} 場有獎勵`:'今天獎勵拿完了'}</span></button>`).join('')}</div>
+  <div class="card"><h3>📜 最近遊戲紀錄</h3>${(G.gameRecs||[]).slice(0,15).map(recRow).join('')||'<div class="empty">還沒有遊戲紀錄，選一個來玩吧！</div>'}</div>`}
 const backBtn=()=>`<button class="back" onclick="gmQuit()">‹ 遊樂區</button>`;
 async function gmQuit(){if(GM&&GM.live&&!await ask('<h3>要離開嗎？</h3>這一場不會算成績喔。','離開'))return;if(GM)GM.dead=true;GM=null;go('play')}
 function gmLevels(g){if(GM)GM.dead=true;GM=null;const info=GMS.find(x=>x[0]===g),x=GI(),b=x.best[g]||{};
