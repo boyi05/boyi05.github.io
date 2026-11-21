@@ -161,7 +161,7 @@ input.amt{font-size:24px;text-align:right;color:var(--red)}
 .pa.lunge{animation:plunge .5s ease-out}@keyframes plunge{0%,100%{transform:none}40%{transform:translateX(14px) scale(1.05,.95)}}
 .pa.cast{animation:pcast 1.2s ease-in-out}@keyframes pcast{0%,100%{transform:none}20%{transform:scale(1.08,.92)}40%,80%{transform:translateY(-4px) scale(1.04)}}
 .skb{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:8px;padding:10px;border:0;border-radius:14px;font:inherit;font-weight:800;font-size:16px;color:#fff;background:linear-gradient(#ff7a3a,#e8452e);box-shadow:0 3px 0 #9a1c1c}
-.skb.wolf{background:linear-gradient(#5a8ad8,#2a4a9a);box-shadow:0 3px 0 #0e1430}.skb.shark{background:linear-gradient(#5a7090,#2a3a52);box-shadow:0 3px 0 #10141c}
+.skb.wolf{background:linear-gradient(#5a8ad8,#2a4a9a);box-shadow:0 3px 0 #0e1430}.skb.deer{background:linear-gradient(#e2343a,#a8141c);box-shadow:0 3px 0 #1f6a3a}.skb.shark{background:linear-gradient(#5a7090,#2a3a52);box-shadow:0 3px 0 #10141c}
 .ppc{padding:10px 12px}
 .phd{display:flex;align-items:center;gap:6px;font-weight:800;font-size:16px}
 .pslots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:6px}
@@ -173,6 +173,7 @@ input.amt{font-size:24px;text-align:right;color:var(--red)}
 .pdot{position:absolute;top:3px;right:5px;width:9px;height:9px;border-radius:50%;background:#e5484d;box-shadow:0 0 0 2px #fff}
 .eggrow{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
 .egg{flex:0 0 92px;scroll-snap-align:start;background:#fffaf0;border:2px solid #f0e2c8;border-radius:12px;padding:4px 4px 6px;display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center}
+.egg.xmas{position:relative;flex-basis:104px;background:linear-gradient(#fff6f0,#eef9f0);border-color:#e2343a;box-shadow:inset 0 0 0 2px #fff,0 0 0 2px #1f9a4a}.eggtag{font-size:10px;font-weight:800;color:#fff;background:#c0262e;border-radius:8px;padding:1px 6px;margin-bottom:1px}.eggcd{font-size:11px;font-weight:800;color:#1f7a3a;background:#e4f6e8;border-radius:8px;padding:2px 6px;margin-top:3px}
 .egg b{font-size:12px;line-height:1.2}.egg .mu{font-size:12px}.egg .go{padding:4px 0;width:100%;font-size:13px;margin-top:3px}
 .skb{margin-top:6px;padding:8px}.skb small{font-weight:600;opacity:.85;font-size:12px}
 </style></head><body>
@@ -619,11 +620,12 @@ const PETPAL2={
  narwhal:[{m:'#5aa8ff',l:'#e8f6ff',d:'#2a5fc4',a:'#ffe27a',o:'#14306e',e:'#2a7aff'},{m:'#ff9ccf',l:'#fff0f8',d:'#d4508e',a:'#9ff3ff',o:'#6a1a44',e:'#ff4fa0'}],
  pxdragon:[{m:'#e8452e',l:'#ffd36a',d:'#9a1c1c',a:'#ffb020',o:'#1a0a10',e:'#fff36a',w:'#ff8a3c',x:'#b8321e',g:'#ff7a1a'},{m:'#2a2a3a',l:'#c8a0ff',d:'#121220',a:'#b06aff',o:'#05040a',e:'#7affff',w:'#6a4ac8',x:'#3a2a7a',g:'#a46aff'}],
  pxwolf:[{m:'#5a8ad8',l:'#e8f2ff',d:'#2a4a9a',a:'#ffe23a',o:'#0e1430',e:'#7affff',w:'#ffffff',x:'#9ac0ff',g:'#ffe23a'},{m:'#2a2a30',l:'#ffd0d0',d:'#121216',a:'#ff3a4a',o:'#050506',e:'#ff4a4a',w:'#ffffff',x:'#5a5a66',g:'#ff3a4a'}],
+ pxdeer:[{m:'#d8262e',l:'#fff4e8',d:'#8e1018',a:'#ffc53a',o:'#2a0a0e',e:'#1a0a0a',w:'#ffffff',x:'#1f9a4a',g:'#fff2b0'},{m:'#eef6ff',l:'#ffffff',d:'#8ab4e0',a:'#cfe8ff',o:'#1a2a4a',e:'#1a2a6a',w:'#bfe0ff',x:'#e2344a',g:'#d8f0ff'}],
  pxshark:[{m:'#8a9ab0',l:'#e8eef6',d:'#4a5a72',a:'#2affe0',o:'#10141c',e:'#2affe0',w:'#ffffff',x:'#ff6a2a',g:'#2affe0'},{m:'#e8b830',l:'#fff6c8',d:'#9a6a10',a:'#ff3aa0',o:'#2a1a04',e:'#ff3aa0',w:'#ffffff',x:'#7a4aff',g:'#ff3aa0'}]};
 Object.assign(PETPAL,PETPAL2);
-Object.assign(PEMO,{corgi:'🦴',dino:'🦖',narwhal:'🦄',pxdragon:'🔥',pxwolf:'⚡',pxshark:'🤖'});
+Object.assign(PEMO,{corgi:'🦴',dino:'🦖',narwhal:'🦄',pxdragon:'🔥',pxwolf:'⚡',pxshark:'🤖',pxdeer:'🎄'});
 Object.keys(PETPAL2).forEach(k=>{const a=PETPAL[k][0],b=PETPAL[k][1];PCOL[k]=[a.m,a.l,a.d,b.m,b.d,b.l]});
-const PXSP={pxdragon:1,pxwolf:1,pxshark:1};
+const PXSP={pxdragon:1,pxwolf:1,pxshark:1,pxdeer:1};
 const PXSIZE=[0,48,58,76,92,106];   /* 每個階段的大小：差距拉大，看得出長大 */
 
 // 共用：漸層定義、臉
@@ -779,6 +781,88 @@ ommmmlllllmmmo.
 ......omdo...omddo...
 ......owwo...owwo....
 ......oooo...oooo....`],
+ pxdeer:[
+`oo..........oo
+olo.oooooo.olo
+.olommwwmmolo.
+..ommmmmmmmo..
+.ommmmmmmmmmo.
+.omwemmmmwemo.
+.omoemmmmoemo.
+.omlmmmmmmlmo.
+..omllddllmo..
+...omllllmo...
+..oxxxxaxxxo..
+.ommwmmmmwmmo.
+.omwmllllmwmo.
+..omllllllmo..
+..omdo..omdo..
+..ooo....ooo..`,
+`.........o...o....
+........oaoooao...
+.......oommmmmmo..
+......olmmmwemmoo.
+.......ommmmemmldo
+........ommlmmmllo
+........ommmmllllo
+....ooooxxxxxxooo.
+.ooommmmmxxxxxo...
+ollmmmmmwmmmmo....
+.olmmwmmmmmmmo....
+..ommmmmmwmmmo....
+..ommmmmmmmmmo....
+..ommllllllmmo....
+...omomoomomo.....
+...ododoododo.....
+....o.o..o.o......`,
+`............o.o......
+...........oaoao.....
+...........oaaaoo....
+............ooaaao...
+...........ooooaoo...
+.........oommmmmmmo..
+........olmmmmwemmoo.
+.........ommmmmemmldo
+..........ommmlmmmllo
+..........ommmmmllllo
+.........oxxxxxxoooo.
+....ooooooxxxxxxo....
+.ooommmmmmmmmamo.....
+ollmmmmmwmmmmmmo.....
+.olmmwmmmmmwmmmo.....
+..ommmmwmmmmmmmo.....
+..ommmmmmmmmmmmo.....
+..ommllllllllmmo.....
+...omomoooomomo......
+...omomo..omomo......
+...ododo..ododo......
+....o.o....o.o.......`,
+`...............o.......
+...........o.ooao......
+..........oaoaoao......
+..........oaoaoao......
+..........oaaaaao.oo...
+...........ooooaaoaao..
+...............oaaao...
+.............ooooaoo...
+...........oommmmmmmo..
+..........olmmmmwemmoo.
+...........ommmmmemmldo
+............ommmlmmmllo
+............ommmmmllllo
+...........oxxxxxxoooo.
+....ooooooooxxxxxxo....
+.ooommmmmmmmmmmamo.....
+ollmmmmmwmmmmwmmmo.....
+.olmmwmmmmmwmmmmmo.....
+..ommmmwmmmmmmmmmo.....
+..ommmmmmmwmmmmmmo.....
+..ommllllllllllmmo.....
+...omomoooooomomo......
+...omomo....omomo......
+...omomo....omomo......
+...ododo....ododo......
+....o.o......o.o.......`],
  pxshark:[
 `......oo.......
 .....omo.......
@@ -829,9 +913,10 @@ function pxPose(R,p){if(!p)return R;R=R.slice();const n=R.length;
 /* 像素寵物進化配色：成年、完全體換顏色，一眼看得出長大（閃亮版維持閃亮配色） */
 const PXEVO={pxdragon:{4:{m:'#d62a1e',d:'#7a0e14',l:'#ffe08a',a:'#ffd040',g:'#ff5a1a',x:'#8a1a10',w:'#ff6a2a'},5:{m:'#6a0e22',d:'#2a0410',l:'#ff8a3a',a:'#c04aff',g:'#ff3a7a',x:'#3a0a2a',w:'#9a3aff',e:'#ffea4a'}},
  pxwolf:{4:{m:'#3a5ac8',d:'#1a2a7a',l:'#d8e6ff',x:'#7aa0ff'},5:{m:'#eef4ff',d:'#8aa0d8',l:'#ffffff',a:'#ffd700',g:'#fff36a',x:'#c0d0ff',e:'#3ab0ff'}},
+ pxdeer:{4:{m:'#c81e2a',d:'#6e0a14',a:'#ffd040',g:'#fff6c8'},5:{m:'#b0142a',d:'#560612',l:'#ffffff',a:'#ffe066',g:'#fff6c8',x:'#14a04a',w:'#fffbe8'}},
  pxshark:{4:{m:'#5a7090',d:'#2a3a52',l:'#d8e2f0',x:'#ff4a1a'},5:{m:'#2a2a36',d:'#10101a',l:'#9aa4b8',a:'#ff2a4a',g:'#ff2a4a',e:'#ff2a4a',x:'#ff8a1a'}}};
 function pxPet(sp,stage,o,u){const C0=PETPAL[sp][o.shiny?1:0],C=!o.shiny&&PXEVO[sp]&&PXEVO[sp][stage]?Object.assign({},C0,PXEVO[sp][stage]):C0,sh=!!o.shiny,sick=!!o.sick,mood=o.mood==null?80:o.mood;
- const big=stage>=3,rows0=PXS[sp][big?1:0].split(String.fromCharCode(10)),W=Math.max(...rows0.map(r=>r.length)),H=rows0.length;
+ const big=stage>=3,SPR=PXS[sp],rows0=SPR[SPR.length>2?Math.min(stage-1,SPR.length-1):big?1:0].split(String.fromCharCode(10)),W=Math.max(...rows0.map(r=>r.length)),H=rows0.length;
  const pal={o:C.o,m:C.m,d:C.d,l:C.l,a:C.a,e:sick?'#9a7ab0':C.e,w:C.w,x:C.x,g:C.g};
  const rows=pxPose(rows0.map(r=>sick?r.replace(/e/g,'o'):r),sick?'':o.pose);
  const target=PXSIZE[stage],c=target/Math.max(W,H*1.05),wpx=W*c,hpx=H*c;
@@ -850,17 +935,36 @@ function pxPet(sp,stage,o,u){const C0=PETPAL[sp][o.shiny?1:0],C=!o.shiny&&PXEVO[
  if(sp==='pxdragon'&&big&&!sick){fx+=`<g class="breath">${q(ox+wpx+2,oy+hpx*.36,5,C.a)}${q(ox+wpx+8,oy+hpx*.33,6,C.g)}${q(ox+wpx+15,oy+hpx*.3,5,C.l)}${q(ox+wpx+9,oy+hpx*.42,4,C.a)}</g>`}
  if(sp==='pxwolf'&&stage>=2){const bolt=(x,y,k,d)=>`<g transform="translate(${x} ${y}) scale(${k})"><path class="zap" style="animation-delay:${d}s" d="M2 -14 L-6 1 H0 L-3 14 L7 -3 H1 L5 -14Z" fill="${C.a}" stroke="${C.o}" stroke-width="1.2" stroke-linejoin="round"/></g>`;fx+=bolt(ox-6,oy+hpx*.3,1,0)+bolt(ox+wpx+4,oy+hpx*.15,.8,.5)+(stage>=4?bolt(60,oy-10,1.1,.9):'')}
  if(sp==='pxshark'&&big){fx+=`<g class="jet">${q(ox+c*4,106-1,c*.9,C.x)}${q(ox+c*10,106-1,c*.9,C.x)}${q(ox+c*4.2,106+c*.8,c*.6,'#ffd23f')}${q(ox+c*10.2,106+c*.8,c*.6,'#ffd23f')}</g>`;if(stage>=4)fx+=`<rect class="laser" x="${ox-38}" y="${oy+c*8.2}" width="40" height="${c*.6}" fill="${C.a}" opacity=".8"/>`}
- if(stage>=5)fx+=crown(u,60-wpx*.08,oy-6,-12,.7);
+ if(stage>=5&&sp!=='pxdeer')fx+=crown(u,60-wpx*.08,oy-6,-12,.7);
+ let deco='';
+ if(sp==='pxdeer'&&stage>=5&&!sick){let k=0;const LC=['#ff3a3a','#3aff7a','#3ab0ff','#ffd23f'];
+  rows.forEach((r,y)=>{if(y>8)return;for(let x=0;x<r.length;x++)if(r[x]==='a'&&(x+y)%2===0){deco+=`<rect class="pxtw" style="animation-delay:${(k%4)*.35}s" x="${(ox+x*c+c*.18).toFixed(1)}" y="${(oy+y*c+c*.18).toFixed(1)}" width="${(c*.64).toFixed(1)}" height="${(c*.64).toFixed(1)}" fill="${LC[k%4]}"/>`;k++}});
+  const ty=rows.findIndex(r=>r.indexOf('a')>=0);if(ty>=0){const tx=rows[ty].indexOf('a'),k2=c*.6;deco+=`<g class="pxtw">${pxRects(['..o..','.oao.','oaaao','.oao.','.o.o.'],{o:'#8a5a00',a:'#ffe066'},k2,ox+tx*c+c/2-2.5*k2,oy+ty*c-5*k2)}</g>`}}
  if(sh)fx+=[[-46,-62,6,0],[46,-54,7,.5],[-44,-14,5,1],[48,-18,5,1.5]].map(([x,y,r,d])=>spk(60+x,106+y,r,'#fff',d)).join('');
  if(!sick&&mood<30)fx+=q(ox+wpx*.62,oy+hpx*.38,c*.8,'#8fd3ff','drip');
  if(sick)fx+=`<g transform="translate(${ox+wpx*.5} ${oy-4})">${[0,1,2].map(i=>`<circle class="dizzy" style="animation-delay:${i*.4}s" cx="${(i-1)*8}" cy="0" r="2.4" fill="#ffd23f" stroke="${C.o}" stroke-width=".8"/>`).join('')}</g>`;
  const ex=Math.max(1.6,c*.4);
  const body=`<g opacity=".55">${pxRects(rows,pal,c,ox+ex,oy+ex,C.o)}</g>${pxRects(rows,pal,c,ox,oy)}`;
  const shine=sh?`<rect x="${ox}" y="${oy}" width="${wpx}" height="${hpx}" fill="url(#${u}h)" style="mix-blend-mode:screen"/>`:'';
- return `<defs>${defs}</defs>${aura}<ellipse cx="60" cy="108" rx="${wpx*.45}" ry="5" fill="url(#${u}g)"/>${petPoo(o.poops)}<g class="pxbob" shape-rendering="crispEdges">${body}${shine}</g>${fx}`}
+ return `<defs>${defs}</defs>${aura}<ellipse cx="60" cy="108" rx="${wpx*.45}" ry="5" fill="url(#${u}g)"/>${petPoo(o.poops)}<g class="pxbob" shape-rendering="crispEdges">${body}${deco}${shine}</g>${fx}`}
 // 像素蛋
+const PXEGG2={pxdeer:`...oo..oo...
+..oaaooaao..
+..oaaaaaao..
+...ooaaoo...
+...owxxwo...
+..owwxxwwo..
+.ommmxxmmmo.
+.omwmxxmmmo.
+oxxxxxxxxxxo
+oxxxxxxxxxxo
+ommmmxxmmwmo
+.ommmxxmmmo.
+.odmmxxmmdo.
+..oodxxdoo..
+....oooo....`};
 function pxEgg(sp,o,u){const C=PETPAL[sp][0];
- const E=`....oooo....
+ const E=PXEGG2[sp]?PXEGG2[sp].split(String.fromCharCode(10)):`....oooo....
 ..oolllloo..
 .olllllaaao.
 .olllaaaamo.
@@ -873,7 +977,7 @@ ommddmmddmmo
 .ommddddmmo.
 .oommmmmmoo.
 ...oooooo...`.split(String.fromCharCode(10)).map(r=>r.replace(/l/g,'w'));
- const pal={o:C.o,w:'#fffaf0',m:C.m,a:C.a,d:C.d},c=6.4,ox=60-6*c,oy=104-13*c;
+ const pal={o:C.o,w:'#fffaf0',m:C.m,a:C.a,d:C.d,x:C.x},c=E.length>13?6:6.4,ox=60-6*c,oy=104-E.length*c;
  const crack=o.crack?`<path d="M${ox+c} ${oy+c*6} l${c} -${c} l${c} ${c} l${c} -${c} l${c} ${c} l${c} -${c} l${c} ${c} l${c} -${c} l${c} ${c} l${c} -${c}" fill="none" stroke="#fff6c2" stroke-width="3"/>`:'';
  return `<defs>${rad(u+'gl',.5,.5,.5,[[0,C.g,.6],[1,C.g,0]])}</defs><circle cx="60" cy="66" r="50" fill="url(#${u}gl)" class="pxpulse"/>
  <path d="M18 104 Q60 90 102 104 Q106 113 60 117 Q14 113 18 104Z" fill="#3a3a4a" stroke="#14141c" stroke-width="1.6"/>${[24,40,56,72,88].map(x=>`<rect x="${x}" y="103" width="8" height="5" fill="${C.g}" opacity=".8"/>`).join('')}
@@ -894,14 +998,16 @@ Object.assign(MEMO_ART,{
  narwhal:u=>`<g transform="rotate(30)"><path d="M-4 20 L0 -24 L4 20Z" fill="url(#${u}it)" stroke="#8a6a10" stroke-width="1.4" stroke-linejoin="round"/>${[14,6,-2,-10,-18].map((y,i)=>`<path d="M${-3+i*.5} ${y} l${6-i} -2" stroke="#8a6a10" stroke-width="1" opacity=".6"/>`).join('')}</g>${spk(10,-14,4,'#fff',.3)}`,
  pxdragon:u=>`<g shape-rendering="crispEdges">${pxRects(['..oo..','.oaao.','oaaaao','oalaao','.oaao.','..oo..'],{o:'#5a0a0a',a:'url(#'+u+'it)',l:'#fff6c0'},5,-15,-15)}</g>`,
  pxwolf:u=>`<g shape-rendering="crispEdges">${pxRects(['...oo.','..oao.','.oaao.','oaaaoo','ooaao.','.oaao.','.oao..','.oo...'],{o:'#0e1430',a:'url(#'+u+'it)'},5,-15,-20)}</g>`,
+ pxdeer:u=>`<g shape-rendering="crispEdges">${pxRects(['..oo..','.oaao.','oaaaao','oaaaao','oaaaao','oooooo','..oo..'],{o:'#6a4200',a:'url(#'+u+'it)'},5,-15,-18)}<rect x="-3" y="-25" width="6" height="5" fill="#1f9a4a"/><rect x="-8" y="-27" width="5" height="4" fill="#e2343a"/><rect x="3" y="-27" width="5" height="4" fill="#e2343a"/></g>${spk(12,-12,4,'#fff',.3)}`,
  pxshark:u=>`<g shape-rendering="crispEdges">${pxRects(['.oooo.','oaaaao','oaggao','oaggao','oaaaao','.oooo.'],{o:'#10141c',a:'url(#'+u+'it)',g:'#2affe0'},5,-15,-15)}</g><circle cx="0" cy="0" r="18" fill="none" stroke="#2affe0" stroke-width="1" opacity=".5" class="twk"/>`});
-Object.assign(MEMO_GRAD,{corgi:[['#fffaf0'],['#e8c690']],dino:[['#c8ffb0'],['#2f9a44']],narwhal:[['#fffbe8'],['#ffd23f']],pxdragon:[['#ffd36a'],['#e8452e']],pxwolf:[['#fff6a0'],['#ffc800']],pxshark:[['#e8eef6'],['#6a7a92']]});
+Object.assign(MEMO_GRAD,{corgi:[['#fffaf0'],['#e8c690']],dino:[['#c8ffb0'],['#2f9a44']],narwhal:[['#fffbe8'],['#ffd23f']],pxdragon:[['#ffd36a'],['#e8452e']],pxwolf:[['#fff6a0'],['#ffc800']],pxshark:[['#e8eef6'],['#6a7a92']],pxdeer:[['#fff3a8'],['#e0a010']]});
 const SCENE2={
  corgi:u=>`${lin(u+'s',0,0,0,1,[[0,'#9ad8ff'],[1,'#fff0d0']])}|<rect width="120" height="120" fill="url(#${u}s)"/><ellipse cx="26" cy="24" rx="14" ry="6" fill="#fff"/><path d="M0 80 Q30 66 60 78 T120 74 V120 H0Z" fill="#8fd36a"/><rect x="84" y="62" width="26" height="22" fill="#e8c890" stroke="#7a4a1a"/><path d="M80 64 L97 50 L114 64Z" fill="#4d8de6"/><circle cx="20" cy="96" r="5" fill="#ffd23f" stroke="#c88a00"/><ellipse cx="60" cy="112" rx="70" ry="16" fill="#6fc05a"/>`,
  dino:u=>`${lin(u+'s',0,0,0,1,[[0,'#ffcf8a'],[1,'#ffe9c8']])}|<rect width="120" height="120" fill="url(#${u}s)"/><path d="M0 76 L22 46 L40 76Z" fill="#a0603a"/><path d="M80 78 L104 40 L124 78Z" fill="#8a4a2a"/><path d="M100 46 l4 -6 l4 6z" fill="#ff5a1a"/><path d="M14 92 C10 70 26 64 28 52 C34 64 44 70 40 92" fill="#3fae5a"/><ellipse cx="60" cy="112" rx="70" ry="18" fill="#c8a060"/>`,
  narwhal:u=>`${lin(u+'s',0,0,0,1,[[0,'#1a3a8a'],[1,'#4ab0f0']])}|<rect width="120" height="120" fill="url(#${u}s)"/>${Array.from({length:12},(_,i)=>`<circle cx="${(i*41)%118}" cy="${(i*29)%50+4}" r="${i%3?.7:1.2}" fill="#fff"/>`).join('')}<path d="M10 62 L30 54 L40 62Z M84 58 L100 48 L114 58Z" fill="#fff" opacity=".9"/><rect y="62" width="120" height="58" fill="#2a7ad0"/><path d="M0 68 q15 -4 30 0 t30 0 t30 0 t30 0" stroke="#fff" stroke-width="1.5" fill="none" opacity=".5"/>`,
  pxdragon:u=>`|<rect width="120" height="120" fill="#2a0a14"/>${[[0,96,120,24,'#5a1a1a'],[0,88,40,8,'#7a2a1a'],[70,84,50,12,'#7a2a1a'],[30,70,8,8,'#ff7a1a'],[86,60,6,6,'#ffb020'],[14,40,4,4,'#ff7a1a'],[100,30,4,4,'#ffd36a']].map(([x,y,w,h,c])=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`).join('')}`,
  pxwolf:u=>`|<rect width="120" height="120" fill="#0e1430"/>${[[90,14,16,16,'#fff6c8'],[0,90,120,30,'#2a3a6a'],[10,80,30,10,'#3a4a8a'],[70,76,40,14,'#3a4a8a'],[20,20,3,3,'#fff'],[50,10,3,3,'#fff'],[66,34,3,3,'#fff']].map(([x,y,w,h,c])=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`).join('')}<path d="M40 0 L30 30 H38 L28 58" stroke="#ffe23a" stroke-width="3" fill="none"/>`,
+ pxdeer:u=>`|<rect width="120" height="120" fill="#0e1a3a"/>${Array.from({length:14},(_,i)=>`<rect x="${(i*37)%116}" y="${(i*23)%70+2}" width="${i%3?2:3}" height="${i%3?2:3}" fill="#fff" opacity="${i%2?.6:1}"/>`).join('')}<rect y="86" width="120" height="34" fill="#f2f8ff"/><rect y="84" width="120" height="3" fill="#d8e8f8"/>${[[14,52],[96,46]].map(([x,y])=>`<rect x="${x}" y="${y+30}" width="6" height="8" fill="#6a3a1a"/><rect x="${x-10}" y="${y+18}" width="26" height="12" fill="#1f7a3a"/><rect x="${x-6}" y="${y+8}" width="18" height="10" fill="#1f8a44"/><rect x="${x-2}" y="${y}" width="10" height="8" fill="#22994c"/><rect x="${x+1}" y="${y-4}" width="4" height="4" fill="#ffd23f"/><rect x="${x-6}" y="${y+22}" width="3" height="3" fill="#e2343a"/><rect x="${x+10}" y="${y+12}" width="3" height="3" fill="#ffd23f"/>`).join('')}`,
  pxshark:u=>`|<rect width="120" height="120" fill="#081a2a"/>${Array.from({length:8},(_,i)=>`<rect x="0" y="${i*15}" width="120" height="1" fill="#2affe0" opacity=".15"/><rect x="${i*15}" y="0" width="1" height="120" fill="#2affe0" opacity=".15"/>`).join('')}<rect y="96" width="120" height="24" fill="#1a2a3a"/><rect x="10" y="40" width="8" height="8" fill="#2affe0" opacity=".6"/><rect x="96" y="30" width="6" height="6" fill="#ff3aa0" opacity=".6"/>`};
 const ART_CSS2=`
 .floaty{animation:floaty 3s ease-in-out infinite}@keyframes floaty{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
@@ -915,6 +1021,7 @@ const ART_CSS2=`
 .pxeye{animation:pxeye 1.2s steps(2) infinite}@keyframes pxeye{50%{fill:#ffffff}}
 .pxfly{animation:pxfly 2.2s steps(6) infinite}@keyframes pxfly{0%{transform:translateY(8px);opacity:0}30%{opacity:1}100%{transform:translateY(-22px);opacity:0}}
 .zap{animation:zap .9s steps(2) infinite}@keyframes zap{50%{opacity:.15}}
+.pxtw{animation:pxtw 1.4s steps(2) infinite}@keyframes pxtw{50%{opacity:.3}}
 .jet{animation:zap .25s steps(2) infinite}
 .laser{animation:laser 1.4s steps(4) infinite}@keyframes laser{0%,60%{opacity:0}70%,90%{opacity:.9}}
 .dizzy{transform-box:fill-box;animation:dizzy 1.2s linear infinite}@keyframes dizzy{50%{transform:translateY(-4px)}}
@@ -1462,12 +1569,14 @@ async function petUnlockBox(){const S=PET.slots||1,SP=PET.slotPrice||[0,200,400]
   const p=SP[S],c=(G.me||{}).coins||0;if(c<p)return toast('解鎖第 '+(S+1)+' 個飼養區要 '+p+' 金幣，還差 '+(p-c),1);
   if(!await ask(`<div style="text-align:center"><div style="font-size:44px">🏡</div><h3>解鎖第 ${S+1} 個飼養區</h3>花 <b class="gold">${p} 金幣</b>，就可以同時多養一隻寵物。<br><span class="mu">每多養一隻，每天要餵、要陪玩、要清大便喔！</span></div>`,'解鎖！'))return;
   const r=await run(null,'petUnlock');if(r){petSet(r.pet);if(G.me&&r.coins!=null){G.me.coins=r.coins;drawHud()}PB.key='';drawPet();toast(r.msg)}}
-function petPeek(k){const T=PET.types[k];ask(`<div style="text-align:center"><h3>${T.name}</h3><div style="display:flex;justify-content:center;align-items:flex-end;gap:6px">${petSvg(k,0,{},80)}<span style="font-size:22px">➜</span>${petSvg(k,3,{photo:1},96)}<span style="font-size:22px">➜</span>${petSvg(k,5,{photo:1},120)}</div><div class="mu" style="margin-top:6px">蛋 ➜ 少年 ➜ 完全體</div></div>`,null,'好')}
+function petOpenAt(T){return T.from?new Date(T.from+'T00:00:00+08:00').getTime():0}
+function petLeft(T){const ms=petOpenAt(T)-Date.now();if(ms<=0)return '';const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5);return d?d+' 天 '+h+' 小時':h?h+' 小時':Math.ceil(ms/6e4)+' 分鐘'}
+function petPeek(k){const T=PET.types[k];if(T.secret)return ask(`<div style="text-align:center"><div style="font-size:12px;color:#c0262e;font-weight:800">🎄 ${esc(T.kind)}</div><h3>${T.name}</h3>${petSvg(k,0,{},110)}<div style="margin-top:6px">長大會變成什麼樣子，是<b>秘密</b> 🎁<br>孵出來才知道喔！</div>${petLeft(T)?`<div class="mu" style="margin-top:6px">${+T.from.slice(5,7)}/${+T.from.slice(8)} 開賣・還有 ${petLeft(T)}</div>`:''}</div>`,null,'好');ask(`<div style="text-align:center"><h3>${T.name}</h3><div style="display:flex;justify-content:center;align-items:flex-end;gap:6px">${petSvg(k,0,{},80)}<span style="font-size:22px">➜</span>${petSvg(k,3,{photo:1},96)}<span style="font-size:22px">➜</span>${petSvg(k,5,{photo:1},120)}</div><div class="mu" style="margin-top:6px">蛋 ➜ 少年 ➜ 完全體</div></div>`,null,'好')}
 function petShopHtml(){const TY=PET.types,c=(G.me||{}).coins||0,L=PET.list||[],full=L.length>=(PET.slots||1),open=PET.shopOpen!=null?PET.shopOpen:!L.length;
-  const ks=Object.keys(TY).filter(k=>!TY[k].retired).sort((a,b)=>TY[a].price-TY[b].price);
+  const ks=Object.keys(TY).filter(k=>!TY[k].retired).sort((a,b)=>(TY[b].from?1:0)-(TY[a].from?1:0)||TY[a].price-TY[b].price);
   return `<div class="card ppc" id="petShop"><div class="phd" onclick="petShopToggle()" style="cursor:pointer">🥚 領養商店 <span class="mu">${ks.length} 種${full?'・飼養區滿了':''}</span><span style="margin-left:auto" class="mu">${open?'收起 ▴':'打開 ▾'}</span></div>
    ${open?`${full?`<div class="mu" style="margin:4px 0 6px">等寵物長大搬進動物園，或${(PET.slots||1)<(PET.slotPrice||[0,200,400]).length?'<a href="#" onclick="petUnlockBox();return false">解鎖新的飼養區</a>':'先好好照顧現在的寵物'}，就能再領養。</div>`:'<div class="mu" style="margin:4px 0 6px">12 小時孵化、10 天長大。點蛋看牠長大的樣子。</div>'}
-   <div class="eggrow">${ks.map(k=>`<div class="egg"><div onclick="petPeek('${k}')" style="cursor:pointer">${petSvg(k,0,{},60)}</div><b>${TY[k].name}</b><span class="mu">🪙${TY[k].price}</span><button class="go" ${full||c<TY[k].price?'disabled':''} onclick="adopt('${k}')">${full?'已滿':c<TY[k].price?'不夠':'領養'}</button></div>`).join('')}</div>`:''}</div>`}
+   <div class="eggrow">${ks.map(k=>{const T=TY[k],wait=petLeft(T);return `<div class="egg${T.from?' xmas':''}">${T.from?`<span class="eggtag">${esc(T.kind)}</span>`:''}<div onclick="petPeek('${k}')" style="cursor:pointer">${petSvg(k,0,{},60)}</div><b>${T.name}</b>${wait?`<span class="mu">${+T.from.slice(5,7)}/${+T.from.slice(8)} 開賣</span><span class="eggcd">⏳ 還有 ${wait}</span>`:`<span class="mu">🪙${T.price}</span><button class="go" ${full||c<T.price?'disabled':''} onclick="adopt('${k}')">${full?'已滿':c<T.price?'不夠':'領養'}</button>`}</div>`}).join('')}</div>`:''}</div>`}
 function petZooEntry(){const Z=PET.zoo||[];return `<div class="card ppc" onclick="zooOpen()" style="cursor:pointer;display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#e4f7d4,#fff)"><div style="font-size:32px">🏞️</div><div style="flex:1"><b>島上動物園</b><div class="mu">${Z.length?'住了 '+Z.length+' 隻你養大的寵物':'寵物養大以後會搬進來住'}</div></div><span class="mu">›</span></div>`}
 function drawPet(){const el=$('#pg-pet');if(!PET){el.innerHTML='<div class="card empty">⏳ 讀取中…</div>';return}
   if(PET.zooOpen){drawZoo();return}
@@ -1486,14 +1595,14 @@ function drawPet(){const el=$('#pg-pet');if(!PET){el.innerHTML='<div class="card
 function petPanel(){const v=PET.now,AC=PET.acts,c=(G.me||{}).coins||0,P=$('#petPanel');if(!P)return;
   const mo=$('#petMore');if(mo)mo.innerHTML=petSlotsHtml()+petShopHtml()+petZooEntry();
   const cap=$('#petCap');if(cap)cap.innerHTML=v.stage===0?'還要 <b>'+Math.ceil(v.hatchIn)+'</b> 小時孵化，點蛋摸摸牠':v.ready?'':'第 '+(v.ageDays+1)+' 天・還有 '+v.daysLeft+' 天長大・點牠可以摸摸';
-  const sk=$('#petSkill');if(sk)sk.innerHTML=v.skill&&!v.ready?`<button class="skb ${v.species==='pxwolf'?'wolf':v.species==='pxshark'?'shark':''}" onclick="petSkill()">⚔️ ${v.skill.n} <small>威力 ${v.skill.p}</small></button>`:'';
+  const sk=$('#petSkill');if(sk)sk.innerHTML=v.skill&&!v.ready?`<button class="skb ${v.species==='pxwolf'?'wolf':v.species==='pxshark'?'shark':v.species==='pxdeer'?'deer':''}" onclick="petSkill()">⚔️ ${v.skill.n} <small>威力 ${v.skill.p}</small></button>`:'';
   const full={feed:v.full>=95&&'吃飽了',snack:v.full>=95&&'吃飽了',play:v.mood>=95&&'很開心',bath:v.clean>=95&&'很乾淨',poop:!v.poops&&'沒有大便',doctor:!v.sick&&'很健康'};
   const btn=(a,ic)=>{const A=AC[a],why=full[a]||(c<A[1]&&'金幣不夠');return `<button class="go" style="padding:8px 4px" ${why?'disabled':''} onclick="petDo('${a}')"><div style="font-size:22px">${ic}</div>${A[0]}<div style="font-size:11px;opacity:.9">${why||(A[1]?A[1]+' 🪙':'免費')}</div></button>`};
   P.innerHTML=v.ready?`<div class="card" style="text-align:center"><div style="font-size:16px"><b>${esc(v.name)}</b> 已經完全長大了！<br>牠要搬進島上動物園了，以後隨時可以去看牠。</div><button class="go wide" onclick="petByeBox()">🏞️ 送 ${esc(v.name)} 去動物園</button></div>`:v.stage===0?'':`
   <div class="card"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${btn('feed','🍙')}${btn('snack','🍰')}${btn('play','⚽')}${btn('bath','🛁')}${btn('poop','💩')}${btn('doctor','💊')}</div><div class="mu" style="text-align:center;margin-top:6px">我有 🪙 ${n(c)}</div></div>
   <div class="card">${v.sick?'<div style="background:#ffe8e6;border-radius:12px;padding:8px;margin-bottom:6px;color:#c0392b">🤒 生病了！快帶牠去看醫生</div>':''}${petBars(v)}<div class="mu" style="margin-top:4px">💩 大便 ${v.poops} 坨${v.poops>=2?'　<b style="color:#e5484d">快清乾淨，不然會生病！</b>':''}</div></div>
   <div class="card mu">${v.nextStage?`🌱 再 <b>${v.nextStage.inHours}</b> 小時會長成「${v.nextStage.name}」${v.nextSkill?`，學會「${v.nextSkill.skill.n}」`:''}<br>`:''}${v.stage<4?`✨ 照顧分數 <b>${v.avg}</b>（成年前保持 75 以上，會變成閃亮型！）`:v.shiny?'✨ 照顧得很好，變成閃亮型了！':'照顧分數 '+v.avg}</div>`}
-async function adopt(k){const T=PET.types[k];if((PET.list||[]).length>=(PET.slots||1))return toast('飼養區滿了',1);if(((G.me||{}).coins||0)<T.price)return toast('金幣不夠喔',1);
+async function adopt(k){const T=PET.types[k];if(petLeft(T))return toast(T.name+' 還沒開賣喔',1);if((PET.list||[]).length>=(PET.slots||1))return toast('飼養區滿了',1);if(((G.me||{}).coins||0)<T.price)return toast('金幣不夠喔',1);
   const ok=await ask(`<div style="text-align:center">${petSvg(k,0,{},100)}<h3>領養${T.name}的蛋</h3>花 <b class="gold">${T.price} 金幣</b></div><label>幫牠取個名字</label><input id="petName" maxlength="10" placeholder="例如：小火">`,'領養！');
   if(!ok)return;const nm=$('#petName').value.trim();if(!nm)return toast('請幫牠取名字',1);
   const r=await run(null,'petAdopt',{species:k,name:nm});if(r){const L=r.pet.list||[];petSet(r.pet,L.length?L[L.length-1].id:null);PB.key='';drawPet();window.scrollTo(0,0);loadGame()}}
@@ -1518,9 +1627,9 @@ function petTap(){const v=PET&&PET.now;if(!v)return;if(!v.stage){pbEgg();return}
 /* ===== 寵物舞台：走路、叫聲、抓癢… ===== */
 const PB={key:'',x:0,dir:1,seq:0,t:null};
 let PSOUND=true;try{PSOUND=localStorage.getItem('petSound')!=='0'}catch(e){}
-const PSND={honeydog:['汪！','汪汪～','嗚嗚？'],shiba:['汪！','汪汪～','嗚～？'],corgi:['汪！','汪汪！','嗚嗚～'],kitty:['喵～','喵嗚？','呼嚕呼嚕～'],bunny:['噗噗～','啾？','咕咕～'],sheep:['咩～','咩咩！','咩？'],fire:['呼嚕！','嘎嘎～','噗咻！'],water:['啵啵～','咕嚕？','啵！'],leaf:['沙沙～','咕咕？','啾啾～'],star:['啾啦～','啾啾！','嗶嚕？'],dino:['嗷嗚！','吼吼～','嘎？'],narwhal:['噗咻～','嗚～','啵啵！'],pxdragon:['吼！','吼吼～','嘎嗚！'],pxwolf:['嗷嗚～','嗚汪！','呼～'],pxshark:['嗶嗶！','嗶嗚？','滋滋～']};
-const PVOX={dog:{w:'square',a:620,b:420,d:.09,n:2,g:.07},cat:{w:'sine',a:520,b:880,c:560,d:.5,g:.12},bunny:{w:'sine',a:900,b:1300,d:.07,n:3,g:.08},sheep:{w:'triangle',a:440,b:400,c:380,d:.6,v:16,g:.14},mon:{w:'triangle',a:320,b:760,d:.18,n:2,g:.12},bubble:{w:'sine',a:300,b:1200,d:.12,n:3,g:.1},roar:{w:'sawtooth',a:190,b:90,d:.45,v:25,g:.07},robot:{w:'square',a:980,b:960,d:.06,n:3,g:.05},star:{w:'sine',a:880,b:1760,d:.25,n:2,g:.09}};
-const PVK={honeydog:'dog',shiba:'dog',corgi:'dog',pxwolf:'dog',kitty:'cat',bunny:'bunny',sheep:'sheep',fire:'mon',leaf:'mon',dino:'roar',pxdragon:'roar',water:'bubble',narwhal:'bubble',pxshark:'robot',star:'star'};
+const PSND={honeydog:['汪！','汪汪～','嗚嗚？'],shiba:['汪！','汪汪～','嗚～？'],corgi:['汪！','汪汪！','嗚嗚～'],kitty:['喵～','喵嗚？','呼嚕呼嚕～'],bunny:['噗噗～','啾？','咕咕～'],sheep:['咩～','咩咩！','咩？'],fire:['呼嚕！','嘎嘎～','噗咻！'],water:['啵啵～','咕嚕？','啵！'],leaf:['沙沙～','咕咕？','啾啾～'],star:['啾啦～','啾啾！','嗶嚕？'],dino:['嗷嗚！','吼吼～','嘎？'],narwhal:['噗咻～','嗚～','啵啵！'],pxdragon:['吼！','吼吼～','嘎嗚！'],pxwolf:['嗷嗚～','嗚汪！','呼～'],pxshark:['嗶嗶！','嗶嗚？','滋滋～'],pxdeer:['呦～','叮噹！','呦呦♪']};
+const PVOX={dog:{w:'square',a:620,b:420,d:.09,n:2,g:.07},cat:{w:'sine',a:520,b:880,c:560,d:.5,g:.12},bunny:{w:'sine',a:900,b:1300,d:.07,n:3,g:.08},sheep:{w:'triangle',a:440,b:400,c:380,d:.6,v:16,g:.14},mon:{w:'triangle',a:320,b:760,d:.18,n:2,g:.12},bubble:{w:'sine',a:300,b:1200,d:.12,n:3,g:.1},roar:{w:'sawtooth',a:190,b:90,d:.45,v:25,g:.07},robot:{w:'square',a:980,b:960,d:.06,n:3,g:.05},star:{w:'sine',a:880,b:1760,d:.25,n:2,g:.09},deer:{w:'sine',a:720,b:1080,d:.16,n:2,g:.1}};
+const PVK={honeydog:'dog',shiba:'dog',corgi:'dog',pxwolf:'dog',kitty:'cat',bunny:'bunny',sheep:'sheep',fire:'mon',leaf:'mon',dino:'roar',pxdragon:'roar',water:'bubble',narwhal:'bubble',pxshark:'robot',star:'star',pxdeer:'deer'};
 let PAC=null;
 /* 音效總開關：音量放大＋壓縮器（大聲但不爆音）；iPhone 靜音模式下也能出聲（audioSession＝playback，舊版用一段無聲音檔切換） */
 function pacInit(){if(PAC)return PAC;try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
@@ -1555,6 +1664,8 @@ const SFX={
   sweep:t=>noise(t,.45,.35,'highpass',800,3000,1),
   pill:t=>{tone(t,1568,0,.4,'sine',.28);tone(t+.1,2093,0,.5,'sine',.2)},
   slash:t=>noise(t,.16,.5,'highpass',2000,6000,1),
+  bell:t=>{for(let i=0;i<3;i++){tone(t+i*.1,2093,0,.4,'sine',.24);tone(t+i*.1,3136,0,.22,'sine',.1);noise(t+i*.1,.05,.22,'highpass',6000,9000,1)}},
+  snow:t=>noise(t,.35,.45,'bandpass',1400,500,.8),
   chomp:t=>{tone(t,150,70,.09,'square',.3);tone(t+.16,150,70,.09,'square',.3)},
   fire:(t,d)=>{d=d||.6;noise(t,d,.55,'lowpass',400,2400,1);for(let i=0;i<Math.round(d*12);i++)noise(t+Math.random()*d,.03,.25,'highpass',3000,0,1)},
   boom:t=>{noise(t,.6,.7,'lowpass',1200,80,1);tone(t,120,35,.5,'sine',.6)},
@@ -1587,7 +1698,7 @@ const PFACE={sheep:-1,honeydog:-1,narwhal:-1,pxshark:-1};
 const PFR={tumble:'blink',walk:'walk',run:'walk',hop:'jump',dance:'jump',eat:'eat',sniff:'eat',sleep:'sleep',scratch:'scratch',yawn:'blink',squish:'blink'};
 function pbFr(){const v=PET&&PET.now,P=v&&IMGPET[v.species];return P&&P.frames&&P.frames[v.stage]?P:null}
 /* 程式畫的寵物（像素三隻、星星龍）：換姿勢時重畫寵物 */
-const PPOSE={pxdragon:1,pxwolf:1,pxshark:1,star:1};
+const PPOSE={pxdragon:1,pxwolf:1,pxshark:1,pxdeer:1,star:1};
 function pbPose(){const v=PET&&PET.now;return !!(v&&v.stage&&PPOSE[v.species])}
 function petOpt(v,pose){return {shiny:v.shiny,sick:v.sick,mood:v.mood,poops:0,crack:v.stage===0&&v.hatchIn<3,wobble:v.stage===0,pose:pose||''}}
 function pbImg(n){if(pbPose()){const a=$('#petA'),p=n==='stand'?'':n;if(a&&PB.pose!==p){PB.pose=p;a.innerHTML=petSvg(PET.now.species,PET.now.stage,petOpt(PET.now,p),170)}return}
@@ -1721,7 +1832,26 @@ async function pkMissile(G){const R=PKSVG(8,4,'<rect x="1" y="1" width="5" heigh
   const ps=[];for(let r=0;r<5;r++){const e=pkEl(R,G.fx-G.d*10,G.my+4,30,15,6);if(e)e.style.transform=`scaleX(${G.d})`;const tx=G.d*(60+Math.random()*(G.W/2)),ty=-(G.my-10)+Math.random()*20;
     psfx('whoosh');ps.push(pkAnim(e,[{transform:`translate(0,0) scaleX(${G.d})`},{transform:`translate(${tx*.4}px,${-50-Math.random()*30}px) scaleX(${G.d})`,offset:.45},{transform:`translate(${tx}px,${-ty}px) scaleX(${G.d})`}],700+r*90,'ease-in').then(()=>{pkBoom(G.fx+tx,G.my+ty,12,['#ff8a1a','#ffd23f','#ff2a4a','#fff'],38);pkShake(260);psfx('boom')}));await pbSleep(140)}
   await Promise.all(ps);pkFlash('#ff8a1a',300,.3)}
-const PKFX={claw:pkClaw,bite:pkBite,fireball:pkFireball,breath:pkBreath,hellfire:pkHell,spark:pkSpark,bolt:pkBolt,storm:pkStorm,water:pkWater,laser:pkLaser,missile:pkMissile};
+/* 聖誕鈴鹿 */
+const PKBELL=PKSVG(7,8,'<rect x="3" y="0" width="1" height="1" fill="#8a5a00"/><rect x="2" y="1" width="3" height="1" fill="#ffd23f"/><rect x="1" y="2" width="5" height="3" fill="#ffd23f"/><rect x="0" y="5" width="7" height="1" fill="#e0a010"/><rect x="3" y="6" width="1" height="2" fill="#8a5a00"/><rect x="2" y="2" width="1" height="2" fill="#fff6c0"/><rect x="1" y="5" width="2" height="1" fill="#1f9a4a"/><rect x="4" y="5" width="2" height="1" fill="#1f9a4a"/>');
+async function pkBell(G){const x=G.fx+G.d*22,y=G.my;const b=pkEl(PKBELL,x,y,34,38,6);if(b)b.style.transformOrigin='50% 0';psfx('bell');
+  const sw=pkAnim(b,[{transform:'rotate(0)'},{transform:'rotate(-28deg)',offset:.18},{transform:'rotate(26deg)',offset:.42},{transform:'rotate(-16deg)',offset:.66},{transform:'rotate(0)',opacity:1,offset:.86},{transform:'rotate(0)',opacity:0}],1200);
+  for(let r=0;r<3;r++){const e=pkEl('',x,y,44,44,5);if(e){e.style.border='3px solid #ffd23f';e.style.borderRadius='50%'}pkAnim(e,[{transform:'scale(.3)',opacity:1},{transform:'scale(2.4)',opacity:0}],700,'ease-out');
+    const nt=pkEl(`<b style="font-size:22px;color:${r%2?'#e2343a':'#1f9a4a'}">♪</b>`,x+(Math.random()*40-20),y+16,22,26,6);pkAnim(nt,[{transform:'translate(0,0)',opacity:1},{transform:`translate(${G.d*30}px,-56px)`,opacity:0}],900,'ease-out');if(r)psfx('bell');await pbSleep(280)}
+  await sw}
+const PKSNOW=PKSVG(7,7,'<rect x="2" y="0" width="3" height="7" fill="#5a7aa0"/><rect x="0" y="2" width="7" height="3" fill="#5a7aa0"/><rect x="1" y="1" width="5" height="5" fill="#5a7aa0"/><rect x="2" y="1" width="3" height="5" fill="#fff"/><rect x="1" y="2" width="5" height="3" fill="#fff"/><rect x="2" y="2" width="1" height="1" fill="#e8f6ff"/><rect x="4" y="4" width="1" height="1" fill="#c8dff0"/>');
+async function pkSnowball(G){for(let r=0;r<2;r++){const e=pkEl(PKSNOW,G.fx,G.my-8,26,26,5),dx=G.d*Math.min(150,G.W/2+30-Math.abs(G.fx))*(r?.65:1);psfx('whoosh');
+    pkAnim(e,[{transform:'translate(0,0) rotate(0)'},{transform:`translate(${dx*.5}px,-44px) rotate(180deg)`,offset:.5},{transform:`translate(${dx}px,10px) rotate(360deg)`}],600,'ease-out').then(()=>{psfx('snow');pkBoom(G.fx+dx,G.my-18,14,['#ffffff','#e8f6ff','#bfe3ff'],36)});await pbSleep(330)}await pbSleep(450)}
+async function pkBlizzard(G){pkDark(2700,'linear-gradient(#7aa8d8cc,#d8eeffaa)');psfx('whoosh');psfx('snow');const end=Date.now()+1900;let k=0;
+  while(Date.now()<end){for(let i=0;i<4;i++){const z=4+Math.random()*7,len=G.W*.6+Math.random()*G.W*.4;pkPart(G.fx,G.my-24+Math.random()*44,z,Math.random()<.7?'#ffffff':'#bfe3ff',G.d*len,(Math.random()*2-1)*60,600+Math.random()*400,6)}
+    if(++k%9===0)psfx('whoosh');await pbSleep(45)}
+  pkShake(400);pkFlash('#ffffff',300,.55)}
+const PKGIFT=(b,r)=>PKSVG(8,8,`<rect x="0" y="2" width="8" height="6" fill="#2a0a0e"/><rect x="1" y="3" width="6" height="4" fill="${b}"/><rect x="1" y="2" width="6" height="1" fill="${b}"/><rect x="3" y="2" width="2" height="5" fill="${r}"/><rect x="1" y="4" width="6" height="1" fill="${r}"/><rect x="1" y="0" width="2" height="2" fill="#ffd23f"/><rect x="5" y="0" width="2" height="2" fill="#ffd23f"/><rect x="3" y="1" width="2" height="1" fill="#ffd23f"/>`);
+async function pkGiftrain(G){pkDark(3300,'linear-gradient(#0a1430ee,#1a2a50aa)');psfx('bell');await pbSleep(300);const ps=[],cols=[['#e2343a','#1f9a4a'],['#1f9a4a','#e2343a'],['#ffd23f','#e2343a'],['#ffffff','#e2343a']];
+  for(let r=0;r<8;r++){const [b,c]=cols[r%4],x=(Math.random()-.5)*(G.W-50),e=pkEl(PKGIFT(b,c),x,G.H-14,30,30,6);psfx('whoosh');
+    ps.push(pkAnim(e,[{transform:'translate(0,0) rotate(0)'},{transform:`translate(0,${G.H-34}px) rotate(${r%2?200:-200}deg)`}],720,'ease-in').then(()=>{pkBoom(x,14,14,['#e2343a','#1f9a4a','#ffd23f','#ffffff'],46);psfx('boom')}));await pbSleep(190)}
+  await Promise.all(ps);pkShake(500);pkFlash('#ffd23f',400,.45);psfx('win')}
+const PKFX={bell:pkBell,snowball:pkSnowball,blizzard:pkBlizzard,giftrain:pkGiftrain,claw:pkClaw,bite:pkBite,fireball:pkFireball,breath:pkBreath,hellfire:pkHell,spark:pkSpark,bolt:pkBolt,storm:pkStorm,water:pkWater,laser:pkLaser,missile:pkMissile};
 async function petSkill(auto){const v=PET&&PET.now,sk=v&&v.skill;if(!sk||!$('#petStage')||v.ready)return;if(Date.now()-PK.at<2600&&!auto)return;PK.at=Date.now();PK.quiet=!!auto;
   clearTimeout(PB.t);pbFreeze();const id=++PB.seq;
   try{pbSay(sk.n+'！',1400);if(!auto)petVoice(v.species);await pbAct('squish',380,id);if(id!==PB.seq)return;

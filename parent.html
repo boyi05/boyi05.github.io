@@ -523,11 +523,12 @@ const PETPAL2={
  narwhal:[{m:'#5aa8ff',l:'#e8f6ff',d:'#2a5fc4',a:'#ffe27a',o:'#14306e',e:'#2a7aff'},{m:'#ff9ccf',l:'#fff0f8',d:'#d4508e',a:'#9ff3ff',o:'#6a1a44',e:'#ff4fa0'}],
  pxdragon:[{m:'#e8452e',l:'#ffd36a',d:'#9a1c1c',a:'#ffb020',o:'#1a0a10',e:'#fff36a',w:'#ff8a3c',x:'#b8321e',g:'#ff7a1a'},{m:'#2a2a3a',l:'#c8a0ff',d:'#121220',a:'#b06aff',o:'#05040a',e:'#7affff',w:'#6a4ac8',x:'#3a2a7a',g:'#a46aff'}],
  pxwolf:[{m:'#5a8ad8',l:'#e8f2ff',d:'#2a4a9a',a:'#ffe23a',o:'#0e1430',e:'#7affff',w:'#ffffff',x:'#9ac0ff',g:'#ffe23a'},{m:'#2a2a30',l:'#ffd0d0',d:'#121216',a:'#ff3a4a',o:'#050506',e:'#ff4a4a',w:'#ffffff',x:'#5a5a66',g:'#ff3a4a'}],
+ pxdeer:[{m:'#d8262e',l:'#fff4e8',d:'#8e1018',a:'#ffc53a',o:'#2a0a0e',e:'#1a0a0a',w:'#ffffff',x:'#1f9a4a',g:'#fff2b0'},{m:'#eef6ff',l:'#ffffff',d:'#8ab4e0',a:'#cfe8ff',o:'#1a2a4a',e:'#1a2a6a',w:'#bfe0ff',x:'#e2344a',g:'#d8f0ff'}],
  pxshark:[{m:'#8a9ab0',l:'#e8eef6',d:'#4a5a72',a:'#2affe0',o:'#10141c',e:'#2affe0',w:'#ffffff',x:'#ff6a2a',g:'#2affe0'},{m:'#e8b830',l:'#fff6c8',d:'#9a6a10',a:'#ff3aa0',o:'#2a1a04',e:'#ff3aa0',w:'#ffffff',x:'#7a4aff',g:'#ff3aa0'}]};
 Object.assign(PETPAL,PETPAL2);
-Object.assign(PEMO,{corgi:'🦴',dino:'🦖',narwhal:'🦄',pxdragon:'🔥',pxwolf:'⚡',pxshark:'🤖'});
+Object.assign(PEMO,{corgi:'🦴',dino:'🦖',narwhal:'🦄',pxdragon:'🔥',pxwolf:'⚡',pxshark:'🤖',pxdeer:'🎄'});
 Object.keys(PETPAL2).forEach(k=>{const a=PETPAL[k][0],b=PETPAL[k][1];PCOL[k]=[a.m,a.l,a.d,b.m,b.d,b.l]});
-const PXSP={pxdragon:1,pxwolf:1,pxshark:1};
+const PXSP={pxdragon:1,pxwolf:1,pxshark:1,pxdeer:1};
 const PXSIZE=[0,48,58,76,92,106];   /* 每個階段的大小：差距拉大，看得出長大 */
 
 // 共用：漸層定義、臉
@@ -683,6 +684,88 @@ ommmmlllllmmmo.
 ......omdo...omddo...
 ......owwo...owwo....
 ......oooo...oooo....`],
+ pxdeer:[
+`oo..........oo
+olo.oooooo.olo
+.olommwwmmolo.
+..ommmmmmmmo..
+.ommmmmmmmmmo.
+.omwemmmmwemo.
+.omoemmmmoemo.
+.omlmmmmmmlmo.
+..omllddllmo..
+...omllllmo...
+..oxxxxaxxxo..
+.ommwmmmmwmmo.
+.omwmllllmwmo.
+..omllllllmo..
+..omdo..omdo..
+..ooo....ooo..`,
+`.........o...o....
+........oaoooao...
+.......oommmmmmo..
+......olmmmwemmoo.
+.......ommmmemmldo
+........ommlmmmllo
+........ommmmllllo
+....ooooxxxxxxooo.
+.ooommmmmxxxxxo...
+ollmmmmmwmmmmo....
+.olmmwmmmmmmmo....
+..ommmmmmwmmmo....
+..ommmmmmmmmmo....
+..ommllllllmmo....
+...omomoomomo.....
+...ododoododo.....
+....o.o..o.o......`,
+`............o.o......
+...........oaoao.....
+...........oaaaoo....
+............ooaaao...
+...........ooooaoo...
+.........oommmmmmmo..
+........olmmmmwemmoo.
+.........ommmmmemmldo
+..........ommmlmmmllo
+..........ommmmmllllo
+.........oxxxxxxoooo.
+....ooooooxxxxxxo....
+.ooommmmmmmmmamo.....
+ollmmmmmwmmmmmmo.....
+.olmmwmmmmmwmmmo.....
+..ommmmwmmmmmmmo.....
+..ommmmmmmmmmmmo.....
+..ommllllllllmmo.....
+...omomoooomomo......
+...omomo..omomo......
+...ododo..ododo......
+....o.o....o.o.......`,
+`...............o.......
+...........o.ooao......
+..........oaoaoao......
+..........oaoaoao......
+..........oaaaaao.oo...
+...........ooooaaoaao..
+...............oaaao...
+.............ooooaoo...
+...........oommmmmmmo..
+..........olmmmmwemmoo.
+...........ommmmmemmldo
+............ommmlmmmllo
+............ommmmmllllo
+...........oxxxxxxoooo.
+....ooooooooxxxxxxo....
+.ooommmmmmmmmmmamo.....
+ollmmmmmwmmmmwmmmo.....
+.olmmwmmmmmwmmmmmo.....
+..ommmmwmmmmmmmmmo.....
+..ommmmmmmwmmmmmmo.....
+..ommllllllllllmmo.....
+...omomoooooomomo......
+...omomo....omomo......
+...omomo....omomo......
+...ododo....ododo......
+....o.o......o.o.......`],
  pxshark:[
 `......oo.......
 .....omo.......
@@ -733,9 +816,10 @@ function pxPose(R,p){if(!p)return R;R=R.slice();const n=R.length;
 /* 像素寵物進化配色：成年、完全體換顏色，一眼看得出長大（閃亮版維持閃亮配色） */
 const PXEVO={pxdragon:{4:{m:'#d62a1e',d:'#7a0e14',l:'#ffe08a',a:'#ffd040',g:'#ff5a1a',x:'#8a1a10',w:'#ff6a2a'},5:{m:'#6a0e22',d:'#2a0410',l:'#ff8a3a',a:'#c04aff',g:'#ff3a7a',x:'#3a0a2a',w:'#9a3aff',e:'#ffea4a'}},
  pxwolf:{4:{m:'#3a5ac8',d:'#1a2a7a',l:'#d8e6ff',x:'#7aa0ff'},5:{m:'#eef4ff',d:'#8aa0d8',l:'#ffffff',a:'#ffd700',g:'#fff36a',x:'#c0d0ff',e:'#3ab0ff'}},
+ pxdeer:{4:{m:'#c81e2a',d:'#6e0a14',a:'#ffd040',g:'#fff6c8'},5:{m:'#b0142a',d:'#560612',l:'#ffffff',a:'#ffe066',g:'#fff6c8',x:'#14a04a',w:'#fffbe8'}},
  pxshark:{4:{m:'#5a7090',d:'#2a3a52',l:'#d8e2f0',x:'#ff4a1a'},5:{m:'#2a2a36',d:'#10101a',l:'#9aa4b8',a:'#ff2a4a',g:'#ff2a4a',e:'#ff2a4a',x:'#ff8a1a'}}};
 function pxPet(sp,stage,o,u){const C0=PETPAL[sp][o.shiny?1:0],C=!o.shiny&&PXEVO[sp]&&PXEVO[sp][stage]?Object.assign({},C0,PXEVO[sp][stage]):C0,sh=!!o.shiny,sick=!!o.sick,mood=o.mood==null?80:o.mood;
- const big=stage>=3,rows0=PXS[sp][big?1:0].split(String.fromCharCode(10)),W=Math.max(...rows0.map(r=>r.length)),H=rows0.length;
+ const big=stage>=3,SPR=PXS[sp],rows0=SPR[SPR.length>2?Math.min(stage-1,SPR.length-1):big?1:0].split(String.fromCharCode(10)),W=Math.max(...rows0.map(r=>r.length)),H=rows0.length;
  const pal={o:C.o,m:C.m,d:C.d,l:C.l,a:C.a,e:sick?'#9a7ab0':C.e,w:C.w,x:C.x,g:C.g};
  const rows=pxPose(rows0.map(r=>sick?r.replace(/e/g,'o'):r),sick?'':o.pose);
  const target=PXSIZE[stage],c=target/Math.max(W,H*1.05),wpx=W*c,hpx=H*c;
@@ -754,17 +838,36 @@ function pxPet(sp,stage,o,u){const C0=PETPAL[sp][o.shiny?1:0],C=!o.shiny&&PXEVO[
  if(sp==='pxdragon'&&big&&!sick){fx+=`<g class="breath">${q(ox+wpx+2,oy+hpx*.36,5,C.a)}${q(ox+wpx+8,oy+hpx*.33,6,C.g)}${q(ox+wpx+15,oy+hpx*.3,5,C.l)}${q(ox+wpx+9,oy+hpx*.42,4,C.a)}</g>`}
  if(sp==='pxwolf'&&stage>=2){const bolt=(x,y,k,d)=>`<g transform="translate(${x} ${y}) scale(${k})"><path class="zap" style="animation-delay:${d}s" d="M2 -14 L-6 1 H0 L-3 14 L7 -3 H1 L5 -14Z" fill="${C.a}" stroke="${C.o}" stroke-width="1.2" stroke-linejoin="round"/></g>`;fx+=bolt(ox-6,oy+hpx*.3,1,0)+bolt(ox+wpx+4,oy+hpx*.15,.8,.5)+(stage>=4?bolt(60,oy-10,1.1,.9):'')}
  if(sp==='pxshark'&&big){fx+=`<g class="jet">${q(ox+c*4,106-1,c*.9,C.x)}${q(ox+c*10,106-1,c*.9,C.x)}${q(ox+c*4.2,106+c*.8,c*.6,'#ffd23f')}${q(ox+c*10.2,106+c*.8,c*.6,'#ffd23f')}</g>`;if(stage>=4)fx+=`<rect class="laser" x="${ox-38}" y="${oy+c*8.2}" width="40" height="${c*.6}" fill="${C.a}" opacity=".8"/>`}
- if(stage>=5)fx+=crown(u,60-wpx*.08,oy-6,-12,.7);
+ if(stage>=5&&sp!=='pxdeer')fx+=crown(u,60-wpx*.08,oy-6,-12,.7);
+ let deco='';
+ if(sp==='pxdeer'&&stage>=5&&!sick){let k=0;const LC=['#ff3a3a','#3aff7a','#3ab0ff','#ffd23f'];
+  rows.forEach((r,y)=>{if(y>8)return;for(let x=0;x<r.length;x++)if(r[x]==='a'&&(x+y)%2===0){deco+=`<rect class="pxtw" style="animation-delay:${(k%4)*.35}s" x="${(ox+x*c+c*.18).toFixed(1)}" y="${(oy+y*c+c*.18).toFixed(1)}" width="${(c*.64).toFixed(1)}" height="${(c*.64).toFixed(1)}" fill="${LC[k%4]}"/>`;k++}});
+  const ty=rows.findIndex(r=>r.indexOf('a')>=0);if(ty>=0){const tx=rows[ty].indexOf('a'),k2=c*.6;deco+=`<g class="pxtw">${pxRects(['..o..','.oao.','oaaao','.oao.','.o.o.'],{o:'#8a5a00',a:'#ffe066'},k2,ox+tx*c+c/2-2.5*k2,oy+ty*c-5*k2)}</g>`}}
  if(sh)fx+=[[-46,-62,6,0],[46,-54,7,.5],[-44,-14,5,1],[48,-18,5,1.5]].map(([x,y,r,d])=>spk(60+x,106+y,r,'#fff',d)).join('');
  if(!sick&&mood<30)fx+=q(ox+wpx*.62,oy+hpx*.38,c*.8,'#8fd3ff','drip');
  if(sick)fx+=`<g transform="translate(${ox+wpx*.5} ${oy-4})">${[0,1,2].map(i=>`<circle class="dizzy" style="animation-delay:${i*.4}s" cx="${(i-1)*8}" cy="0" r="2.4" fill="#ffd23f" stroke="${C.o}" stroke-width=".8"/>`).join('')}</g>`;
  const ex=Math.max(1.6,c*.4);
  const body=`<g opacity=".55">${pxRects(rows,pal,c,ox+ex,oy+ex,C.o)}</g>${pxRects(rows,pal,c,ox,oy)}`;
  const shine=sh?`<rect x="${ox}" y="${oy}" width="${wpx}" height="${hpx}" fill="url(#${u}h)" style="mix-blend-mode:screen"/>`:'';
- return `<defs>${defs}</defs>${aura}<ellipse cx="60" cy="108" rx="${wpx*.45}" ry="5" fill="url(#${u}g)"/>${petPoo(o.poops)}<g class="pxbob" shape-rendering="crispEdges">${body}${shine}</g>${fx}`}
+ return `<defs>${defs}</defs>${aura}<ellipse cx="60" cy="108" rx="${wpx*.45}" ry="5" fill="url(#${u}g)"/>${petPoo(o.poops)}<g class="pxbob" shape-rendering="crispEdges">${body}${deco}${shine}</g>${fx}`}
 // 像素蛋
+const PXEGG2={pxdeer:`...oo..oo...
+..oaaooaao..
+..oaaaaaao..
+...ooaaoo...
+...owxxwo...
+..owwxxwwo..
+.ommmxxmmmo.
+.omwmxxmmmo.
+oxxxxxxxxxxo
+oxxxxxxxxxxo
+ommmmxxmmwmo
+.ommmxxmmmo.
+.odmmxxmmdo.
+..oodxxdoo..
+....oooo....`};
 function pxEgg(sp,o,u){const C=PETPAL[sp][0];
- const E=`....oooo....
+ const E=PXEGG2[sp]?PXEGG2[sp].split(String.fromCharCode(10)):`....oooo....
 ..oolllloo..
 .olllllaaao.
 .olllaaaamo.
@@ -777,7 +880,7 @@ ommddmmddmmo
 .ommddddmmo.
 .oommmmmmoo.
 ...oooooo...`.split(String.fromCharCode(10)).map(r=>r.replace(/l/g,'w'));
- const pal={o:C.o,w:'#fffaf0',m:C.m,a:C.a,d:C.d},c=6.4,ox=60-6*c,oy=104-13*c;
+ const pal={o:C.o,w:'#fffaf0',m:C.m,a:C.a,d:C.d,x:C.x},c=E.length>13?6:6.4,ox=60-6*c,oy=104-E.length*c;
  const crack=o.crack?`<path d="M${ox+c} ${oy+c*6} l${c} -${c} l${c} ${c} l${c} -${c} l${c} ${c} l${c} -${c} l${c} ${c} l${c} -${c} l${c} ${c} l${c} -${c}" fill="none" stroke="#fff6c2" stroke-width="3"/>`:'';
  return `<defs>${rad(u+'gl',.5,.5,.5,[[0,C.g,.6],[1,C.g,0]])}</defs><circle cx="60" cy="66" r="50" fill="url(#${u}gl)" class="pxpulse"/>
  <path d="M18 104 Q60 90 102 104 Q106 113 60 117 Q14 113 18 104Z" fill="#3a3a4a" stroke="#14141c" stroke-width="1.6"/>${[24,40,56,72,88].map(x=>`<rect x="${x}" y="103" width="8" height="5" fill="${C.g}" opacity=".8"/>`).join('')}
@@ -798,14 +901,16 @@ Object.assign(MEMO_ART,{
  narwhal:u=>`<g transform="rotate(30)"><path d="M-4 20 L0 -24 L4 20Z" fill="url(#${u}it)" stroke="#8a6a10" stroke-width="1.4" stroke-linejoin="round"/>${[14,6,-2,-10,-18].map((y,i)=>`<path d="M${-3+i*.5} ${y} l${6-i} -2" stroke="#8a6a10" stroke-width="1" opacity=".6"/>`).join('')}</g>${spk(10,-14,4,'#fff',.3)}`,
  pxdragon:u=>`<g shape-rendering="crispEdges">${pxRects(['..oo..','.oaao.','oaaaao','oalaao','.oaao.','..oo..'],{o:'#5a0a0a',a:'url(#'+u+'it)',l:'#fff6c0'},5,-15,-15)}</g>`,
  pxwolf:u=>`<g shape-rendering="crispEdges">${pxRects(['...oo.','..oao.','.oaao.','oaaaoo','ooaao.','.oaao.','.oao..','.oo...'],{o:'#0e1430',a:'url(#'+u+'it)'},5,-15,-20)}</g>`,
+ pxdeer:u=>`<g shape-rendering="crispEdges">${pxRects(['..oo..','.oaao.','oaaaao','oaaaao','oaaaao','oooooo','..oo..'],{o:'#6a4200',a:'url(#'+u+'it)'},5,-15,-18)}<rect x="-3" y="-25" width="6" height="5" fill="#1f9a4a"/><rect x="-8" y="-27" width="5" height="4" fill="#e2343a"/><rect x="3" y="-27" width="5" height="4" fill="#e2343a"/></g>${spk(12,-12,4,'#fff',.3)}`,
  pxshark:u=>`<g shape-rendering="crispEdges">${pxRects(['.oooo.','oaaaao','oaggao','oaggao','oaaaao','.oooo.'],{o:'#10141c',a:'url(#'+u+'it)',g:'#2affe0'},5,-15,-15)}</g><circle cx="0" cy="0" r="18" fill="none" stroke="#2affe0" stroke-width="1" opacity=".5" class="twk"/>`});
-Object.assign(MEMO_GRAD,{corgi:[['#fffaf0'],['#e8c690']],dino:[['#c8ffb0'],['#2f9a44']],narwhal:[['#fffbe8'],['#ffd23f']],pxdragon:[['#ffd36a'],['#e8452e']],pxwolf:[['#fff6a0'],['#ffc800']],pxshark:[['#e8eef6'],['#6a7a92']]});
+Object.assign(MEMO_GRAD,{corgi:[['#fffaf0'],['#e8c690']],dino:[['#c8ffb0'],['#2f9a44']],narwhal:[['#fffbe8'],['#ffd23f']],pxdragon:[['#ffd36a'],['#e8452e']],pxwolf:[['#fff6a0'],['#ffc800']],pxshark:[['#e8eef6'],['#6a7a92']],pxdeer:[['#fff3a8'],['#e0a010']]});
 const SCENE2={
  corgi:u=>`${lin(u+'s',0,0,0,1,[[0,'#9ad8ff'],[1,'#fff0d0']])}|<rect width="120" height="120" fill="url(#${u}s)"/><ellipse cx="26" cy="24" rx="14" ry="6" fill="#fff"/><path d="M0 80 Q30 66 60 78 T120 74 V120 H0Z" fill="#8fd36a"/><rect x="84" y="62" width="26" height="22" fill="#e8c890" stroke="#7a4a1a"/><path d="M80 64 L97 50 L114 64Z" fill="#4d8de6"/><circle cx="20" cy="96" r="5" fill="#ffd23f" stroke="#c88a00"/><ellipse cx="60" cy="112" rx="70" ry="16" fill="#6fc05a"/>`,
  dino:u=>`${lin(u+'s',0,0,0,1,[[0,'#ffcf8a'],[1,'#ffe9c8']])}|<rect width="120" height="120" fill="url(#${u}s)"/><path d="M0 76 L22 46 L40 76Z" fill="#a0603a"/><path d="M80 78 L104 40 L124 78Z" fill="#8a4a2a"/><path d="M100 46 l4 -6 l4 6z" fill="#ff5a1a"/><path d="M14 92 C10 70 26 64 28 52 C34 64 44 70 40 92" fill="#3fae5a"/><ellipse cx="60" cy="112" rx="70" ry="18" fill="#c8a060"/>`,
  narwhal:u=>`${lin(u+'s',0,0,0,1,[[0,'#1a3a8a'],[1,'#4ab0f0']])}|<rect width="120" height="120" fill="url(#${u}s)"/>${Array.from({length:12},(_,i)=>`<circle cx="${(i*41)%118}" cy="${(i*29)%50+4}" r="${i%3?.7:1.2}" fill="#fff"/>`).join('')}<path d="M10 62 L30 54 L40 62Z M84 58 L100 48 L114 58Z" fill="#fff" opacity=".9"/><rect y="62" width="120" height="58" fill="#2a7ad0"/><path d="M0 68 q15 -4 30 0 t30 0 t30 0 t30 0" stroke="#fff" stroke-width="1.5" fill="none" opacity=".5"/>`,
  pxdragon:u=>`|<rect width="120" height="120" fill="#2a0a14"/>${[[0,96,120,24,'#5a1a1a'],[0,88,40,8,'#7a2a1a'],[70,84,50,12,'#7a2a1a'],[30,70,8,8,'#ff7a1a'],[86,60,6,6,'#ffb020'],[14,40,4,4,'#ff7a1a'],[100,30,4,4,'#ffd36a']].map(([x,y,w,h,c])=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`).join('')}`,
  pxwolf:u=>`|<rect width="120" height="120" fill="#0e1430"/>${[[90,14,16,16,'#fff6c8'],[0,90,120,30,'#2a3a6a'],[10,80,30,10,'#3a4a8a'],[70,76,40,14,'#3a4a8a'],[20,20,3,3,'#fff'],[50,10,3,3,'#fff'],[66,34,3,3,'#fff']].map(([x,y,w,h,c])=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`).join('')}<path d="M40 0 L30 30 H38 L28 58" stroke="#ffe23a" stroke-width="3" fill="none"/>`,
+ pxdeer:u=>`|<rect width="120" height="120" fill="#0e1a3a"/>${Array.from({length:14},(_,i)=>`<rect x="${(i*37)%116}" y="${(i*23)%70+2}" width="${i%3?2:3}" height="${i%3?2:3}" fill="#fff" opacity="${i%2?.6:1}"/>`).join('')}<rect y="86" width="120" height="34" fill="#f2f8ff"/><rect y="84" width="120" height="3" fill="#d8e8f8"/>${[[14,52],[96,46]].map(([x,y])=>`<rect x="${x}" y="${y+30}" width="6" height="8" fill="#6a3a1a"/><rect x="${x-10}" y="${y+18}" width="26" height="12" fill="#1f7a3a"/><rect x="${x-6}" y="${y+8}" width="18" height="10" fill="#1f8a44"/><rect x="${x-2}" y="${y}" width="10" height="8" fill="#22994c"/><rect x="${x+1}" y="${y-4}" width="4" height="4" fill="#ffd23f"/><rect x="${x-6}" y="${y+22}" width="3" height="3" fill="#e2343a"/><rect x="${x+10}" y="${y+12}" width="3" height="3" fill="#ffd23f"/>`).join('')}`,
  pxshark:u=>`|<rect width="120" height="120" fill="#081a2a"/>${Array.from({length:8},(_,i)=>`<rect x="0" y="${i*15}" width="120" height="1" fill="#2affe0" opacity=".15"/><rect x="${i*15}" y="0" width="1" height="120" fill="#2affe0" opacity=".15"/>`).join('')}<rect y="96" width="120" height="24" fill="#1a2a3a"/><rect x="10" y="40" width="8" height="8" fill="#2affe0" opacity=".6"/><rect x="96" y="30" width="6" height="6" fill="#ff3aa0" opacity=".6"/>`};
 const ART_CSS2=`
 .floaty{animation:floaty 3s ease-in-out infinite}@keyframes floaty{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
@@ -819,6 +924,7 @@ const ART_CSS2=`
 .pxeye{animation:pxeye 1.2s steps(2) infinite}@keyframes pxeye{50%{fill:#ffffff}}
 .pxfly{animation:pxfly 2.2s steps(6) infinite}@keyframes pxfly{0%{transform:translateY(8px);opacity:0}30%{opacity:1}100%{transform:translateY(-22px);opacity:0}}
 .zap{animation:zap .9s steps(2) infinite}@keyframes zap{50%{opacity:.15}}
+.pxtw{animation:pxtw 1.4s steps(2) infinite}@keyframes pxtw{50%{opacity:.3}}
 .jet{animation:zap .25s steps(2) infinite}
 .laser{animation:laser 1.4s steps(4) infinite}@keyframes laser{0%,60%{opacity:0}70%,90%{opacity:.9}}
 .dizzy{transform-box:fill-box;animation:dizzy 1.2s linear infinite}@keyframes dizzy{50%{transform:translateY(-4px)}}
