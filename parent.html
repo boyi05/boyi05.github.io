@@ -100,6 +100,7 @@ input.amt{font-size:24px;font-weight:700;text-align:right}
  <div class="two" style="margin-top:8px"><input id="sFrom" type="date"><input id="sTo" type="date"></div>
  <div class="toggle" id="sFixedBox"><span>不算每月固定支出</span><button type="button" class="sw" onclick="st.noFixed=!st.noFixed;this.classList.toggle('on',st.noFixed);loadStats()"></button></div>
  <button class="btn" onclick="st.range='';drawQuick();loadStats()">查詢</button></div><div id="statBody"></div></div></section>
+<section id="pg-cal" class="page"><div class="ptitle">📅 行事曆</div><div class="pad" id="calBody"></div></section>
 <section id="pg-set" class="page"><div class="ptitle">設定</div><div class="pad"><div class="seg" id="setSeg"></div><div id="setBody"></div></div></section>
 </div>
 <nav id="dock"></nav>
@@ -897,6 +898,56 @@ async function loadRank(){chips($('#rkSeg'),['week','month','lastweek','lastmont
 // 寵物狀態卡（爸媽看的、小島首頁用）
 function petBars(v){const bar=(ic,lab,val,c)=>`<div style="display:flex;align-items:center;gap:6px;font-size:13px;margin:3px 0"><span style="width:58px">${ic} ${lab}</span><div class="rbar" style="flex:1;height:10px;margin:0"><i style="width:${val}%;background:${val<25?'#f0705f':c}"></i></div><b style="width:28px;text-align:right">${val}</b></div>`;
   return bar('🍙','飽足',v.full,'#ffb020')+bar('😊','心情',v.mood,'#ff8fb1')+bar('🫧','清潔',v.clean,'#5ec2f2')}
+/* ===== 行事曆（爸媽、小孩共用） ===== */
+const CAL_IC=[[/生日/,'🎂'],[/考|測驗/,'📝'],[/醫|牙|診所|疫苗|看病|回診/,'🏥'],[/繳|帳單|保費|稅/,'💳'],[/出遊|旅行|旅遊|露營|樂園|飯店|出國|民宿/,'🧳'],[/課|才藝|鋼琴|游泳|補習|舞|球|畫|琴|跆拳/,'🎹'],[/學校|開學|放假|運動會|校|畢業|家長|園遊會/,'🏫'],[/聚餐|吃飯|聚會|派對|拜拜|過年|回.*家/,'🍽️']];
+const CAL_BIG=/生日|出遊|旅行|旅遊|露營|出國|樂園|過年|畢業|運動會/;
+const CAL_WD='日一二三四五六',CAL_KC=['#ff8a4c','#e86aa6','#4c9dff','#36b37e','#9b6bff'];
+function calIc(t){for(const [r,i] of CAL_IC)if(r.test(t))return i;return '📌'}
+function calKc(name,kids){const i=(kids||[]).indexOf(name);return name==='全家'?'#8a7a5a':CAL_KC[(i<0?4:i)%5]}
+function calD(s){const p=String(s).split('-');return new Date(+p[0],p[1]-1,+p[2],12)}
+function calYmd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function calAddD(s,n){const d=calD(s);d.setDate(d.getDate()+n);return calYmd(d)}
+function calDiff(a,b){return Math.round((calD(b)-calD(a))/864e5)}
+function calRel(today,d){const x=calDiff(today,d);return x===0?'今天':x===1?'明天':x===2?'後天':x>0?x+' 天後':''}
+function calMd(s){return (+s.slice(5,7))+'/'+(+s.slice(8,10))}
+function calWhen(e){let w=calMd(e.d)+'（'+CAL_WD[calD(e.d).getDay()]+'）';if(e.d2&&e.d2!==e.d)w+=' 到 '+calMd(e.d2);return w+(e.all?'':' '+e.t)}
+function calTitle(e){let t=e.title;(e.who||[]).forEach(n=>{if(t.indexOf(n)===0&&/^[：:、 ]/.test(t.slice(n.length)))t=t.slice(n.length).replace(/^[：:、 ]+/,'')});return t||e.title}
+function calSort(L){return L.sort((a,b)=>a.d<b.d?-1:a.d>b.d?1:(a.all?'':a.t)<(b.all?'':b.t)?-1:1)}
+function calChips(e,kids){return (e.who&&e.who.length?e.who:['全家']).map(n=>`<span class="cwho" style="background:${calKc(n,kids)}">${esc(n)}</span>`).join('')}
+function calItem(e,o){o=o||{};const r=o.today&&e.d2>=o.today?(e.d<=o.today?'今天':calRel(o.today,e.d)):'';
+  return `<div class="cit"><div class="cic">${calIc(e.title)}</div><div class="ct"><b>${esc(calTitle(e))}</b> ${calChips(e,o.kids)}<div class="mu">${calWhen(e)}${r?' ・<b class="crel">'+r+'</b>':''}${e.loc?' ・📍'+esc(e.loc):''}</div></div>${o.del&&!e.rec?`<button class="cdel" onclick="calDelete('${e.id}')">🗑️</button>`:''}</div>`}
+function calOn(list,d){return list.filter(e=>e.d<=d&&(e.d2||e.d)>=d)}
+// 月曆（m 從 0 開始）
+function calMonth(y,m,list,sel,today,kids){const first=new Date(y,m,1,12).getDay(),days=new Date(y,m+1,0).getDate();
+  let h='<div class="cgrid">'+[...CAL_WD].map(w=>`<div class="cwd">${w}</div>`).join('');for(let i=0;i<first;i++)h+='<div></div>';
+  for(let d=1;d<=days;d++){const s=calYmd(new Date(y,m,d,12)),ev=calOn(list,s);
+    h+=`<div class="cday${s===today?' tdy':''}${s===sel?' sel':''}" onclick="calPick('${s}')"><span>${d}</span><div class="cdots">${ev.slice(0,4).map(e=>`<i style="background:${calKc(e.who&&e.who.length===1?e.who[0]:'全家',kids)}"></i>`).join('')}</div></div>`}
+  return h+'</div>'}
+// 新增行程的表單（kid：小孩版，只能選自己或全家）
+function calFormHtml(date,kids,kid){return `<h3>📅 新增行程</h3>
+  <label class="cfl">日期</label><input id="cfDate" type="date" value="${date}">
+  <label class="cfl chk"><input id="cfAll" type="checkbox" checked onchange="$('#cfTimeRow').classList.toggle('hidden',this.checked);$('#cfDaysRow').classList.toggle('hidden',!this.checked)"> 全天</label>
+  <div id="cfTimeRow" class="hidden"><label class="cfl">時間</label><input id="cfTime" type="time" value="09:00"></div>
+  <div id="cfDaysRow"><label class="cfl">共幾天</label><select id="cfDays">${[1,2,3,4,5,6,7].map(i=>`<option value="${i}">${i} 天</option>`).join('')}</select></div>
+  <label class="cfl">要做什麼</label><input id="cfTitle" maxlength="30" placeholder="例如：數學考試、鋼琴課、宛芝生日">
+  <label class="cfl">是誰的</label><div class="cfwho">${(kid?[kid,'全家']:['全家'].concat(kids)).map((n,i)=>`<label><input type="radio" name="cfWho" value="${esc(n)}"${i===0?' checked':''}> ${esc(n)}</label>`).join('')}</div>`}
+function calFormVal(){const all=$('#cfAll').checked,w=document.querySelector('input[name=cfWho]:checked');
+  return {date:$('#cfDate').value,time:all?'':$('#cfTime').value,days:all?+$('#cfDays').value:1,title:$('#cfTitle').value.trim(),who:w?w.value:'全家'}}
+document.head.insertAdjacentHTML('beforeend',`<style>
+.cit{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:2px dashed #f0e2cc}.cit:last-child{border-bottom:0}
+.cic{font-size:24px;width:34px;text-align:center;flex:none}.ct{flex:1;min-width:0}.ct b{font-size:15px}
+.cwho{display:inline-block;color:#fff;font-size:11px;font-weight:700;border-radius:8px;padding:1px 6px;margin-left:2px;vertical-align:2px}
+.crel{color:#e8590c}.cdel{border:0;background:none;font-size:18px;padding:4px;cursor:pointer}
+.cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center}.cwd{font-size:12px;color:#9a8a6a;padding:2px 0}
+.cday{border-radius:10px;padding:4px 0 3px;min-height:40px;cursor:pointer;background:#fffaf0}.cday span{font-size:14px;font-weight:700}
+.cday.tdy{background:#ffe7b8}.cday.sel{outline:3px solid #ff9f43}.cdots{display:flex;justify-content:center;gap:2px;margin-top:3px;min-height:6px}.cdots i{width:6px;height:6px;border-radius:50%}
+.cnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.cnav b{font-size:18px}.cnav button{border:0;background:#fff3dc;border-radius:10px;padding:6px 12px;font-size:16px;cursor:pointer}
+.cfl{display:block;font-size:13px;color:#8a7a5a;margin:10px 0 4px;text-align:left}#mBody input[type=date],#mBody input[type=time],#mBody #cfTitle,#mBody select{width:100%;box-sizing:border-box;font-size:16px;padding:8px;border:2px solid #eadfc8;border-radius:10px}
+.cfwho{display:flex;flex-wrap:wrap;gap:8px 14px;text-align:left}.cfwho label{font-size:15px;display:inline-flex;align-items:center;color:#4a3b2a}
+#mBody input[type=checkbox],#mBody input[type=radio]{width:20px!important;height:20px;min-height:0;margin:0 6px 0 0;padding:0;vertical-align:middle;appearance:auto;-webkit-appearance:auto;border:0;background:none;box-shadow:none;display:inline-block;flex:none}
+.cfl.chk{display:flex;align-items:center;color:#4a3b2a;font-size:15px}
+.ccount{display:inline-block;background:#fff3dc;border-radius:12px;padding:6px 10px;margin:4px 6px 0 0;font-size:14px}
+</style>`);
 </script>
 <script>
 let S={},st={tab:'home',rec:'p',pCat:'',kKid:'',kType:'獎金',kCat:'',sync:true,kid:'',kidView:'bank',depMonths:6,book:'__parent',noFixed:false,range:'this',stats:null,payer:'',sPayer:''},INB=null,CFG=null,recs=[],mems=[];
@@ -909,7 +960,7 @@ const D5=['🍃','🐌','🌧️','🌪️','🌋'];
 const TABS=[['home','🏠','海星家'],['rec','✏️','記帳'],['kids','🧒','郗芝炘團隊'],['forum','💬','廣場'],['stat','📊','統計'],['set','⚙️','設定']];
 function buildDock(){$('#dock').innerHTML=TABS.map(t=>`<div data-p="${t[0]}" class="${t[0]===st.tab?'on':''}"><b>${t[1]}</b>${t[2]}<i class="badge hidden" id="bd-${t[0]}"></i></div>`).join('');$$('#dock>div').forEach(d=>d.onclick=()=>go(d.dataset.p))}
 function go(p){st.tab=p;$$('#dock>div').forEach(d=>d.classList.toggle('on',d.dataset.p===p));$$('.page').forEach(s=>s.classList.toggle('on',s.id==='pg-'+p));window.scrollTo(0,0);
-  if(p==='home'&&Date.now()-H_AT>20000)loadHome();if(p==='forum')loadForum();if(p==='rec'){if(st.rec==='r')loadRecur();else loadRecent()}if(p==='kids')loadKid();if(p==='stat')loadStats();if(p==='set')loadSet()}
+  if(p==='home'&&Date.now()-H_AT>20000)loadHome();if(p==='forum')loadForum();if(p==='rec'){if(st.rec==='r')loadRecur();else loadRecent()}if(p==='kids')loadKid();if(p==='stat')loadStats();if(p==='set')loadSet();if(p==='cal')drawCal(1)}
 
 /* ===== 總覽＋審核收件匣 ===== */
 let H_AT=0,LAST_MS=null,INB_RAW=null;
@@ -928,10 +979,12 @@ async function loadHome(pre){
   ${pinsHtml()}
   <div class="card"><div class="row"><h3>📥 審核收件匣 ${inb.items.length?`<span class="pill">${inb.items.length}</span>`:''}</h3>${tasks.length>1?'<button class="sbtn" onclick="okAll()">全部通過</button>':''}</div>
    ${inb.items.length?'':'<div class="empty">沒有要處理的事 ✨</div>'}
-   ${tasks.map(x=>`<div class="it"><div class="ic">${av(x.kid,34)}</div><div class="t"><b>${esc(x.kid)}</b> 完成${x.type==='團隊'?'🤝合作任務':''}「${esc(x.name)}」<div class="mu">${x.time.slice(5)}・+${x.exp} 經驗・+${n(x.coins)} 金幣${x.ntd?`・<b class="plus">+${n(x.ntd)} 元</b>`:''}${x.note?'・'+esc(x.note):''}</div></div>
+   ${tasks.map(x=>x.type==='行事曆'?`<div class="it"><div class="ic">${av(x.kid,34)}</div><div class="t"><b>${esc(x.kid)}</b> 想加行程 📅「${esc(x.name)}」<div class="mu">${esc(x.note)}・${x.time.slice(5)} 送出</div></div>
+     <div class="acts"><button class="ok" onclick="rv('${x.id}',1)">加入</button><button class="no" onclick="rv('${x.id}',0)">退回</button></div></div>`:`<div class="it"><div class="ic">${av(x.kid,34)}</div><div class="t"><b>${esc(x.kid)}</b> 完成${x.type==='團隊'?'🤝合作任務':''}「${esc(x.name)}」<div class="mu">${x.time.slice(5)}・+${x.exp} 經驗・+${n(x.coins)} 金幣${x.ntd?`・<b class="plus">+${n(x.ntd)} 元</b>`:''}${x.note?'・'+esc(x.note):''}</div></div>
      <div class="acts"><button class="ok" onclick="rv('${x.id}',1)">通過</button><button class="no" onclick="rv('${x.id}',0)">退回</button></div></div>`).join('')}
    ${buys.map(x=>`<div class="it"><div class="ic">${av(x.kid,34)}</div><div class="t"><b>${esc(x.kid)}</b> ${x.type==='兌換'?'要兌換':'買了'}「${esc(x.name)}」<div class="mu">${x.time.slice(5)}・${n(-x.coins)} 金幣${x.type==='兌換'?`・存進存摺 ${n(x.ntd)} 元`:''}</div></div>
      <div class="acts"><button class="ok" onclick="rv('${x.id}',1)">${x.type==='兌換'?'存入':'兌現'}</button><button class="no" onclick="rv('${x.id}',0)">退回</button></div></div>`).join('')}</div>
+  <div id="calCard">${calCardHtml()}</div>
   <div class="card"><h3>🏝️ 小孩們</h3>${S.kids.map(k=>{const g=inb.kids[k]||{};return `<div class="it" onclick="st.kid='${esc(k)}';st.kidView='game';go('kids')"><div class="ic">${av(k,38)}</div>
    <div class="t"><b>${esc(PF(k).nick||k)}</b> <span class="mu">${esc(k)}</span><div class="mu">Lv.${g.lv||1} ${titleOf(g.lv||1)}${g.pending?`・⏳ ${g.pending} 個待審核`:''}</div></div>
    <div style="text-align:right"><b class="gold">🪙 ${n(g.coins)}</b><div class="mu">💵 ${n(g.ntd)} 元</div></div></div>`}).join('')}</div>`;
@@ -944,7 +997,35 @@ async function okAll(){if(!await ask('<h3>全部通過？</h3>所有待審核的
 async function rvSend(ids,fn,arg,hint){ids.forEach(i=>RV_BUSY.add(i));loadHome({inbox:INB_RAW,keep:1});toast(hint+'（處理中…）');
   let r=null;try{r=await call(fn,arg);if(r&&r.msg)toast(r.msg)}catch(e){toast(errMsg(e),1)}
   ids.forEach(i=>RV_BUSY.delete(i));
+  if(r)CAL.at=0;
   if(r&&r.inbox)loadHome({inbox:r.inbox});else if(r)loadHome();else loadHome({inbox:INB_RAW,keep:1})}
+
+/* ===== 行事曆 ===== */
+let CAL={list:[],at:0,busy:0},CALM=null;
+async function calLoad(){if(CAL.busy)return;CAL.busy=1;try{const r=await call('getCal',{from:S.today,to:calAddD(S.today,45)});CAL.list=calSort(r.list);CAL.at=Date.now();CAL.err=''}catch(e){CAL.err=errMsg(e);CAL.at=Date.now()}CAL.busy=0;const c=$('#calCard');if(c)c.innerHTML=calCardHtml()}
+function calCardHtml(){if(Date.now()-CAL.at>60000)setTimeout(calLoad,0);const t=S.today,wk=calAddD(t,7);
+  const L=CAL.list.filter(e=>e.d2>=t&&e.d<=wk);
+  return `<div class="card"><div class="row"><h3>📅 這週行程</h3><button class="sbtn" onclick="go('cal')">看月曆 ›</button></div>
+   ${CAL.err?`<div class="mu">⚠️ ${esc(CAL.err)}</div>`:!CAL.at?'<div class="mu">⏳ 讀取中…</div>':L.length?L.slice(0,10).map(e=>calItem(e,{today:t,kids:S.kids})).join(''):'<div class="empty">這週沒有行程 ✨</div>'}
+   <button class="sbtn" style="margin-top:8px" onclick="calNew()">＋ 新增行程</button></div>`}
+async function drawCal(reset){if(reset||!CALM){const d=calD(S.today);CALM={y:d.getFullYear(),m:d.getMonth(),sel:S.today,list:null,key:''}}
+  const y=CALM.y,m=CALM.m,from=calYmd(new Date(y,m,1,12)),to=calYmd(new Date(y,m+1,0,12)),key=from;
+  if(CALM.key===key&&!reset)return calPaint();CALM.key=key;CALM.list=null;calPaint();
+  try{const r=await call('getCal',{from,to});if(CALM.key!==key)return;CALM.list=calSort(r.list)}catch(e){CALM.list=[];toast(errMsg(e),1)}calPaint()}
+function calPaint(){const b=$('#calBody');if(!b||!CALM)return;const L=CALM.list,sel=CALM.sel;
+  b.innerHTML=`<div class="card"><div class="cnav"><button onclick="calMove(-1)">‹</button><b>${CALM.y} 年 ${CALM.m+1} 月</b><button onclick="calMove(1)">›</button></div>
+   ${L?calMonth(CALM.y,CALM.m,L,sel,S.today,S.kids):'<div class="empty">⏳ 讀取中…</div>'}</div>
+   <div class="card"><div class="row"><h3>${calMd(sel)}（${CAL_WD[calD(sel).getDay()]}）</h3><button class="sbtn" onclick="calNew('${sel}')">＋ 新增</button></div>${L?(calOn(L,sel).map(e=>calItem(e,{kids:S.kids,del:1})).join('')||'<div class="empty">這天沒有行程</div>'):''}</div>
+   <div class="card mu" style="font-size:13px;line-height:1.7">💡 行程放在 Google 日曆「海星家行事曆」，iPhone 行事曆也看得到、會提醒。<br>名稱裡寫小孩名字（例如「晨郗：數學考」）就是那個小孩的；開頭是「爸媽」或有繳費、帳單、保費、稅的，小孩看不到。<br>在手機上改的，最多 5 分鐘後這裡會更新。重複的行程請在手機上改。</div>`}
+function calMove(d){let m=CALM.m+d,y=CALM.y;if(m<0){m=11;y--}if(m>11){m=0;y++}CALM.y=y;CALM.m=m;const t=calD(S.today);CALM.sel=(y===t.getFullYear()&&m===t.getMonth())?S.today:calYmd(new Date(y,m,1,12));drawCal()}
+function calPick(d){CALM.sel=d;calPaint()}
+async function calNew(date){if(!await ask(calFormHtml(date||S.today,S.kids),'加入'))return;const v=calFormVal();
+  if(!v.title)return toast('請寫要做什麼',1);if(!v.date)return toast('請選日期',1);
+  try{toast(await call('calAdd',v))}catch(e){return toast(errMsg(e),1)}calRefresh()}
+async function calDelete(id){const e=(CALM&&CALM.list||[]).concat(CAL.list).find(x=>x.id===id);if(!e)return;
+  if(!await ask(`<h3>刪除這個行程？</h3>${calIc(e.title)} ${esc(e.title)}<br><span class="mu">${calWhen(e)}</span>`,'刪除'))return;
+  try{toast(await call('calDel',{id}))}catch(x){return toast(errMsg(x),1)}calRefresh()}
+function calRefresh(){CAL.at=0;calLoad();if(CALM){CALM.key='';if(st.tab==='cal')drawCal()}}
 
 /* ===== 發金幣／處罰／團隊 ===== */
 let pickKids=[];

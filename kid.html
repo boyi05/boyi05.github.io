@@ -190,6 +190,7 @@ input.amt{font-size:24px;text-align:right;color:var(--red)}
  <section id="pg-rank" class="page"><div class="sign"><h3>🏆 排行榜</h3></div><div class="chips" id="rkSeg"></div><div id="rkBody"></div></section>
  <section id="pg-forum" class="page"><div class="sign"><h3>💬 家庭廣場</h3></div><div id="foBody"></div></section>
  <section id="pg-bank" class="page"></section>
+ <section id="pg-cal" class="page"><div class="sign"><h3>📅 行事曆</h3></div><div id="calBody"><div class="card empty">⏳ 讀取中…</div></div></section>
  <section id="pg-rec" class="page"><div class="sign"><h3>🧾 今天買了什麼？</h3></div><div class="card wal balc"><div class="mu">💵 現在可以用的錢（活存）</div><div class="big" id="kBal">…</div></div><div class="card">
   <label>💰 金額</label><input id="kAmt" class="amt" type="number" inputmode="numeric" placeholder="0">
   <label>🏷️ 分類</label><div class="chips cats" id="kCats"></div>
@@ -993,6 +994,56 @@ async function loadRank(){chips($('#rkSeg'),['week','month','lastweek','lastmont
 // 寵物狀態卡（爸媽看的、小島首頁用）
 function petBars(v){const bar=(ic,lab,val,c)=>`<div style="display:flex;align-items:center;gap:6px;font-size:13px;margin:3px 0"><span style="width:58px">${ic} ${lab}</span><div class="rbar" style="flex:1;height:10px;margin:0"><i style="width:${val}%;background:${val<25?'#f0705f':c}"></i></div><b style="width:28px;text-align:right">${val}</b></div>`;
   return bar('🍙','飽足',v.full,'#ffb020')+bar('😊','心情',v.mood,'#ff8fb1')+bar('🫧','清潔',v.clean,'#5ec2f2')}
+/* ===== 行事曆（爸媽、小孩共用） ===== */
+const CAL_IC=[[/生日/,'🎂'],[/考|測驗/,'📝'],[/醫|牙|診所|疫苗|看病|回診/,'🏥'],[/繳|帳單|保費|稅/,'💳'],[/出遊|旅行|旅遊|露營|樂園|飯店|出國|民宿/,'🧳'],[/課|才藝|鋼琴|游泳|補習|舞|球|畫|琴|跆拳/,'🎹'],[/學校|開學|放假|運動會|校|畢業|家長|園遊會/,'🏫'],[/聚餐|吃飯|聚會|派對|拜拜|過年|回.*家/,'🍽️']];
+const CAL_BIG=/生日|出遊|旅行|旅遊|露營|出國|樂園|過年|畢業|運動會/;
+const CAL_WD='日一二三四五六',CAL_KC=['#ff8a4c','#e86aa6','#4c9dff','#36b37e','#9b6bff'];
+function calIc(t){for(const [r,i] of CAL_IC)if(r.test(t))return i;return '📌'}
+function calKc(name,kids){const i=(kids||[]).indexOf(name);return name==='全家'?'#8a7a5a':CAL_KC[(i<0?4:i)%5]}
+function calD(s){const p=String(s).split('-');return new Date(+p[0],p[1]-1,+p[2],12)}
+function calYmd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function calAddD(s,n){const d=calD(s);d.setDate(d.getDate()+n);return calYmd(d)}
+function calDiff(a,b){return Math.round((calD(b)-calD(a))/864e5)}
+function calRel(today,d){const x=calDiff(today,d);return x===0?'今天':x===1?'明天':x===2?'後天':x>0?x+' 天後':''}
+function calMd(s){return (+s.slice(5,7))+'/'+(+s.slice(8,10))}
+function calWhen(e){let w=calMd(e.d)+'（'+CAL_WD[calD(e.d).getDay()]+'）';if(e.d2&&e.d2!==e.d)w+=' 到 '+calMd(e.d2);return w+(e.all?'':' '+e.t)}
+function calTitle(e){let t=e.title;(e.who||[]).forEach(n=>{if(t.indexOf(n)===0&&/^[：:、 ]/.test(t.slice(n.length)))t=t.slice(n.length).replace(/^[：:、 ]+/,'')});return t||e.title}
+function calSort(L){return L.sort((a,b)=>a.d<b.d?-1:a.d>b.d?1:(a.all?'':a.t)<(b.all?'':b.t)?-1:1)}
+function calChips(e,kids){return (e.who&&e.who.length?e.who:['全家']).map(n=>`<span class="cwho" style="background:${calKc(n,kids)}">${esc(n)}</span>`).join('')}
+function calItem(e,o){o=o||{};const r=o.today&&e.d2>=o.today?(e.d<=o.today?'今天':calRel(o.today,e.d)):'';
+  return `<div class="cit"><div class="cic">${calIc(e.title)}</div><div class="ct"><b>${esc(calTitle(e))}</b> ${calChips(e,o.kids)}<div class="mu">${calWhen(e)}${r?' ・<b class="crel">'+r+'</b>':''}${e.loc?' ・📍'+esc(e.loc):''}</div></div>${o.del&&!e.rec?`<button class="cdel" onclick="calDelete('${e.id}')">🗑️</button>`:''}</div>`}
+function calOn(list,d){return list.filter(e=>e.d<=d&&(e.d2||e.d)>=d)}
+// 月曆（m 從 0 開始）
+function calMonth(y,m,list,sel,today,kids){const first=new Date(y,m,1,12).getDay(),days=new Date(y,m+1,0).getDate();
+  let h='<div class="cgrid">'+[...CAL_WD].map(w=>`<div class="cwd">${w}</div>`).join('');for(let i=0;i<first;i++)h+='<div></div>';
+  for(let d=1;d<=days;d++){const s=calYmd(new Date(y,m,d,12)),ev=calOn(list,s);
+    h+=`<div class="cday${s===today?' tdy':''}${s===sel?' sel':''}" onclick="calPick('${s}')"><span>${d}</span><div class="cdots">${ev.slice(0,4).map(e=>`<i style="background:${calKc(e.who&&e.who.length===1?e.who[0]:'全家',kids)}"></i>`).join('')}</div></div>`}
+  return h+'</div>'}
+// 新增行程的表單（kid：小孩版，只能選自己或全家）
+function calFormHtml(date,kids,kid){return `<h3>📅 新增行程</h3>
+  <label class="cfl">日期</label><input id="cfDate" type="date" value="${date}">
+  <label class="cfl chk"><input id="cfAll" type="checkbox" checked onchange="$('#cfTimeRow').classList.toggle('hidden',this.checked);$('#cfDaysRow').classList.toggle('hidden',!this.checked)"> 全天</label>
+  <div id="cfTimeRow" class="hidden"><label class="cfl">時間</label><input id="cfTime" type="time" value="09:00"></div>
+  <div id="cfDaysRow"><label class="cfl">共幾天</label><select id="cfDays">${[1,2,3,4,5,6,7].map(i=>`<option value="${i}">${i} 天</option>`).join('')}</select></div>
+  <label class="cfl">要做什麼</label><input id="cfTitle" maxlength="30" placeholder="例如：數學考試、鋼琴課、宛芝生日">
+  <label class="cfl">是誰的</label><div class="cfwho">${(kid?[kid,'全家']:['全家'].concat(kids)).map((n,i)=>`<label><input type="radio" name="cfWho" value="${esc(n)}"${i===0?' checked':''}> ${esc(n)}</label>`).join('')}</div>`}
+function calFormVal(){const all=$('#cfAll').checked,w=document.querySelector('input[name=cfWho]:checked');
+  return {date:$('#cfDate').value,time:all?'':$('#cfTime').value,days:all?+$('#cfDays').value:1,title:$('#cfTitle').value.trim(),who:w?w.value:'全家'}}
+document.head.insertAdjacentHTML('beforeend',`<style>
+.cit{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:2px dashed #f0e2cc}.cit:last-child{border-bottom:0}
+.cic{font-size:24px;width:34px;text-align:center;flex:none}.ct{flex:1;min-width:0}.ct b{font-size:15px}
+.cwho{display:inline-block;color:#fff;font-size:11px;font-weight:700;border-radius:8px;padding:1px 6px;margin-left:2px;vertical-align:2px}
+.crel{color:#e8590c}.cdel{border:0;background:none;font-size:18px;padding:4px;cursor:pointer}
+.cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center}.cwd{font-size:12px;color:#9a8a6a;padding:2px 0}
+.cday{border-radius:10px;padding:4px 0 3px;min-height:40px;cursor:pointer;background:#fffaf0}.cday span{font-size:14px;font-weight:700}
+.cday.tdy{background:#ffe7b8}.cday.sel{outline:3px solid #ff9f43}.cdots{display:flex;justify-content:center;gap:2px;margin-top:3px;min-height:6px}.cdots i{width:6px;height:6px;border-radius:50%}
+.cnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.cnav b{font-size:18px}.cnav button{border:0;background:#fff3dc;border-radius:10px;padding:6px 12px;font-size:16px;cursor:pointer}
+.cfl{display:block;font-size:13px;color:#8a7a5a;margin:10px 0 4px;text-align:left}#mBody input[type=date],#mBody input[type=time],#mBody #cfTitle,#mBody select{width:100%;box-sizing:border-box;font-size:16px;padding:8px;border:2px solid #eadfc8;border-radius:10px}
+.cfwho{display:flex;flex-wrap:wrap;gap:8px 14px;text-align:left}.cfwho label{font-size:15px;display:inline-flex;align-items:center;color:#4a3b2a}
+#mBody input[type=checkbox],#mBody input[type=radio]{width:20px!important;height:20px;min-height:0;margin:0 6px 0 0;padding:0;vertical-align:middle;appearance:auto;-webkit-appearance:auto;border:0;background:none;box-shadow:none;display:inline-block;flex:none}
+.cfl.chk{display:flex;align-items:center;color:#4a3b2a;font-size:15px}
+.ccount{display:inline-block;background:#fff3dc;border-radius:12px;padding:6px 10px;margin:4px 6px 0 0;font-size:14px}
+</style>`);
 </script>
 <script>
 let uid=0;const id=p=>p+(++uid);
@@ -1077,20 +1128,20 @@ const prof=()=>(S.profiles||{})[S.me]||{};
 
 /* ===== 導覽 ===== */
 const TABS=[['home','🏝️','小島'],['task','🧹','任務'],['pet','🐣','寵物'],['play','🎡','遊樂區'],['shop','🛒','商店'],['forum','💬','廣場'],['me','🎒','我的']];
-const ME=[['badge','🏅 徽章'],['rank','🏆 排行'],['bank','🐷 台幣存摺'],['rec','🧾 記帳本']];
+const ME=[['badge','🏅 徽章'],['cal','📅 行事曆'],['rank','🏆 排行'],['bank','🐷 台幣存摺'],['rec','🧾 記帳本']];
 function buildDock(){$('#dock').innerHTML=TABS.map(t=>`<div data-p="${t[0]}" class="${t[0]===st.tab?'on':''}"><b>${t[1]}</b>${t[2]}</div>`).join('');
   $$('#dock>div').forEach(d=>d.onclick=()=>go(d.dataset.p))}
 function go(p){if(p==='me')p=st.me||'badge';const inMe=ME.some(m=>m[0]===p);if(inMe)st.me=p;const dk=inMe?'me':(p==='math'||p==='gm')?'play':p;st.tab=p;
   $$('#dock>div').forEach(d=>d.classList.toggle('on',d.dataset.p===dk));$$('.page').forEach(s=>s.classList.toggle('on',s.id==='pg-'+p));window.scrollTo(0,0);
   $('#meNav').classList.toggle('hidden',!inMe);if(inMe){chips($('#meNav'),ME.map(m=>m[0]),p,go,v=>ME.find(m=>m[0]===v)[1]);$('#meNav').insertAdjacentHTML('beforeend',`<button class="chip" id="sndT" onclick="sndToggle()">${PSOUND?'🔊 音效：開':'🔇 音效：關'}</button>`)}
-  if((p==='home'||p==='task'||p==='shop'||p==='pet'||p==='play')&&Date.now()-G_AT>20000)loadGame();if(p==='pet')drawPet();if(p==='bank')loadBank();if(p==='forum')loadForum();if(p==='badge')drawBadges();if(p==='rank')loadRank();if(p==='rec')refreshBal();if(p==='math')drawMath();if(p==='play')drawPlay()}
+  if((p==='home'||p==='task'||p==='shop'||p==='pet'||p==='play')&&Date.now()-G_AT>20000)loadGame();if(p==='pet')drawPet();if(p==='bank')loadBank();if(p==='forum')loadForum();if(p==='badge')drawBadges();if(p==='rank')loadRank();if(p==='rec')refreshBal();if(p==='math')drawMath();if(p==='play')drawPlay();if(p==='cal')drawCal(1)}
 function drawHud(){const p=prof(),g=G.me||{};$('#hud').innerHTML=`<div class="who" onclick="editProfile()">${avatar(p,40)}<div><b>${esc(p.nick||me())}</b><small>${g.lv?'Lv.'+g.lv+' '+titleOf(g.lv):''}</small></div></div><div class="coin">🪙 ${n(g.coins)}</div>`;loadImgs([p.photo])}
 
 /* ===== 遊戲資料 ===== */
 let G_AT=0;
 async function loadGame(){try{G=await call('getGame')}catch(e){return toast(errMsg(e),1)}showGame()}
 let LAST_ME=null;
-function showGame(g){if(g)G=g;G_AT=Date.now();if(G.me){const m=G.me;if(LAST_ME&&m.lv>LAST_ME.lv){sfx('levelup');toast('🎉 升級了！Lv.'+m.lv)}else if(LAST_ME&&m.coins>LAST_ME.coins+0)sfx('coin');LAST_ME={lv:m.lv,coins:m.coins}}if(G.pet){const zo=PET&&PET.zooOpen;petSet(G.pet);PET.zooOpen=zo}drawHud();drawHome();drawTasks();drawShop();if(st.tab==='pet')drawPet();if(st.tab==='play')drawPlay();if(st.tab==='badge')drawBadges();badgeCheck(G.badges,me())}
+function showGame(g){if(g)G=g;G_AT=Date.now();if(G.me){const m=G.me;if(LAST_ME&&m.lv>LAST_ME.lv){sfx('levelup');toast('🎉 升級了！Lv.'+m.lv)}else if(LAST_ME&&m.coins>LAST_ME.coins+0)sfx('coin');LAST_ME={lv:m.lv,coins:m.coins}}if(G.pet){const zo=PET&&PET.zooOpen;petSet(G.pet);PET.zooOpen=zo}drawHud();drawHome();drawTasks();drawShop();if(st.tab==='pet')drawPet();if(st.tab==='play')drawPlay();if(st.tab==='cal')calPaint();if(st.tab==='badge')drawBadges();badgeCheck(G.badges,me())}
 // 動作完成後，伺服器會順便送回最新資料，就不用再讀一次
 function after(r){if(!r)return;if(r.game)showGame(r.game);else loadGame()}
 function drawHome(){const g=G.me,p=prof(),e=eraOf(g.maxLv);
@@ -1104,14 +1155,41 @@ function drawHome(){const g=G.me,p=prof(),e=eraOf(g.maxLv);
   <div class="three"><div class="card wal"><div class="mu">🪙 金幣</div><div class="big gold">${n(g.coins)}</div><div class="mu">2 枚換 1 元</div></div>
    <div class="card wal"><div class="mu">💵 活存</div><div class="big">${n(g.ntd)}</div><div class="mu">元</div></div>
    <div class="card wal" onclick="go('bank')" style="cursor:pointer"><div class="mu">🌱 定存中</div><div class="big dep">${n(g.dep||0)}</div><div class="mu">元</div></div></div>
+  <div id="calCard">${calCardHtml()}</div>
   ${pend.length?`<div class="card"><h3>⏳ 等爸媽確認（${pend.length}）</h3>${pend.map(recRow).join('')}</div>`:''}
   <div class="card"><h3>📜 最近紀錄</h3>${G.records.filter(r=>r.status!=='待審核'&&r.status!=='待兌現'&&r.type!=='寵物'&&r.type!=='遊戲').slice(0,7).map(recRow).join('')||'<div class="empty">還沒有紀錄，去做任務吧！</div>'}</div>`;loadImgs([p.photo])}
 const ST_ICON={'通過':'✅','退回':'↩️','待審核':'⏳','待兌現':'⏳','已兌現':'🎉','取消':'✖️'};
-const TY_ICON={'遊戲':'🧮','任務':'🧹','團隊':'🤝','購買':'🛒','兌換':'💵','處罰':'⚠️','獎勵':'🎁','搬家':'🚚','寵物':'🐾'};
+const TY_ICON={'遊戲':'🧮','任務':'🧹','團隊':'🤝','購買':'🛒','兌換':'💵','處罰':'⚠️','獎勵':'🎁','搬家':'🚚','寵物':'🐾','行事曆':'📅'};
 // 個人資料卡裡的徽章列，點了去徽章牆
 function profBadges(b){if(!b)return '';const L=b.list.filter(x=>x.tier).sort((x,y)=>y.tier-x.tier);
   return `<div class="pbdg" onclick="go('badge')"><div class="row" style="display:flex;justify-content:space-between;align-items:center"><b>🏅 我的徽章 ${b.earned} 個</b><span class="mu">看全部 ›</span></div>
   <div class="shelf">${L.length?L.slice(0,8).map(x=>medal(x.icon,x.tier,42,x.id)).join(''):'<div class="mu" style="padding:6px 0">做任務、照顧寵物，就能拿到徽章喔！</div>'}</div></div>`}
+/* ===== 行事曆 ===== */
+let CAL={list:[],kids:[],at:0,busy:0},CALM=null;
+async function calLoad(){if(CAL.busy)return;CAL.busy=1;try{const r=await call('getCal',{from:S.today,to:calAddD(S.today,45)});CAL.list=calSort(r.list);CAL.kids=r.kids;CAL.at=Date.now()}catch(e){CAL.err=1}CAL.busy=0;const c=$('#calCard');if(c)c.innerHTML=calCardHtml()}
+// 小島首頁：這週跟我有關的行程＋大事倒數
+function calCardHtml(){if(Date.now()-CAL.at>60000)setTimeout(calLoad,0);const me_=me(),t=S.today,wk=calAddD(t,7);
+  const mine=CAL.list.filter(e=>(!e.who.length||e.who.indexOf(me_)>=0)&&e.d2>=t&&e.d<=wk).slice(0,5);
+  const big=CAL.list.filter(e=>CAL_BIG.test(e.title)&&e.d>wk).slice(0,3);
+  return `<div class="card"><div class="row" style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">📅 最近行程</h3><button class="mini" onclick="go('cal')">看月曆 ›</button></div>
+   ${!CAL.at?'<div class="mu" style="padding:6px 0">⏳ 讀取中…</div>':mine.length?mine.map(e=>calItem(e,{today:t,kids:CAL.kids})).join(''):'<div class="mu" style="padding:6px 0">這週沒有行程 ✨</div>'}
+   ${big.length?`<div>${big.map(e=>`<span class="ccount">${calIc(e.title)} ${esc(calTitle(e))} 還有 <b>${calDiff(t,e.d)}</b> 天</span>`).join('')}</div>`:''}
+   <button class="go" style="margin-top:10px" onclick="calNew()">＋ 我要加行程</button></div>`}
+async function drawCal(reset){if(reset||!CALM){const d=calD(S.today);CALM={y:d.getFullYear(),m:d.getMonth(),sel:S.today,list:[],key:''}}
+  const y=CALM.y,m=CALM.m,from=calYmd(new Date(y,m,1,12)),to=calYmd(new Date(y,m+1,0,12)),key=from;
+  calPaint();if(CALM.key===key)return;CALM.key=key;CALM.list=null;calPaint();
+  try{const r=await call('getCal',{from,to});if(CALM.key!==key)return;CALM.list=calSort(r.list);CAL.kids=r.kids}catch(e){CALM.list=[];toast(errMsg(e),1)}calPaint()}
+function calPaint(){const b=$('#calBody');if(!b||!CALM)return;const L=CALM.list,sel=CALM.sel,mine=(G.records||[]).filter(r=>r.type==='行事曆'&&r.status==='待審核');
+  b.innerHTML=`<div class="card"><div class="cnav"><button onclick="calMove(-1)">‹</button><b>${CALM.y} 年 ${CALM.m+1} 月</b><button onclick="calMove(1)">›</button></div>
+   ${L?calMonth(CALM.y,CALM.m,L,sel,S.today,CAL.kids):'<div class="empty">⏳ 讀取中…</div>'}</div>
+   <div class="card"><h3>${calMd(sel)}（${CAL_WD[calD(sel).getDay()]}）</h3>${L?(calOn(L,sel).map(e=>calItem(e,{kids:CAL.kids})).join('')||'<div class="mu" style="padding:6px 0">這天沒有行程</div>'):''}
+   <button class="go" style="margin-top:10px" onclick="calNew('${sel}')">＋ 加行程到這天</button></div>
+   ${mine.length?`<div class="card"><h3>⏳ 等爸媽確認的行程</h3>${mine.map(recRow).join('')}</div>`:''}`}
+function calMove(d){let m=CALM.m+d,y=CALM.y;if(m<0){m=11;y--}if(m>11){m=0;y++}CALM.y=y;CALM.m=m;CALM.sel=calYmd(new Date(y,m,1,12));if(y===calD(S.today).getFullYear()&&m===calD(S.today).getMonth())CALM.sel=S.today;drawCal()}
+function calPick(d){CALM.sel=d;calPaint()}
+async function calNew(date){if(!await ask(calFormHtml(date||S.today,[],me()),'送給爸媽'))return;const v=calFormVal();
+  if(!v.title)return toast('請寫要做什麼',1);if(!v.date)return toast('請選日期',1);
+  try{toast(await call('calAdd',v));psfx&&psfx('ok')}catch(e){return toast(errMsg(e),1)}G_AT=0;loadGame()}
 function recRow(r){const can=r.status==='待審核'||r.status==='待兌現';const dim=r.status==='退回'||r.status==='取消';
   return `<div class="it" style="${dim?'opacity:.5':''}"><div><div>${TY_ICON[r.type]||'•'} ${esc(r.name)}</div><div class="mu">${r.time.slice(5)}・${ST_ICON[r.status]||''} ${r.status}${r.note?'・'+esc(r.note):''}</div></div>
   <div style="text-align:right">${r.coins?`<b class="${r.coins>0?'plus':'minus'}">${r.coins>0?'+':''}${n(r.coins)} 🪙</b>`:''}${r.exp?`<div class="mu">${r.exp>0?'+':''}${r.exp} 經驗</div>`:''}</div>
