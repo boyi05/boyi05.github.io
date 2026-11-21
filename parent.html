@@ -1021,7 +1021,7 @@ function calTitle(e){let t=e.title;(e.who||[]).forEach(n=>{if(t.indexOf(n)===0&&
 function calSort(L){return L.sort((a,b)=>a.d<b.d?-1:a.d>b.d?1:(a.all?'':a.t)<(b.all?'':b.t)?-1:1)}
 function calChips(e,kids){return (e.who&&e.who.length?e.who:['全家']).map(n=>`<span class="cwho" style="background:${calKc(n,kids)}">${esc(n)}</span>`).join('')}
 function calItem(e,o){o=o||{};const r=o.today&&e.d2>=o.today?(e.d<=o.today?'今天':calRel(o.today,e.d)):'';
-  return `<div class="cit"><div class="cic">${calIc(e.title)}</div><div class="ct"><b>${esc(calTitle(e))}</b> ${calChips(e,o.kids)}<div class="mu">${calWhen(e)}${r?' ・<b class="crel">'+r+'</b>':''}${e.loc?' ・📍'+esc(e.loc):''}</div></div>${o.del&&!e.rec?`<button class="cdel" onclick="calDelete('${e.id}')">🗑️</button>`:''}</div>`}
+  return `<div class="cit"><div class="cic">${calIc(e.title)}</div><div class="ct"><b>${esc(calTitle(e))}</b> ${calChips(e,o.kids)}<div class="mu">${calWhen(e)}${r?' ・<b class="crel">'+r+'</b>':''}${e.loc?' ・📍'+esc(e.loc):''}</div></div>${o.del&&!e.rec?`<button class="cdel" onclick="calEdit('${e.id}')">✏️</button><button class="cdel" onclick="calDelete('${e.id}')">🗑️</button>`:''}</div>`}
 // 之後的行程倒數小卡（有日期）
 function calCount(list,today,kids){return list.length?`<div class="ccw">${list.map(e=>`<div class="ccount">${calIc(e.title)} <b>${esc(calTitle(e))}</b> ${e.who&&e.who.length?calChips(e,kids):''}<div class="mu">${calWhen(e)}・還有 <b class="crel">${calDiff(today,e.d)}</b> 天</div></div>`).join('')}</div>`:''}
 function calOn(list,d){return list.filter(e=>e.d<=d&&(e.d2||e.d)>=d)}
@@ -1032,13 +1032,14 @@ function calMonth(y,m,list,sel,today,kids){const first=new Date(y,m,1,12).getDay
     h+=`<div class="cday${s===today?' tdy':''}${s===sel?' sel':''}" onclick="calPick('${s}')"><span>${d}</span><div class="cdots">${ev.slice(0,4).map(e=>`<i style="background:${calKc(e.who&&e.who.length===1?e.who[0]:'全家',kids)}"></i>`).join('')}</div></div>`}
   return h+'</div>'}
 // 新增行程的表單（kid：小孩版，只能選自己或全家）
-function calFormHtml(date,kids,kid){return `<h3>📅 新增行程</h3>
+function calFormHtml(date,kids,kid,ev){const ed=ev||null,dys=ed&&ed.all?calDiff(ed.d,ed.d2)+1:1,ew=ed&&ed.who&&ed.who.length?ed.who[0]:'全家',all=!ed||ed.all;
+  return `<h3>${ed?'✏️ 修改行程':'📅 新增行程'}</h3>
   <label class="cfl">日期</label><input id="cfDate" type="date" value="${date}">
-  <label class="cfl chk"><input id="cfAll" type="checkbox" checked onchange="$('#cfTimeRow').classList.toggle('hidden',this.checked);$('#cfDaysRow').classList.toggle('hidden',!this.checked)"> 全天</label>
-  <div id="cfTimeRow" class="hidden"><label class="cfl">時間</label><input id="cfTime" type="time" value="09:00"></div>
-  <div id="cfDaysRow"><label class="cfl">共幾天</label><select id="cfDays">${[1,2,3,4,5,6,7].map(i=>`<option value="${i}">${i} 天</option>`).join('')}</select></div>
-  <label class="cfl">要做什麼</label><input id="cfTitle" maxlength="30" placeholder="例如：數學考試、鋼琴課、宛芝生日">
-  <label class="cfl">是誰的</label><div class="cfwho">${(kid?[kid,'全家']:['全家'].concat(kids)).map((n,i)=>`<label><input type="radio" name="cfWho" value="${esc(n)}"${i===0?' checked':''}> ${esc(n)}</label>`).join('')}</div>`}
+  <label class="cfl chk"><input id="cfAll" type="checkbox"${all?' checked':''} onchange="$('#cfTimeRow').classList.toggle('hidden',this.checked);$('#cfDaysRow').classList.toggle('hidden',!this.checked)"> 全天</label>
+  <div id="cfTimeRow"${all?' class="hidden"':''}><label class="cfl">時間</label><input id="cfTime" type="time" value="${ed&&!ed.all?ed.t:'09:00'}"></div>
+  <div id="cfDaysRow"${all?'':' class="hidden"'}><label class="cfl">共幾天</label><select id="cfDays">${[1,2,3,4,5,6,7,8,9,10,11,12,13,14].map(i=>`<option value="${i}"${i===dys?' selected':''}>${i} 天</option>`).join('')}</select></div>
+  <label class="cfl">要做什麼</label><input id="cfTitle" maxlength="30" value="${ed?esc(calTitle(ed)):''}" placeholder="例如：數學考試、鋼琴課、宛芝生日">
+  <label class="cfl">是誰的</label><div class="cfwho">${(kid?[kid,'全家']:['全家'].concat(kids)).map((n,i)=>`<label><input type="radio" name="cfWho" value="${esc(n)}"${(ed?n===ew:i===0)?' checked':''}> ${esc(n)}</label>`).join('')}</div>`}
 function calFormVal(){const all=$('#cfAll').checked,w=document.querySelector('input[name=cfWho]:checked');
   return {date:$('#cfDate').value,time:all?'':$('#cfTime').value,days:all?+$('#cfDays').value:1,title:$('#cfTitle').value.trim(),who:w?w.value:'全家'}}
 document.head.insertAdjacentHTML('beforeend',`<style>
@@ -1131,6 +1132,10 @@ function calPick(d){CALM.sel=d;calPaint()}
 async function calNew(date){if(!await ask(calFormHtml(date||S.today,S.kids),'加入'))return;const v=calFormVal();
   if(!v.title)return toast('請寫要做什麼',1);if(!v.date)return toast('請選日期',1);
   try{toast(await call('calAdd',v))}catch(e){return toast(errMsg(e),1)}calRefresh()}
+async function calEdit(id){const e=(CALM&&CALM.list||[]).concat(CAL.list).find(x=>x.id===id);if(!e)return;
+  if(!await ask(calFormHtml(e.d,S.kids,null,e),'儲存'))return;const v=calFormVal();v.id=id;
+  if(!v.title)return toast('請寫要做什麼',1);if(!v.date)return toast('請選日期',1);
+  try{toast(await call('calEdit',v))}catch(x){return toast(errMsg(x),1)}calRefresh()}
 async function calDelete(id){const e=(CALM&&CALM.list||[]).concat(CAL.list).find(x=>x.id===id);if(!e)return;
   if(!await ask(`<h3>刪除這個行程？</h3>${calIc(e.title)} ${esc(e.title)}<br><span class="mu">${calWhen(e)}</span>`,'刪除'))return;
   try{toast(await call('calDel',{id}))}catch(x){return toast(errMsg(x),1)}calRefresh()}
