@@ -1119,6 +1119,8 @@ function calSort(L){return L.sort((a,b)=>a.d<b.d?-1:a.d>b.d?1:(a.all?'':a.t)<(b.
 function calChips(e,kids){return (e.who&&e.who.length?e.who:['全家']).map(n=>`<span class="cwho" style="background:${calKc(n,kids)}">${esc(n)}</span>`).join('')}
 function calItem(e,o){o=o||{};const r=o.today&&e.d2>=o.today?(e.d<=o.today?'今天':calRel(o.today,e.d)):'';
   return `<div class="cit"><div class="cic">${calIc(e.title)}</div><div class="ct"><b>${esc(calTitle(e))}</b> ${calChips(e,o.kids)}<div class="mu">${calWhen(e)}${r?' ・<b class="crel">'+r+'</b>':''}${e.loc?' ・📍'+esc(e.loc):''}</div></div>${o.del&&!e.rec?`<button class="cdel" onclick="calDelete('${e.id}')">🗑️</button>`:''}</div>`}
+// 之後的行程倒數小卡（有日期）
+function calCount(list,today,kids){return list.length?`<div class="ccw">${list.map(e=>`<div class="ccount">${calIc(e.title)} <b>${esc(calTitle(e))}</b> ${e.who&&e.who.length?calChips(e,kids):''}<div class="mu">${calWhen(e)}・還有 <b class="crel">${calDiff(today,e.d)}</b> 天</div></div>`).join('')}</div>`:''}
 function calOn(list,d){return list.filter(e=>e.d<=d&&(e.d2||e.d)>=d)}
 // 月曆（m 從 0 開始）
 function calMonth(y,m,list,sel,today,kids){const first=new Date(y,m,1,12).getDay(),days=new Date(y,m+1,0).getDate();
@@ -1149,7 +1151,7 @@ document.head.insertAdjacentHTML('beforeend',`<style>
 .cfwho{display:flex;flex-wrap:wrap;gap:8px 14px;text-align:left}.cfwho label{font-size:15px;display:inline-flex;align-items:center;color:#4a3b2a}
 #mBody input[type=checkbox],#mBody input[type=radio]{width:20px!important;height:20px;min-height:0;margin:0 6px 0 0;padding:0;vertical-align:middle;appearance:auto;-webkit-appearance:auto;border:0;background:none;box-shadow:none;display:inline-block;flex:none}
 .cfl.chk{display:flex;align-items:center;color:#4a3b2a;font-size:15px}
-.ccount{display:inline-block;background:#fff3dc;border-radius:12px;padding:6px 10px;margin:4px 6px 0 0;font-size:14px}
+.ccw{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.ccount{background:#fff3dc;border-radius:12px;padding:6px 10px;font-size:14px;line-height:1.4}.ccount .mu{font-size:12px}
 </style>`);
 </script>
 <script>
@@ -1280,7 +1282,7 @@ function calCardHtml(){if(Date.now()-CAL.at>60000)setTimeout(calLoad,0);const me
   const big=CAL.list.filter(e=>CAL_BIG.test(e.title)&&e.d>wk).slice(0,3);
   return `<div class="card"><div class="row" style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">📅 最近行程</h3><button class="mini" onclick="go('cal')">看月曆 ›</button></div>
    ${!CAL.at?'<div class="mu" style="padding:6px 0">⏳ 讀取中…</div>':mine.length?mine.map(e=>calItem(e,{today:t,kids:CAL.kids})).join(''):'<div class="mu" style="padding:6px 0">這週沒有行程 ✨</div>'}
-   ${big.length?`<div>${big.map(e=>`<span class="ccount">${calIc(e.title)} ${esc(calTitle(e))} 還有 <b>${calDiff(t,e.d)}</b> 天</span>`).join('')}</div>`:''}
+   ${big.length?`<div class="mu" style="margin-top:8px">🎉 期待的大事</div>${calCount(big,t,CAL.kids)}`:''}
    <button class="go" style="margin-top:10px" onclick="calNew()">＋ 我要加行程</button></div>`}
 async function drawCal(reset){if(reset||!CALM){const d=calD(S.today);CALM={y:d.getFullYear(),m:d.getMonth(),sel:S.today,list:[],key:''}}
   const y=CALM.y,m=CALM.m,from=calYmd(new Date(y,m,1,12)),to=calYmd(new Date(y,m+1,0,12)),key=from;
