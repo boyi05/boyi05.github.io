@@ -524,12 +524,11 @@ const PETPAL2={
  pxdragon:[{m:'#e8452e',l:'#ffd36a',d:'#9a1c1c',a:'#ffb020',o:'#1a0a10',e:'#fff36a',w:'#ff8a3c',x:'#b8321e',g:'#ff7a1a'},{m:'#2a2a3a',l:'#c8a0ff',d:'#121220',a:'#b06aff',o:'#05040a',e:'#7affff',w:'#6a4ac8',x:'#3a2a7a',g:'#a46aff'}],
  pxwolf:[{m:'#5a8ad8',l:'#e8f2ff',d:'#2a4a9a',a:'#ffe23a',o:'#0e1430',e:'#7affff',w:'#ffffff',x:'#9ac0ff',g:'#ffe23a'},{m:'#2a2a30',l:'#ffd0d0',d:'#121216',a:'#ff3a4a',o:'#050506',e:'#ff4a4a',w:'#ffffff',x:'#5a5a66',g:'#ff3a4a'}],
  pxdeer:[{m:'#d8262e',l:'#fff4e8',d:'#8e1018',a:'#ffc53a',o:'#2a0a0e',e:'#1a0a0a',w:'#ffffff',x:'#1f9a4a',g:'#fff2b0'},{m:'#eef6ff',l:'#ffffff',d:'#8ab4e0',a:'#cfe8ff',o:'#1a2a4a',e:'#1a2a6a',w:'#bfe0ff',x:'#e2344a',g:'#d8f0ff'}],
- pxsheep:[{o:'#3a2a3a',m:'#fff6ec',l:'#ffffff',d:'#e8c8d8',x:'#ffd8c0',n:'#f0b8a0',f:'#8a6a72',b:'#6a5058',k:'#4a3040',e:'#2a1a3a',w:'#ffffff',p:'#ff9ab0',h:'#f2c47a',j:'#c8904a',a:'#ff6a9a',g:'#ffc8e6',q:'#5ac85a',r:'#ff7aa8',y:'#ffd23f',v:'#8ab4ff'},{o:'#3a2050',m:'#ffd3ea',l:'#fff0f8',d:'#d4aaff',x:'#fff0e0',n:'#f5c8b0',f:'#7a6aa0',b:'#5a4a80',k:'#3a2a5a',e:'#3a2a7a',w:'#ffffff',p:'#ff8ac0',h:'#bfe8ff',j:'#6aa4e0',a:'#5ad0ff',g:'#bfe8ff',q:'#5ac85a',r:'#ff7aa8',y:'#ffd23f',v:'#8ab4ff'}],
  pxshark:[{m:'#8a9ab0',l:'#e8eef6',d:'#4a5a72',a:'#2affe0',o:'#10141c',e:'#2affe0',w:'#ffffff',x:'#ff6a2a',g:'#2affe0'},{m:'#e8b830',l:'#fff6c8',d:'#9a6a10',a:'#ff3aa0',o:'#2a1a04',e:'#ff3aa0',w:'#ffffff',x:'#7a4aff',g:'#ff3aa0'}]};
 Object.assign(PETPAL,PETPAL2);
-Object.assign(PEMO,{corgi:'🦴',dino:'🦖',narwhal:'🦄',pxdragon:'🔥',pxwolf:'⚡',pxshark:'🤖',pxdeer:'🎄',pxsheep:'🐑'});
+Object.assign(PEMO,{corgi:'🦴',dino:'🦖',narwhal:'🦄',pxdragon:'🔥',pxwolf:'⚡',pxshark:'🤖',pxdeer:'🎄'});
 Object.keys(PETPAL2).forEach(k=>{const a=PETPAL[k][0],b=PETPAL[k][1];PCOL[k]=[a.m,a.l,a.d,b.m,b.d,b.l]});
-const PXSP={pxdragon:1,pxwolf:1,pxshark:1,pxdeer:1,pxsheep:1};
+const PXSP={pxdragon:1,pxwolf:1,pxshark:1,pxdeer:1};
 const PXSIZE=[0,48,58,76,92,106];   /* 每個階段的大小：差距拉大，看得出長大 */
 
 // 共用：漸層定義、臉
@@ -814,128 +813,13 @@ function pxPose(R,p){if(!p)return R;R=R.slice();const n=R.length;
   if(a<0)return R;const m=Math.floor((a+b)/2),d=p==='walk2'?1:-1;
   for(let k=n-2;k<n;k++)R[k]=sh(R[k].slice(0,m),d)+sh(R[k].slice(m),-d)}
  return R}
-/* ===== 像素綿綿羊（2026/11/22）：格子比其他像素寵物多一倍，身體各部位分開畫，姿勢更多（走路四格、跳、吃草、甩毛、搖尾巴…） ===== */
-// 像素綿綿羊產生器：依階段與姿勢畫出字元格子（面向右）
-// o 描邊 m 羊毛 l 羊毛亮 d 羊毛暗 x 臉 n 臉暗 f 近腳 b 遠腳 k 蹄 e 眼 w 白 p 腮紅/耳內 h 角 j 角暗 a 點綴 g 草/發光
-function sheepRows(stage,pose,opt){opt=opt||{};
- const S=[0,.6,.72,.85,1,1.08][stage];
- const W=Math.round(36*S)+3,H=Math.round(30*S)+3;
- const G=[];for(let y=0;y<H;y++)G.push(Array(W).fill('.'));
- const set=(x,y,c)=>{x=Math.round(x);y=Math.round(y);if(x>=0&&y>=0&&x<W&&y<H)G[y][x]=c};
- const get=(x,y)=>x>=0&&y>=0&&x<W&&y<H?G[y][x]:'.';
- function part(fn,colorFn,outline){const M=[];for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(fn(x+.5,y+.5))M.push([x,y]);
-  const inM=new Set(M.map(([x,y])=>x+','+y));
-  if(outline!==false)M.forEach(([x,y])=>[[1,0],[-1,0],[0,1],[0,-1]].forEach(([dx,dy])=>{if(!inM.has((x+dx)+','+(y+dy)))set(x+dx,y+dy,'o')}));
-  M.forEach(([x,y])=>{const c=colorFn(x+.5,y+.5,x,y);if(c)set(x,y,c)});return M}
- const ell=(cx,cy,rx,ry)=>(x,y)=>((x-cx)/rx)**2+((y-cy)/ry)**2<=1;
- const P=pose||'';
- const sleep=P==='sleep',air=P==='jump'||P==='air',crouch=P==='crouch'||P==='land',eat=P==='eat'||P==='eat2';
- const shake=P==='shakeL'?-1:P==='shakeR'?1:0;
- const ground=H-1.6;
- const legH=(stage<=2?4.2:5.2)*S;
- const rx=(stage<=2?10.5:12.5)*S,ry=(stage<=2?7.4:8.4)*S;
- const bx=W*.42+(shake*.6*S),by=ground-(sleep?ry*.92:legH+ry*.82)+(crouch?1.6*S:0)+(air?-.4*S:0);
- // ---- 腳 ----
- const legW=Math.max(2,Math.round(2.6*S));
- const legX=[bx-rx*.55,bx-rx*.05,bx+rx*.2,bx+rx*.62];   // 0 遠後 1 近後 2 遠前 3 近前
- const SW={walk1:[1,-1,-1,1],walk2:[0,0,0,0],walk3:[-1,1,1,-1],walk4:[0,0,0,0]}[P]||[0,0,0,0];
- const UP={walk2:[0,1,1,0],walk4:[1,0,0,1]}[P]||[0,0,0,0];
- function leg(i){if(sleep)return;const far=i===0||i===2;let x0=legX[i]+(far?1:0),sw=SW[i]*1.8*S,up=UP[i]*1.4*S,top=by+ry*.45,bot=ground;
-  if(air){bot=by+ry+legH*.55;sw=(i<2?-1:1)*2.2*S;up=0}
-  if(crouch){x0+=(i<2?-1:1)*1*S}
-  if(P==='scratch'&&i===1){sw=-3*S;up=3.2*S}
-  if(P==='pronk'){sw=(i<2?-1:1)*1.2*S}
-  bot-=up;
-  part((x,y)=>{if(y<top||y>bot)return false;const t=(y-top)/Math.max(1,bot-top);return Math.abs(x-(x0+sw*t))<=legW/2},
-   (x,y)=>y>bot-1.5*S?'k':far?'b':'f')}
- leg(0);leg(2);
- // ---- 尾巴 ----
- const wag=P==='wag1'?-1:P==='wag2'?1:0;
- const tx=bx-rx*1.02,ty=by-ry*.15+wag*1.2*S;
- part(ell(tx,ty,2.8*S,2.5*S),(x,y)=>y<ty-.5*S&&x<tx?'l':'m');
- // ---- 羊毛身體：核心＋沿邊一圈毛球（邊緣一球一球）----
- const rp=Math.max(2,3.1*S),sx=shake*1.4*S,puffs=[];
- {const per=Math.PI*(3*(rx+ry)-Math.sqrt((3*rx+ry)*(rx+3*ry))),N=Math.round(per/(rp*1.95));
-  for(let i=0;i<N;i++){const a=2*Math.PI*i/N+.2;const y=by+Math.sin(a)*(ry-rp*.15);if(y>by+ry*.55)continue;puffs.push([bx+Math.cos(a)*(rx-rp*.15)+sx*((by-y)/ry),y])}}
- const inBody=(x,y)=>ell(bx+sx*.3,by,rx-rp*.5,ry-rp*.3)(x,y)||puffs.some(([px,py])=>(x-px)**2+(y-py)**2<=rp*rp);
- part(inBody,(x,y)=>{
-   if(y>by+ry*.52)return 'd';
-   let bd=1e9,b=null;for(const q of puffs){const d=(x-q[0])**2+(y-q[1])**2;if(d<bd){bd=d;b=q}}
-   const dx=x-b[0],dy=y-b[1];
-   if(bd<=rp*rp&&y<by+ry*.2){if(dx<.2&&dy<.2&&dx*dx+dy*dy<rp*rp*.42)return 'l'}
-   return 'm'});
- // 羊毛捲紋（小 c 字）
- const curls=[[-.45,-.1],[.05,-.25],[-.15,.25],[.4,.05],[-.7,.2]];
- curls.forEach(([cx,cy],i)=>{const X=Math.round(bx+cx*rx+sx*.5),Y=Math.round(by+cy*ry);if(S<.7&&i>2)return;
-   if(get(X,Y)!=='m'||get(X+1,Y+1)==='.')return;set(X,Y,'d');set(X+1,Y+1,'d');set(X+2,Y+1,'d');if(S>=.85)set(X-1,Y-1,'l')});
- // 下巴底的毛邊
- leg(1);leg(3);
- // ---- 頭 ----
- const hr=(stage<=2?7.2:7)*S,hry=hr*.86;
- let hx=bx+rx*.86,hy=by-ry*.42;
- if(eat){hx+=1.6*S;hy=ground-hry-.2*S}
- if(sleep){hx-=1*S;hy=by-ry*.05}
- if(air||P==='happy'||P==='pronk')hy-=.8*S;
- if(crouch)hy+=.8*S;
- hx+=shake*1*S;
- const horn=stage>=4;
- const earDn=sleep||P==='sad'||P==='sick',earUp=air||P==='happy'||P==='earup'||P==='pronk';
- // 臉（大一點、偏下）
- part(ell(hx,hy,hr,hry),(x,y)=>(y>hy+hry*.45&&x>hx+hr*.15)?'n':'x');
- // 頭頂小毛球（只蓋住頭頂後半）
- const tfx=hx-hr*.35,tfy=hy-hry*.78;
- part((x,y)=>ell(tfx,tfy,2.6*S,2.2*S)(x,y)||ell(tfx+2.6*S,tfy-.5*S,2.2*S,1.9*S)(x,y)||ell(tfx-2.4*S,tfy+1.4*S,2.2*S,2*S)(x,y),(x,y)=>(y<tfy-.4*S&&x<tfx+2.4*S)?'l':'m');
- // 耳朵：從頭的後側伸出去，會動
- const eA=earUp?-.15:earDn?.95:.5;
- const ex=hx-hr*.86,ey=hy+hry*.05,eL=4.6*S,eT=1.7*S;
- const eu=(x,y)=>{const dx=x-ex,dy=y-ey,c=Math.cos(Math.PI+eA),s=Math.sin(Math.PI+eA);return [dx*c+dy*s,-dx*s+dy*c]};
- part((x,y)=>{const [u,v]=eu(x,y);return u>=0&&u<=eL&&Math.abs(v)<=eT*(1-.35*u/eL)},(x,y)=>{const [u,v]=eu(x,y);return u>1.2&&u<eL-1&&Math.abs(v)<eT*.5?'p':'x'});
- // 角：耳朵上面的捲角（成年起）
- if(horn){const R=(stage>=5?3.3:2.9)*S,hcx=hx-hr*.62,hcy=hy-hry*.5,T=Math.max(2,1.8*S);
-  part((x,y)=>{const d=Math.hypot(x-hcx,y-hcy);if(d>R)return false;if(d<R-T)return false;const a=Math.atan2(y-hcy,x-hcx);return !(a>.3&&a<1.9)},(x,y)=>{const d=Math.hypot(x-hcx,y-hcy);return d>R-.9?'j':'h'});
-  part(ell(hcx,hcy,1.2*S,1.2*S),()=>'h')}
- // 完全體：頭頂花冠
- if(stage>=5){const cy=Math.round(tfy-3*S),FL=['r','y','v','r','y'];const pts=[];
-  FL.forEach((c,i)=>{const x=Math.round(tfx-3.6*S+i*2.1*S),y=cy+(i%2?1:0)+(i===0||i===4?1:0);[[0,0],[1,0],[0,1],[1,1]].forEach(([dx,dy])=>{set(x+dx,y+dy,c);pts.push([x+dx,y+dy])});set(x+(i%2),y+(i%2?0:1),'y'===c?'a':'y')});
-  pts.forEach(([x,y])=>[[1,0],[-1,0],[0,1],[0,-1]].forEach(([dx,dy])=>{if(get(x+dx,y+dy)==='.')set(x+dx,y+dy,'o')}))}
- // 眼睛
- const eyX=Math.round(hx+hr*.22),eyY=Math.round(hy+hry*.02);
- const closed=sleep||P==='blink'||eat||P==='sick',hap=P==='happy'||P==='pronk'||P==='baa';
- const big=S>=.8;
- if(closed){set(eyX-1,eyY+1,'o');set(eyX,eyY+1,'o');set(eyX+1,eyY+1,'o');if(sleep)set(eyX+1,eyY,'o')}
- else if(hap){set(eyX-1,eyY+1,'o');set(eyX,eyY,'o');set(eyX+1,eyY,'o');set(eyX+2,eyY+1,'o')}
- else{for(let dy=-1;dy<=(big?2:1);dy++)for(let dx=0;dx<=(big?2:1);dx++)set(eyX+dx-(big?1:0),eyY+dy,(dy===-1&&dx===(big?2:1))?'o':'e');
-  set(eyX-(big?1:0),eyY-1,'w');if(big)set(eyX,eyY-1,'w');set(eyX+(big?1:1),eyY+(big?2:1),'w')}
- // 腮紅
- const ckX=eyX-(big?3:2),ckY=eyY+(big?3:2);set(ckX,ckY,'p');set(ckX+1,ckY,'p');if(big)set(ckX,ckY+1,'p');
- // 鼻嘴
- const nX=Math.round(hx+hr*.86),nY=Math.round(hy+hry*.3);
- set(nX,nY,'o');
- if(hap){set(nX-1,nY+1,'o');set(nX-2,nY+2,'a');set(nX-1,nY+2,'a');set(nX-3,nY+1,'o');set(nX-2,nY+3,'o')}
- else if(P==='eat2'){set(nX-1,nY+1,'o');set(nX-2,nY+1,'a');set(nX-3,nY+1,'o')}
- else if(!sleep){set(nX-1,nY+1,'o');set(nX-2,nY+2,'o')}
- // 項圈＋金鈴鐺（少年起）
- if(stage>=3&&!sleep&&!eat){const cx=Math.round(hx-hr*.5),cy=Math.round(hy+hry*.88);
-  for(let i=-2;i<=1;i++)if(get(cx+i,cy)!=='.')set(cx+i,cy,'a');
-  [[0,1,'o'],[1,1,'o'],[-1,2,'o'],[0,2,'h'],[1,2,'h'],[2,2,'o'],[-1,3,'o'],[0,3,'h'],[1,3,'j'],[2,3,'o'],[0,4,'o'],[1,4,'o']].forEach(([dx,dy,c])=>set(cx+dx,cy+dy,c));set(cx,cy+2,'w')}
- // 吃草
- if(eat){const gx=nX+1,gy=H-2;[[0,0],[0,-1],[1,-1],[1,-2],[-1,-1],[-1,0],[2,-1]].forEach(([dx,dy])=>{if(get(gx+dx,gy+dy)==='.')set(gx+dx,gy+dy,'q')})}
- return G.map(r=>r.join(''))}
-const PXGEN={pxsheep:sheepRows};
-const PXBOX={};
-/* 每個階段固定一個畫框（所有姿勢合起來的範圍），換姿勢時大小、位置不會跳 */
-function pxGen(sp,stage,pose){const k=sp+stage;if(!PXBOX[k]){let x0=1e9,x1=-1,y0=1e9,y1=-1;['','walk1','walk3','jump','eat','scratch','happy','sleep','shakeL','shakeR'].forEach(p=>PXGEN[sp](stage,p).forEach((r,y)=>{for(let x=0;x<r.length;x++)if(r[x]!=='.'){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y}}));PXBOX[k]=[x0,x1,y0,y1]}
- const [x0,x1,y0,y1]=PXBOX[k];return PXGEN[sp](stage,pose).slice(y0,y1+1).map(r=>r.slice(x0,x1+1))}
 /* 像素寵物進化配色：成年、完全體換顏色，一眼看得出長大（閃亮版維持閃亮配色） */
 const PXEVO={pxdragon:{4:{m:'#d62a1e',d:'#7a0e14',l:'#ffe08a',a:'#ffd040',g:'#ff5a1a',x:'#8a1a10',w:'#ff6a2a'},5:{m:'#6a0e22',d:'#2a0410',l:'#ff8a3a',a:'#c04aff',g:'#ff3a7a',x:'#3a0a2a',w:'#9a3aff',e:'#ffea4a'}},
  pxwolf:{4:{m:'#3a5ac8',d:'#1a2a7a',l:'#d8e6ff',x:'#7aa0ff'},5:{m:'#eef4ff',d:'#8aa0d8',l:'#ffffff',a:'#ffd700',g:'#fff36a',x:'#c0d0ff',e:'#3ab0ff'}},
- pxsheep:{4:{h:'#ffc84a',j:'#c8861a',g:'#ffe0f0'},5:{h:'#ffd84a',j:'#e09a10',g:'#fff2a0',a:'#ff4a8a'}},
  pxdeer:{4:{m:'#c81e2a',d:'#6e0a14',a:'#ffd040',g:'#fff6c8'},5:{m:'#b0142a',d:'#560612',l:'#ffffff',a:'#ffe066',g:'#fff6c8',x:'#14a04a',w:'#fffbe8'}},
  pxshark:{4:{m:'#5a7090',d:'#2a3a52',l:'#d8e2f0',x:'#ff4a1a'},5:{m:'#2a2a36',d:'#10101a',l:'#9aa4b8',a:'#ff2a4a',g:'#ff2a4a',e:'#ff2a4a',x:'#ff8a1a'}}};
 function pxPet(sp,stage,o,u){const C0=PETPAL[sp][o.shiny?1:0],C=!o.shiny&&PXEVO[sp]&&PXEVO[sp][stage]?Object.assign({},C0,PXEVO[sp][stage]):C0,sh=!!o.shiny,sick=!!o.sick,mood=o.mood==null?80:o.mood;
- const big=stage>=3,GEN=PXGEN[sp],SPR=PXS[sp];let rows0,rows;
- if(GEN){rows=pxGen(sp,stage,sick?'sick':o.pose||(mood<30?'sad':''));rows0=rows}
- else{rows0=SPR[SPR.length>2?Math.min(stage-1,SPR.length-1):big?1:0].split(String.fromCharCode(10));rows=pxPose(rows0.map(r=>sick?r.replace(/e/g,'o'):r),sick?'':o.pose)}
+ const big=stage>=3,SPR=PXS[sp],rows0=SPR[SPR.length>2?Math.min(stage-1,SPR.length-1):big?1:0].split(String.fromCharCode(10)),rows=pxPose(rows0.map(r=>sick?r.replace(/e/g,'o'):r),sick?'':o.pose);
  const W=Math.max(...rows0.map(r=>r.length)),H=rows0.length;
  const pal=Object.assign({},C,{o:C.o,m:C.m,d:C.d,l:C.l,a:C.a,e:sick?'#9a7ab0':C.e,w:C.w,x:C.x,g:C.g});
  const target=PXSIZE[stage],c=target/Math.max(W,H*1.05),wpx=W*c,hpx=H*c;
@@ -954,13 +838,11 @@ function pxPet(sp,stage,o,u){const C0=PETPAL[sp][o.shiny?1:0],C=!o.shiny&&PXEVO[
  if(sp==='pxdragon'&&big&&!sick){fx+=`<g class="breath">${q(ox+wpx+2,oy+hpx*.36,5,C.a)}${q(ox+wpx+8,oy+hpx*.33,6,C.g)}${q(ox+wpx+15,oy+hpx*.3,5,C.l)}${q(ox+wpx+9,oy+hpx*.42,4,C.a)}</g>`}
  if(sp==='pxwolf'&&stage>=2){const bolt=(x,y,k,d)=>`<g transform="translate(${x} ${y}) scale(${k})"><path class="zap" style="animation-delay:${d}s" d="M2 -14 L-6 1 H0 L-3 14 L7 -3 H1 L5 -14Z" fill="${C.a}" stroke="${C.o}" stroke-width="1.2" stroke-linejoin="round"/></g>`;fx+=bolt(ox-6,oy+hpx*.3,1,0)+bolt(ox+wpx+4,oy+hpx*.15,.8,.5)+(stage>=4?bolt(60,oy-10,1.1,.9):'')}
  if(sp==='pxshark'&&big){fx+=`<g class="jet">${q(ox+c*4,106-1,c*.9,C.x)}${q(ox+c*10,106-1,c*.9,C.x)}${q(ox+c*4.2,106+c*.8,c*.6,'#ffd23f')}${q(ox+c*10.2,106+c*.8,c*.6,'#ffd23f')}</g>`;if(stage>=4)fx+=`<rect class="laser" x="${ox-38}" y="${oy+c*8.2}" width="40" height="${c*.6}" fill="${C.a}" opacity=".8"/>`}
- if(stage>=5&&sp!=='pxdeer'&&sp!=='pxsheep')fx+=crown(u,60-wpx*.08,oy-6,-12,.7);
+ if(stage>=5&&sp!=='pxdeer')fx+=crown(u,60-wpx*.08,oy-6,-12,.7);
  let deco='';
  if(sp==='pxdeer'&&stage>=5&&!sick){let k=0;const LC=['#ff3a3a','#3aff7a','#3ab0ff','#ffd23f'];
   rows.forEach((r,y)=>{if(y>8)return;for(let x=0;x<r.length;x++)if(r[x]==='a'&&(x+y)%2===0){deco+=`<rect class="pxtw" style="animation-delay:${(k%4)*.35}s" x="${(ox+x*c+c*.18).toFixed(1)}" y="${(oy+y*c+c*.18).toFixed(1)}" width="${(c*.64).toFixed(1)}" height="${(c*.64).toFixed(1)}" fill="${LC[k%4]}"/>`;k++}});
   const ty=rows.findIndex(r=>r.indexOf('a')>=0);if(ty>=0){const tx=rows[ty].indexOf('a'),k2=c*.6;deco+=`<g class="pxtw">${pxRects(['..o..','.oao.','oaaao','.oao.','.o.o.'],{o:'#8a5a00',a:'#ffe066'},k2,ox+tx*c+c/2-2.5*k2,oy+ty*c-5*k2)}</g>`}}
- if(sp==='pxsheep'&&stage>=5&&!sick){let k=0;const RC=['#ff7aa8','#ffd23f','#7ae08a','#7ac8ff','#c89aff'];
-  rows.forEach((r,y)=>{for(let x=0;x<r.length;x++)if(r[x]==='l'&&(x*7+y*3)%5===0){deco+=`<rect class="pxtw" style="animation-delay:${(k%5)*.28}s" x="${(ox+x*c).toFixed(1)}" y="${(oy+y*c).toFixed(1)}" width="${c.toFixed(1)}" height="${c.toFixed(1)}" fill="${RC[k%5]}"/>`;k++}})}
  if(sh)fx+=[[-46,-62,6,0],[46,-54,7,.5],[-44,-14,5,1],[48,-18,5,1.5]].map(([x,y,r,d])=>spk(60+x,106+y,r,'#fff',d)).join('');
  if(!sick&&mood<30)fx+=q(ox+wpx*.62,oy+hpx*.38,c*.8,'#8fd3ff','drip');
  if(sick)fx+=`<g transform="translate(${ox+wpx*.5} ${oy-4})">${[0,1,2].map(i=>`<circle class="dizzy" style="animation-delay:${i*.4}s" cx="${(i-1)*8}" cy="0" r="2.4" fill="#ffd23f" stroke="${C.o}" stroke-width=".8"/>`).join('')}</g>`;
@@ -969,21 +851,7 @@ function pxPet(sp,stage,o,u){const C0=PETPAL[sp][o.shiny?1:0],C=!o.shiny&&PXEVO[
  const shine=sh?`<rect x="${ox}" y="${oy}" width="${wpx}" height="${hpx}" fill="url(#${u}h)" style="mix-blend-mode:screen"/>`:'';
  return `<defs>${defs}</defs>${aura}<ellipse cx="60" cy="108" rx="${wpx*.45}" ry="5" fill="url(#${u}g)"/>${petPoo(o.poops)}<g class="pxbob" shape-rendering="crispEdges">${body}${deco}${shine}</g>${fx}`}
 // 像素蛋
-const PXEGG2={pxsheep:`...o.oo.o...
-..omommomo..
-.omlmmmlmmo.
-.ommmdmmmdo.
-owwwwwwwwwwo
-owwaawaawwwo
-owaaaaaaawwo
-owaaaaaaawwo
-owwaaaaawwwo
-odwwaaawwwdo
-.owwwawwwwo.
-.odwwwwwwdo.
-..oodddddo..
-....oooo....`,
-pxdeer:`...oo..oo...
+const PXEGG2={pxdeer:`...oo..oo...
 ..oaaooaao..
 ..oaaaaaao..
 ...ooaaoo...
@@ -1034,11 +902,9 @@ Object.assign(MEMO_ART,{
  pxdragon:u=>`<g shape-rendering="crispEdges">${pxRects(['..oo..','.oaao.','oaaaao','oalaao','.oaao.','..oo..'],{o:'#5a0a0a',a:'url(#'+u+'it)',l:'#fff6c0'},5,-15,-15)}</g>`,
  pxwolf:u=>`<g shape-rendering="crispEdges">${pxRects(['...oo.','..oao.','.oaao.','oaaaoo','ooaao.','.oaao.','.oao..','.oo...'],{o:'#0e1430',a:'url(#'+u+'it)'},5,-15,-20)}</g>`,
  pxdeer:u=>`<g shape-rendering="crispEdges">${pxRects(['..oo..','.oaao.','oaaaao','oaaaao','oaaaao','oooooo','..oo..'],{o:'#6a4200',a:'url(#'+u+'it)'},5,-15,-18)}<rect x="-3" y="-25" width="6" height="5" fill="#1f9a4a"/><rect x="-8" y="-27" width="5" height="4" fill="#e2343a"/><rect x="3" y="-27" width="5" height="4" fill="#e2343a"/></g>${spk(12,-12,4,'#fff',.3)}`,
- pxsheep:u=>`<g shape-rendering="crispEdges">${pxRects(['..oooo..','.oaaaao.','oaaxaaao','oaxaaxao','oaaaxaao','oaxaaaao','.oaaaao.','..oooo..'],{o:'#7a2a5a',a:'url(#'+u+'it)',x:'#ffffff'},4.4,-17.6,-17.6)}<rect x="12" y="-4" width="4" height="3" fill="#ff7aa8"/><rect x="15" y="-1" width="4" height="3" fill="#ffd23f"/><rect x="18" y="2" width="4" height="3" fill="#7ac8ff"/></g>${spk(-12,-14,4,'#fff',.3)}`,
  pxshark:u=>`<g shape-rendering="crispEdges">${pxRects(['.oooo.','oaaaao','oaggao','oaggao','oaaaao','.oooo.'],{o:'#10141c',a:'url(#'+u+'it)',g:'#2affe0'},5,-15,-15)}</g><circle cx="0" cy="0" r="18" fill="none" stroke="#2affe0" stroke-width="1" opacity=".5" class="twk"/>`});
-Object.assign(MEMO_GRAD,{corgi:[['#fffaf0'],['#e8c690']],dino:[['#c8ffb0'],['#2f9a44']],narwhal:[['#fffbe8'],['#ffd23f']],pxdragon:[['#ffd36a'],['#e8452e']],pxwolf:[['#fff6a0'],['#ffc800']],pxshark:[['#e8eef6'],['#6a7a92']],pxdeer:[['#fff3a8'],['#e0a010']],pxsheep:[['#fff0f8'],['#ff8ac8']]});
+Object.assign(MEMO_GRAD,{corgi:[['#fffaf0'],['#e8c690']],dino:[['#c8ffb0'],['#2f9a44']],narwhal:[['#fffbe8'],['#ffd23f']],pxdragon:[['#ffd36a'],['#e8452e']],pxwolf:[['#fff6a0'],['#ffc800']],pxshark:[['#e8eef6'],['#6a7a92']],pxdeer:[['#fff3a8'],['#e0a010']]});
 const SCENE2={
- pxsheep:u=>`${lin(u+'s',0,0,0,1,[[0,'#8fd0ff'],[1,'#e8f8ff']])}|<g shape-rendering="crispEdges"><rect width="120" height="120" fill="url(#${u}s)"/>${['#ff7a9a','#ffb14a','#ffe45a','#7ad87a','#6ab4ff','#b48aff'].map((c,i)=>`<path d="M${8+i*4} 84 A${52-i*4} ${46-i*4} 0 0 1 ${112-i*4} 84" fill="none" stroke="${c}" stroke-width="4" opacity=".75"/>`).join('')}${[[14,20],[80,12]].map(([x,y])=>`<rect x="${x}" y="${y+4}" width="26" height="8" fill="#fff"/><rect x="${x+4}" y="${y}" width="12" height="6" fill="#fff"/><rect x="${x+2}" y="${y+12}" width="22" height="2" fill="#d8ecff"/>`).join('')}<rect y="78" width="120" height="42" fill="#7ad36a"/><rect y="76" width="120" height="3" fill="#9ae68a"/>${Array.from({length:10},(_,i)=>`<rect x="${(i*29)%116}" y="${86+(i*13)%28}" width="3" height="3" fill="${i%3?'#5ab84a':'#ffd23f'}"/>`).join('')}${[6,30,54,78,102].map(x=>`<rect x="${x}" y="70" width="5" height="22" fill="#c08a4a"/><rect x="${x}" y="70" width="5" height="2" fill="#e8b87a"/>`).join('')}<rect x="0" y="75" width="120" height="4" fill="#a8703a"/><rect x="0" y="84" width="120" height="4" fill="#a8703a"/></g>`,
  corgi:u=>`${lin(u+'s',0,0,0,1,[[0,'#9ad8ff'],[1,'#fff0d0']])}|<rect width="120" height="120" fill="url(#${u}s)"/><ellipse cx="26" cy="24" rx="14" ry="6" fill="#fff"/><path d="M0 80 Q30 66 60 78 T120 74 V120 H0Z" fill="#8fd36a"/><rect x="84" y="62" width="26" height="22" fill="#e8c890" stroke="#7a4a1a"/><path d="M80 64 L97 50 L114 64Z" fill="#4d8de6"/><circle cx="20" cy="96" r="5" fill="#ffd23f" stroke="#c88a00"/><ellipse cx="60" cy="112" rx="70" ry="16" fill="#6fc05a"/>`,
  dino:u=>`${lin(u+'s',0,0,0,1,[[0,'#ffcf8a'],[1,'#ffe9c8']])}|<rect width="120" height="120" fill="url(#${u}s)"/><path d="M0 76 L22 46 L40 76Z" fill="#a0603a"/><path d="M80 78 L104 40 L124 78Z" fill="#8a4a2a"/><path d="M100 46 l4 -6 l4 6z" fill="#ff5a1a"/><path d="M14 92 C10 70 26 64 28 52 C34 64 44 70 40 92" fill="#3fae5a"/><ellipse cx="60" cy="112" rx="70" ry="18" fill="#c8a060"/>`,
  narwhal:u=>`${lin(u+'s',0,0,0,1,[[0,'#1a3a8a'],[1,'#4ab0f0']])}|<rect width="120" height="120" fill="url(#${u}s)"/>${Array.from({length:12},(_,i)=>`<circle cx="${(i*41)%118}" cy="${(i*29)%50+4}" r="${i%3?.7:1.2}" fill="#fff"/>`).join('')}<path d="M10 62 L30 54 L40 62Z M84 58 L100 48 L114 58Z" fill="#fff" opacity=".9"/><rect y="62" width="120" height="58" fill="#2a7ad0"/><path d="M0 68 q15 -4 30 0 t30 0 t30 0 t30 0" stroke="#fff" stroke-width="1.5" fill="none" opacity=".5"/>`,
@@ -1191,6 +1057,214 @@ document.head.insertAdjacentHTML('beforeend',`<style>
 .cfl.chk{display:flex;align-items:center;color:#4a3b2a;font-size:15px}
 .ccw{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.ccount{background:#fff3dc;border-radius:12px;padding:6px 10px;font-size:14px;line-height:1.4}.ccount .mu{font-size:12px}
 </style>`);
+/* ===== 寵物工作室（2026/11/22）：大家自己設計像素寵物 =====
+   畫格子或上傳圖片 → 自動轉成像素 → 預覽會動的樣子 → 小孩送給爸媽、爸媽上架 → 商店買得到
+   格子字母：. 空白、o 外框、e 眼睛（會自動眨眼）、w 眼睛反光、1～8 自己挑的顏色 */
+const CP_VOICE=[['dog','狗狗'],['cat','貓咪'],['bunny','兔子'],['sheep','羊咩咩'],['deer','小鹿'],['mon','小怪獸'],['roar','恐龍吼'],['bubble','泡泡'],['robot','機器人'],['star','星星']];
+const CP_FXN={claw:'利爪抓',bite:'大口咬',ram:'頭槌',fireball:'火球',spark:'電花',water:'水彈',snowball:'雪球',woolball:'羊毛球',bell:'叮噹鈴',breath:'火焰吐息',bolt:'落雷',laser:'雷射光',blizzard:'暴風雪',countsheep:'數羊催眠',hellfire:'地獄火',storm:'雷暴風',missile:'飛彈齊射',giftrain:'禮物流星雨',rainbow:'彩虹棉花雲'};
+const CP_STG=['寶寶','幼年','少年','成年'],CP_SKST=['幼年','少年','成年','完全體'],CP_KEYS=['o','e','w','1','2','3','4','5','6','7','8'],CP_KN={o:'外框',e:'眼睛',w:'反光'};
+const CP_DEFPAL={o:'#3a2a2a',e:'#1e1a2e',w:'#ffffff','1':'#ff9a3c','2':'#ffd36a','3':'#e0602a','4':'#ffffff','5':'#6ad0ff','6':'#2a7ad0','7':'#a0e070','8':'#ff7ab0'};
+const NL=String.fromCharCode(10);
+function cpHex(h){return [1,3,5].map(i=>parseInt(h.slice(i,i+2),16))}
+function cpToHex(r,g,b){return '#'+[r,g,b].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('')}
+function cpLum(h){const [r,g,b]=cpHex(h);return r*.3+g*.59+b*.11}
+function cpHue(h,deg,lift){let [r,g,b]=cpHex(h).map(v=>v/255);const mx=Math.max(r,g,b),mn=Math.min(r,g,b);let H=0,S=0,L=(mx+mn)/2;
+  if(mx!==mn){const d=mx-mn;S=L>.5?d/(2-mx-mn):d/(mx+mn);H=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;H/=6}
+  H=(H+deg/360+1)%1;L=Math.min(.95,L+(lift||0));const f=(p,q,t)=>{t=(t+1)%1;return t<1/6?p+(q-p)*6*t:t<.5?q:t<2/3?p+(q-p)*(2/3-t)*6:p};
+  if(!S)return cpToHex(L*255,L*255,L*255);const q=L<.5?L*(1+S):L+S-L*S,p=2*L-q;return cpToHex(f(p,q,H+1/3)*255,f(p,q,H)*255,f(p,q,H-1/3)*255)}
+// 自訂寵物登記進像素寵物系統（PXS、配色、場景、紀念品…）
+function cpPal(art){const P=Object.assign({},CP_DEFPAL,art.pal||{}),g=(art.st||[])[3]||[],cnt={};
+  g.forEach(r=>{for(const c of r)if(c>='1'&&c<='8')cnt[c]=(cnt[c]||0)+1});
+  const ds=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]);const col=k=>P[k]||'#cccccc';
+  const m=col(ds[0]||'1'),a=col(ds[1]||ds[0]||'2'),byL=ds.slice().sort((x,y)=>cpLum(col(x))-cpLum(col(y)));
+  const base=Object.assign({},P,{m:m,a:a,x:a,g:a,l:col(byL[byL.length-1]||'1'),d:col(byL[0]||'1')});
+  const sh=Object.assign({},base);'12345678'.split('').forEach(k=>{sh[k]=cpHue(P[k],150,.06)});['m','a','x','g','l','d'].forEach(k=>{sh[k]=cpHue(base[k],150,.06)});sh.g='#fff6a0';
+  return [base,sh]}
+function cpReg(types){if(!types)return;Object.keys(types).forEach(k=>{const T=types[k],A=T&&T.art;if(!A||!A.st)return;
+  const st=[0,1,2,3].map(i=>{for(const j of [i,i+1,i+2,i+3,i-1,i-2,i-3]){const g=A.st[j];if(g&&g.length)return g}return ['o']});
+  PXS[k]=st.map(g=>g.join(NL));PETPAL[k]=cpPal(A);PXSP[k]=1;PEMO[k]='🎨';const a=PETPAL[k][0],b=PETPAL[k][1];PCOL[k]=[a.m,a.l,a.d,b.m,b.d,b.l];
+  const th=A.theme||'pxdragon';if(SCENE2[th])SCENE2[k]=SCENE2[th];if(MEMO_ART[th])MEMO_ART[k]=MEMO_ART[th];if(MEMO_GRAD[th])MEMO_GRAD[k]=MEMO_GRAD[th];
+  if(typeof cpRegHook==='function')cpRegHook(k,T)})}
+/* ---------- 畫面 ---------- */
+let CPS=null;   // 工作室狀態
+function studioOpen(focus){let el=$('#studio');if(!el){el=document.createElement('div');el.id='studio';document.body.appendChild(el)}
+  el.className='stu';el.innerHTML='<div class="stuh"><b>🎨 寵物工作室</b><button class="stux" onclick="studioClose()">✕</button></div><div class="stub" id="stuB"><div class="stucard">⏳ 讀取中…</div></div>';
+  document.body.style.overflow='hidden';studioLoad(focus)}
+function studioClose(){const el=$('#studio');if(el)el.remove();document.body.style.overflow='';CPS=null;clearInterval(CPA_T);if(typeof studioClosed==='function')studioClosed()}
+async function studioLoad(focus){let r;try{r=await call('studioList')}catch(e){$('#stuB').innerHTML='<div class="stucard">'+esc(errMsg(e))+'</div>';return}
+  CPS={L:r.list,fx:r.fx,themes:r.themes,parent:r.parent,me:r.me,ed:null};studioList(focus)}
+const CP_STC={'草稿':'#8a8a8a','待審核':'#e08a00','上架':'#2a9a4a','退回':'#d04040','下架':'#6a6a8a'};
+function studioThumb(d,size,stage){const k='_cpt'+Math.random().toString(36).slice(2,7);cpReg({[k]:{art:d}});const s=petSvg(k,stage||4,{},size);return s}
+function studioList(focus){const L=CPS.L;
+  $('#stuB').innerHTML=`<div class="stucard"><div class="mu">${CPS.parent?'大家設計的寵物都在這裡。小孩送出的設計會出現在首頁收件匣，按「上架」商店就買得到。':'自己畫一隻寵物！畫好送給爸媽，爸媽按「上架」，大家就能在商店領養牠 🥚'}</div>
+   <button class="stubig" onclick="studioEdit()">＋ 設計新寵物</button></div>
+   ${L.length?L.map(c=>`<div class="stucard stuit${focus===c.id?' foc':''}"><div class="stuth">${studioThumb(c.data,64)}</div><div style="flex:1;min-width:0"><b>${esc(c.name)}</b> <span class="stust" style="background:${CP_STC[c.status]||'#888'}">${esc(c.status)}</span>
+     <div class="mu">${esc(c.by)} 設計${c.status==='上架'||CPS.parent?'・🪙'+c.price:''}</div>
+     <div class="stuacts"><button onclick="studioEdit('${c.id}')">${!CPS.parent&&(c.status==='上架'||c.status==='下架')?'看看':'✏️ 編輯'}</button>${CPS.parent?`${c.status!=='上架'?`<button class="ok" onclick="studioSetSt('${c.id}','上架')">上架</button>`:`<button onclick="studioSetSt('${c.id}','下架')">下架</button>`}${c.status==='待審核'?`<button class="no" onclick="studioSetSt('${c.id}','退回')">退回</button>`:''}<button onclick="studioPrice('${c.id}')">🪙 價格</button>`:''}${CPS.parent||c.status==='草稿'||c.status==='退回'?`<button class="no" onclick="studioDelOne('${c.id}')">🗑️</button>`:''}</div></div></div>`).join(''):'<div class="stucard mu">還沒有設計，按上面的按鈕開始吧！</div>'}`}
+async function studioSetSt(id,st){const r=await run(null,'studioSet',{id:id,status:st});if(r!==null)studioLoad(id)}
+async function studioPrice(id){const c=CPS.L.find(x=>x.id===id);if(!await ask(`<h3>🪙 「${esc(c.name)}」的價格</h3><input id="cpPr" type="number" min="0" max="500" value="${c.price}" style="width:100%;font-size:18px;padding:8px">`,'儲存'))return;
+  const r=await run(null,'studioSet',{id:id,price:+$('#cpPr').value});if(r!==null)studioLoad(id)}
+async function studioDelOne(id){const c=CPS.L.find(x=>x.id===id);if(!await ask(`<h3>刪除「${esc(c.name)}」？</h3>刪除後無法復原。`,'刪除'))return;const r=await run(null,'studioDel',{id:id});if(r!==null)studioLoad()}
+/* ---------- 編輯器 ---------- */
+function cpBlank(n){return Array.from({length:n},()=>'.'.repeat(n))}
+function studioEdit(id){const c=id?CPS.L.find(x=>x.id===id):null,d=c?JSON.parse(JSON.stringify(c.data)):{};
+  const st=[0,1,2,3].map(i=>d.st&&d.st[i]&&d.st[i].length?d.st[i].map(r=>r.split('')):null);if(!st[3])st[3]=cpBlank(24).map(r=>r.split(''));
+  const ro=!!c&&!CPS.parent&&(c.status==='上架'||c.status==='下架');
+  CPS.ed={id:c?c.id:null,c:c,name:c?c.name:'',st:st,cur:3,pal:Object.assign({},CP_DEFPAL,d.pal||{}),key:'1',tool:'pen',undo:[],say:(d.say||['嗷～','嘿！','好開心♪']).concat(['','','']).slice(0,3),
+    voice:d.voice||'mon',skills:[0,1,2,3].map(i=>(d.skills||[])[i]||{n:CP_FXN[CPS.fx[[2,3,10,14][i]]],fx:CPS.fx[[2,3,10,14][i]]}),theme:d.theme||'pxdragon',memo:d.memo||'',price:c?c.price:40,ro:ro,anim:'walk'};
+  studioDraw()}
+function cpGrid(){const E=CPS.ed;return E.st[E.cur]}
+function studioData(){const E=CPS.ed,used={};E.st.forEach(g=>g&&g.forEach(r=>r.forEach(c=>used[c]=1)));const pal={};CP_KEYS.forEach(k=>{if(used[k])pal[k]=E.pal[k]});
+  return {st:E.st.map(g=>{if(!g)return null;const R=g.map(r=>r.join(''));return R.some(r=>/[^.]/.test(r))?R:null}),pal:pal,voice:E.voice,say:E.say.filter(String),skills:E.skills,theme:E.theme,memo:E.memo}}
+function studioDraw(){const E=CPS.ed,ro=E.ro;
+  $('#stuB').innerHTML=`<div class="stucard"><button class="stuback" onclick="studioList()">‹ 回列表</button>
+   <label class="stul">名字</label><input id="cpName" class="stuin" maxlength="10" value="${esc(E.name)}" placeholder="例如：方塊龍" ${ro?'disabled':''} oninput="CPS.ed.name=this.value">
+   </div>
+   <div class="stucard"><div class="stutabs">${CP_STG.map((s,i)=>`<button class="${E.cur===i?'on':''}" onclick="studioStage(${i})">${s}${i===3?'★':''}${E.st[i]?'':'<small>（沒畫）</small>'}</button>`).join('')}</div>
+    <div class="mu" style="margin:6px 0">${E.cur===3?'成年一定要畫。':'這個階段不畫的話，會用最接近的階段的圖。'}臉朝<b>右邊</b>畫；用「眼睛」色畫眼睛，牠就會自動眨眼；最下面兩排當腳，走路會自動交替。</div>
+    ${E.st[E.cur]?`<div class="stupv" id="cpPv"></div>
+    <div class="stuanim">${[['walk','🚶 走路'],['jump','🦘 跳'],['blink','😌 眨眼'],['sleep','💤 睡覺'],['happy','💗 開心']].map(([k,t])=>`<button class="${E.anim===k?'on':''}" onclick="CPS.ed.anim='${k}';studioPvRun();$$('.stuanim button').forEach(b=>b.classList.remove('on'));this.classList.add('on')">${t}</button>`).join('')}</div>
+    <div class="stucvw"><canvas id="cpCv"></canvas></div>
+    ${ro?'':`<div class="stutools">${[['pen','✏️ 畫'],['erase','🧽 擦'],['fill','🪣 倒'],['pick','💧 吸']].map(([k,t])=>`<button class="${E.tool===k?'on':''}" onclick="CPS.ed.tool='${k}';$$('.stutools button[data-t]').forEach(b=>b.classList.remove('on'));this.classList.add('on')" data-t="1">${t}</button>`).join('')}<button onclick="studioUndo()">↩️ 復原</button><button onclick="studioFlip()">↔️ 翻轉</button></div>
+    <div class="stupal">${CP_KEYS.map(k=>`<button class="stusw${E.key===k?' on':''}" onclick="studioKey('${k}')" style="background:${E.pal[k]}"><span>${CP_KN[k]||k}</span></button>`).join('')}</div>
+    <div class="stutools"><button onclick="studioColor()">🎨 換這格顏色</button><label class="stufile">📷 上傳圖片轉像素<input type="file" accept="image/*" onchange="studioImg(this)"></label></div>
+    <div class="stutools"><span class="mu">格子大小</span><select onchange="studioSize(+this.value)">${[16,20,24,28,32,36,40,44,48].map(n=>`<option ${n===cpGrid().length?'selected':''}>${n}</option>`).join('')}</select>
+     <select onchange="studioCopy(+this.value);this.value=''"><option value="">📋 從別的階段複製…</option>${CP_STG.map((s,i)=>i!==E.cur&&E.st[i]?`<option value="${i}">${s}</option>`:'').join('')}</select>
+     <button class="no" onclick="studioClear()">🗑️ 清空</button></div>`}`:
+    `<div class="stucard mu" style="text-align:center">這個階段還沒畫 ${ro?'':`<br><button class="stubig" onclick="studioNewStage()">開始畫${CP_STG[E.cur]}</button>`}</div>`}
+   </div>
+   <div class="stucard"><h4>🔊 叫聲和說話</h4>
+    <select class="stuin" ${ro?'disabled':''} onchange="CPS.ed.voice=this.value">${CP_VOICE.map(([k,t])=>`<option value="${k}" ${E.voice===k?'selected':''}>${t}</option>`).join('')}</select>
+    <div class="stu3">${E.say.map((s,i)=>`<input class="stuin" maxlength="10" value="${esc(s)}" placeholder="說的話 ${i+1}" ${ro?'disabled':''} oninput="CPS.ed.say[${i}]=this.value">`).join('')}</div></div>
+   <div class="stucard"><h4>⚡ 技能（長大會學會）</h4>${E.skills.map((s,i)=>`<div class="stusk"><span>${CP_SKST[i]}</span><input class="stuin" maxlength="8" value="${esc(s.n)}" ${ro?'disabled':''} oninput="CPS.ed.skills[${i}].n=this.value"><select class="stuin" ${ro?'disabled':''} onchange="studioFx(${i},this.value)">${CPS.fx.map(f=>`<option value="${f}" ${s.fx===f?'selected':''}>${CP_FXN[f]||f}</option>`).join('')}</select></div>`).join('')}
+    <div class="mu">特效從現有的挑；想要全新的特效，再請爸媽找 Claude 做。</div></div>
+   <div class="stucard"><h4>🏝️ 故鄉和紀念品</h4><select class="stuin" ${ro?'disabled':''} onchange="CPS.ed.theme=this.value">${CPS.themes.map(([k,n,h])=>`<option value="${k}" ${E.theme===k?'selected':''}>${esc(h)}（跟${esc(n)}一樣的場景）</option>`).join('')}</select>
+    <input class="stuin" maxlength="14" value="${esc(E.memo)}" placeholder="紀念品名字，例如：方塊龍的小鱗片" ${ro?'disabled':''} oninput="CPS.ed.memo=this.value"></div>
+   ${ro?'<div class="stucard mu">已經上架了，要修改請找爸媽。</div>':`<div class="stucard stubtns">${CPS.parent?`<label class="mu">價格 🪙<input id="cpPrice" type="number" min="0" max="500" value="${E.price}" style="width:70px"></label>`:''}
+    <button onclick="studioSave(0,this)">💾 存草稿</button><button class="go" onclick="studioSave(1,this)">${CPS.parent?'🚀 上架':'🚀 送給爸媽'}</button></div>`}`;
+  if(E.st[E.cur]){studioCv();studioPv()}}
+function studioFx(i,f){const s=CPS.ed.skills[i];if(!s.n||Object.values(CP_FXN).indexOf(s.n)>=0)s.n=CP_FXN[f]||s.n;s.fx=f;studioDraw()}
+function studioStage(i){CPS.ed.cur=i;CPS.ed.undo=[];studioDraw()}
+function studioNewStage(){const E=CPS.ed;E.st[E.cur]=cpBlank(E.st[3]?E.st[3].length:24).map(r=>r.split(''));studioDraw()}
+function studioKey(k){CPS.ed.key=k;$$('.stusw').forEach(b=>b.classList.remove('on'));const i=CP_KEYS.indexOf(k);$$('.stusw')[i].classList.add('on');if(CPS.ed.tool==='erase'||CPS.ed.tool==='pick'){CPS.ed.tool='pen';studioDraw()}}
+function studioColor(){const E=CPS.ed,inp=document.createElement('input');inp.type='color';inp.value=E.pal[E.key];inp.style.cssText='position:fixed;left:50%;top:50%;opacity:0';document.body.appendChild(inp);
+  inp.oninput=()=>{E.pal[E.key]=inp.value;const i=CP_KEYS.indexOf(E.key);$$('.stusw')[i].style.background=inp.value;studioCv();studioPv()};inp.onchange=()=>inp.remove();inp.click()}
+function studioPush(){const E=CPS.ed;E.undo.push(cpGrid().map(r=>r.slice()));if(E.undo.length>40)E.undo.shift()}
+function studioUndo(){const E=CPS.ed;if(!E.undo.length)return toast('沒有可以復原的');E.st[E.cur]=E.undo.pop();studioCv();studioPv()}
+function studioFlip(){studioPush();CPS.ed.st[CPS.ed.cur]=cpGrid().map(r=>r.slice().reverse());studioCv();studioPv()}
+function studioClear(){studioPush();const n=cpGrid().length;CPS.ed.st[CPS.ed.cur]=cpBlank(n).map(r=>r.split(''));studioCv();studioPv()}
+function studioCopy(i){if(isNaN(i))return;studioPush();CPS.ed.st[CPS.ed.cur]=CPS.ed.st[i].map(r=>r.slice());studioDraw()}
+// 換格子大小：內容貼齊底部、置中
+function studioSize(n){studioPush();const g=cpGrid(),o=g.length,N=cpBlank(n).map(r=>r.split('')),dx=Math.floor((n-o)/2),dy=n-o;
+  for(let y=0;y<o;y++)for(let x=0;x<o;x++){const X=x+dx,Y=y+dy;if(X>=0&&Y>=0&&X<n&&Y<n)N[Y][X]=g[y][x]}CPS.ed.st[CPS.ed.cur]=N;studioDraw()}
+function studioCv(){const cv=$('#cpCv');if(!cv)return;const g=cpGrid(),n=g.length,E=CPS.ed,W=Math.min(360,$('#stuB').clientWidth-36),c=Math.floor(W/n),S=c*n,dpr=window.devicePixelRatio||1;
+  cv.width=S*dpr;cv.height=S*dpr;cv.style.width=S+'px';cv.style.height=S+'px';const x=cv.getContext('2d');x.scale(dpr,dpr);
+  for(let j=0;j<n;j++)for(let i=0;i<n;i++){const ch=g[j][i];x.fillStyle=ch==='.'?((i+j)%2?'#f2f2f2':'#ffffff'):E.pal[ch];x.fillRect(i*c,j*c,c,c)}
+  x.strokeStyle='rgba(0,0,0,.08)';x.lineWidth=1;for(let i=0;i<=n;i++){x.beginPath();x.moveTo(i*c+.5,0);x.lineTo(i*c+.5,S);x.stroke();x.beginPath();x.moveTo(0,i*c+.5);x.lineTo(S,i*c+.5);x.stroke()}
+  x.strokeStyle='rgba(255,80,80,.35)';x.beginPath();x.moveTo(0,(n-2)*c+.5);x.lineTo(S,(n-2)*c+.5);x.stroke();
+  if(E.ro||cv.dataset.on)return;cv.dataset.on=1;let down=false;
+  const cell=ev=>{const r=cv.getBoundingClientRect(),cc=r.width/cpGrid().length;return [Math.floor((ev.clientX-r.left)/cc),Math.floor((ev.clientY-r.top)/cc)]};
+  cv.onpointerdown=ev=>{ev.preventDefault();cv.setPointerCapture(ev.pointerId);const [i,j]=cell(ev);const E=CPS.ed,G=cpGrid();if(i<0||j<0||j>=G.length||i>=G.length)return;
+    if(E.tool==='pick'){const ch=G[j][i];if(ch!=='.')studioKey(ch);return}studioPush();
+    if(E.tool==='fill'){cpFill(G,i,j,E.key);studioCv();studioPv();return}down=[i,j];cpPaint(i,j)};
+  cv.onpointermove=ev=>{if(!down)return;ev.preventDefault();const [i,j]=cell(ev),[a,b]=down;const st=Math.max(Math.abs(i-a),Math.abs(j-b),1);for(let t=1;t<=st;t++)cpPaint(Math.round(a+(i-a)*t/st),Math.round(b+(j-b)*t/st));down=[i,j]};
+  cv.onpointerup=cv.onpointercancel=()=>{if(down){down=false;studioPv()}}}
+function cpPaint(i,j){const E=CPS.ed,G=cpGrid();if(i<0||j<0||j>=G.length||i>=G.length)return;const v=E.tool==='erase'?'.':E.key;if(G[j][i]===v)return;G[j][i]=v;
+  const cv=$('#cpCv'),c=parseFloat(cv.style.width)/G.length,x=cv.getContext('2d');x.fillStyle=v==='.'?((i+j)%2?'#f2f2f2':'#ffffff'):E.pal[v];x.fillRect(i*c,j*c,c,c);
+  x.strokeStyle='rgba(0,0,0,.08)';x.strokeRect(i*c+.5,j*c+.5,c,c)}
+function cpFill(G,i,j,v){const t=G[j][i];if(t===v)return;const n=G.length,q=[[i,j]];while(q.length){const [a,b]=q.pop();if(a<0||b<0||a>=n||b>=n||G[b][a]!==t)continue;G[b][a]=v;q.push([a+1,b],[a-1,b],[a,b+1],[a,b-1])}}
+/* ---------- 預覽：用真正的寵物畫法，會走、會跳、會眨眼 ---------- */
+let CPA_T=0,CPA_K=0;
+function studioPv(){if(!$('#cpPv'))return;cpReg({_cpv:{art:Object.assign(studioData(),{st:CPS.ed.st.map((g,i)=>i===CPS.ed.cur?g.map(r=>r.join('')):(g?g.map(r=>r.join('')):null))})}});
+  const cur=CPS.ed.cur;CPS.ed.pvSt=[1,2,3,4][cur];studioPvFrame();if(!CPA_T)studioPvRun()}
+function studioPvRun(){clearInterval(CPA_T);CPA_K=0;const box=$('#cpPv');if(!box)return;box.className='stupv a-'+CPS.ed.anim;CPA_T=setInterval(()=>{if(!$('#cpPv')){clearInterval(CPA_T);CPA_T=0;return}CPA_K++;studioPvFrame()},260);studioPvFrame()}
+function studioPvFrame(){const E=CPS&&CPS.ed,box=$('#cpPv');if(!E||!box)return;const a=E.anim,k=CPA_K;
+  const pose=a==='walk'?(k%2?'walk1':'walk2'):a==='jump'?(k%4===1||k%4===2?'jump':''):a==='blink'?(k%6===5?'blink':''):a==='sleep'?'sleep':a==='happy'?(k%8===7?'blink':''):'';
+  box.innerHTML=`<div class="stupvi">${petSvg('_cpv',E.pvSt||4,{pose:pose,mood:a==='happy'?100:80},130)}</div>${a==='sleep'?'<div class="stuzz">Zzz</div>':''}${a==='happy'?'<div class="stuht">💗</div>':''}`}
+/* ---------- 上傳圖片 → 像素格子 ---------- */
+function studioImg(inp){const f=inp.files&&inp.files[0];if(!f)return;const img=new Image(),url=URL.createObjectURL(f);
+  img.onload=async()=>{URL.revokeObjectURL(url);const det=cpDetect(img),cur=cpGrid().length,sug=det||cur;
+    if(!await ask(`<h3>📷 圖片轉成像素</h3><div class="mu">${det?'看起來這是 '+det+' 格左右的像素圖'+(det>48?'（最多 48 格，會稍微縮小）':'')+'，':''}會把圖片轉成像素格子，挑出顏色，白色或單色背景會自動去掉。</div>
+      <label style="display:block;margin:8px 0">格子大小 <select id="cpNs">${[16,20,24,28,32,36,40,44,48].map(x=>`<option ${x===Math.min(48,Math.max(16,Math.round(sug/4)*4))?'selected':''}>${x}</option>`).join('')}</select></label>
+      <label style="display:block;margin:8px 0">顏色數量 <select id="cpNc">${[3,4,5,6,7,8].map(x=>`<option ${x===8?'selected':''}>${x}</option>`).join('')}</select></label>
+      <label style="display:block"><input type="checkbox" id="cpOl"> 自動加外框（原圖沒有外框才需要）</label>`,'轉換'))return;
+    studioPush();const n=+$('#cpNs').value,r=cpPixelate(img,n,+$('#cpNc').value,$('#cpOl').checked);CPS.ed.st[CPS.ed.cur]=r.g;Object.assign(CPS.ed.pal,r.pal);studioDraw();toast('轉好了！可以再用筆修一修')};
+  img.src=url;inp.value=''}
+// 猜像素圖原本有幾格：看顏色一段一段的長度
+function cpDetect(img){try{const W=Math.min(img.width,900),sc=W/img.width,H=Math.round(img.height*sc),cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d');x.imageSmoothingEnabled=false;x.drawImage(img,0,0,W,H);
+  const D=x.getImageData(0,0,W,H).data,runs={};
+  for(let y=Math.floor(H*.2);y<H*.8;y+=Math.max(1,Math.floor(H/60))){let st=0;for(let i=1;i<W;i++){const a=(y*W+i)*4,b=a-4;const d=Math.abs(D[a]-D[b])+Math.abs(D[a+1]-D[b+1])+Math.abs(D[a+2]-D[b+2]);if(d>60){const L=i-st;if(L>=3&&L<W/6)runs[L]=(runs[L]||0)+1;st=i}}}
+  let bL=0,bs=0;for(let L=4;L<W/6;L++){const v=(runs[L-1]||0)+(runs[L]||0)+(runs[L+1]||0);if(v>bs){bs=v;bL=L}}
+  if(!bL||bs<8)return 0;const Lm=((bL-1)*(runs[bL-1]||0)+bL*(runs[bL]||0)+(bL+1)*(runs[bL+1]||0))/bs;
+  const n=Math.round(Math.max(W,H)/Lm);return n>=12&&n<=80?n:0}catch(e){return 0}}
+function cpPixelate(img,n,nc,outline){const K=8,cv=document.createElement('canvas');cv.width=cv.height=n*K;const x=cv.getContext('2d');
+  const sc=Math.min(n*K/img.width,n*K/img.height),w=img.width*sc,h=img.height*sc,ox=(n*K-w)/2,oy=n*K-h;x.imageSmoothingEnabled=false;x.drawImage(img,ox,oy,w,h);
+  const D=x.getImageData(0,0,n*K,n*K).data,px=(X,Y)=>{const i=(Y*n*K+X)*4;return [D[i],D[i+1],D[i+2],D[i+3]]};
+  // 背景：四個角落都差不多的顏色就當背景
+  const X0=Math.ceil(ox)+1,Y0=Math.ceil(oy)+1,X1=Math.floor(ox+w)-2,Y1=Math.floor(oy+h)-2,cs=[px(X0,Y0),px(X1,Y0),px(X0,Y1),px(X1,Y1)].filter(p=>p[3]>200);let bg=null;
+  if(cs.length===4&&cs.every(p=>Math.abs(p[0]-cs[0][0])+Math.abs(p[1]-cs[0][1])+Math.abs(p[2]-cs[0][2])<40))bg=cs[0];
+  const near=p=>bg&&Math.abs(p[0]-bg[0])+Math.abs(p[1]-bg[1])+Math.abs(p[2]-bg[2])<46;
+  // 每格取最多的顏色（透明太多就是空格）
+  const cells=[];for(let j=0;j<n;j++){const row=[];for(let i=0;i<n;i++){const bins={};let tot=0,emp=0;
+    for(let yy=1;yy<K;yy+=2)for(let xx=1;xx<K;xx+=2){const p=px(i*K+xx,j*K+yy);tot++;if(p[3]<128){emp++;continue}const key=(p[0]>>4)+'_'+(p[1]>>4)+'_'+(p[2]>>4);const b=bins[key]||(bins[key]=[0,0,0,0]);b[0]+=p[0];b[1]+=p[1];b[2]+=p[2];b[3]++}
+    if(emp>tot*.55){row.push(null);continue}let best=null;Object.values(bins).forEach(b=>{if(!best||b[3]>best[3])best=b});row.push(best?[best[0]/best[3],best[1]/best[3],best[2]/best[3]]:null)}cells.push(row)}
+  // 背景：從四邊往內，跟背景色很像、連在一起的格子才去掉（被外框圍住的白色不會被去掉）
+  if(bg){const q=[];for(let i=0;i<n;i++)q.push([i,0],[i,n-1],[0,i],[n-1,i]);const seen={};
+    while(q.length){const [i,j]=q.pop(),k=i+'_'+j;if(i<0||j<0||i>=n||j>=n||seen[k])continue;seen[k]=1;const c=cells[j][i];if(c&&!near(c))continue;cells[j][i]=null;q.push([i+1,j],[i-1,j],[i,j+1],[i,j-1])}}
+  // 顏色分群（k-means）
+  const all=[];cells.forEach(r=>r.forEach(c=>c&&all.push(c)));if(!all.length)return {g:cpBlank(n).map(r=>r.split('')),pal:{}};
+  const dist=(a,b)=>(a[0]-b[0])**2+(a[1]-b[1])**2+(a[2]-b[2])**2;let C=[all[0]];
+  while(C.length<Math.min(nc+1,all.length)){let far=null,fd=-1;all.forEach(p=>{const d=Math.min(...C.map(c=>dist(p,c)));if(d>fd){fd=d;far=p}});if(fd<200)break;C.push(far)}
+  for(let it=0;it<8;it++){const S=C.map(()=>[0,0,0,0]);all.forEach(p=>{let bi=0,bd=1e9;C.forEach((c,i)=>{const d=dist(p,c);if(d<bd){bd=d;bi=i}});S[bi][0]+=p[0];S[bi][1]+=p[1];S[bi][2]+=p[2];S[bi][3]++});C=C.map((c,i)=>S[i][3]?[S[i][0]/S[i][3],S[i][1]/S[i][3],S[i][2]/S[i][3]]:c)}
+  // 很暗的那群當外框
+  const lum=c=>c[0]*.3+c[1]*.59+c[2]*.11;let oi=-1,ol=1e9;C.forEach((c,i)=>{if(lum(c)<70&&lum(c)<ol){ol=lum(c);oi=i}});
+  const keys={},pal={};let k=1;C.forEach((c,i)=>{if(i===oi){keys[i]='o';pal.o=cpToHex(...c)}else if(k<=8){keys[i]=String(k);pal[String(k)]=cpToHex(...c);k++}else keys[i]='1'});
+  const g=cells.map(r=>r.map(c=>{if(!c)return '.';let bi=0,bd=1e9;C.forEach((cc,i)=>{const d=dist(c,cc);if(d<bd){bd=d;bi=i}});return keys[bi]}));
+  if(outline){const o=g.map(r=>r.slice());for(let j=0;j<n;j++)for(let i=0;i<n;i++)if(g[j][i]==='.'&&[[1,0],[-1,0],[0,1],[0,-1]].some(([a,b])=>{const v=(g[j+b]||[])[i+a];return v&&v!=='.'&&v!=='o'}))o[j][i]='o';return {g:o,pal:pal}}
+  return {g:g,pal:pal}}
+async function studioSave(submit,btn){const E=CPS.ed;E.name=($('#cpName')||{}).value||E.name;if(!E.name.trim())return toast('先幫牠取個名字',1);
+  const data=studioData();if(!data.st[3])return toast('「成年」一定要畫喔',1);
+  if(submit&&!await ask(`<h3>${CPS.parent?'🚀 上架「'+esc(E.name)+'」？':'🚀 送給爸媽？'}</h3>${studioThumb(data,110)}<div class="mu">${CPS.parent?'上架後大家都能在商店領養。':'爸媽按「上架」以後，大家都能在商店領養牠。'}</div>`,CPS.parent?'上架':'送出'))return;
+  const arg={id:E.id,name:E.name.trim(),data:data,submit:!!submit};if(CPS.parent&&$('#cpPrice'))arg.price=+$('#cpPrice').value;
+  const r=await run(btn,'studioSave',arg);if(r){E.id=r.id;if(submit)studioLoad(r.id)}}
+document.head.insertAdjacentHTML('beforeend',`<style>
+.stu{position:fixed;inset:0;z-index:15;background:#f4f1ea;display:flex;flex-direction:column;font-size:15px;color:#2a2a2a}
+.stuh{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:linear-gradient(90deg,#ffe28a,#ffb3d1);font-size:18px}
+.stux{border:0;background:#fff8;border-radius:50%;width:34px;height:34px;font-size:18px}
+.stub{flex:1;overflow:auto;padding:10px 12px 90px;-webkit-overflow-scrolling:touch}
+.stucard{background:#fff;border-radius:16px;padding:12px;margin-bottom:10px;box-shadow:0 2px 0 #0001}
+.stucard h4{margin:0 0 8px}
+.stuit{display:flex;gap:10px;align-items:center}.stuit.foc{outline:3px solid #ffb000}
+.stuth{width:64px;height:64px;flex:none;background:#eef6e8;border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stust{color:#fff;border-radius:8px;padding:1px 7px;font-size:12px;margin-left:4px}
+.stuacts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.stuacts button,.stutools button,.stuanim button,.stubtns button,.stuback,.stufile{border:0;border-radius:10px;padding:7px 10px;background:#eee;font-size:14px;font-weight:700;cursor:pointer}
+.stuacts .ok,.stubtns .go{background:#2a9a4a;color:#fff}.stuacts .no,.stutools .no{background:#ffe0e0;color:#b02020}
+.stubig{display:block;width:100%;margin-top:10px;border:0;border-radius:14px;padding:12px;font-size:17px;font-weight:800;background:linear-gradient(90deg,#ffcf3a,#ff8ac0);color:#fff}
+.stuin{width:100%;box-sizing:border-box;border:2px solid #e6e0d4;border-radius:10px;padding:8px;font-size:15px;margin:4px 0;background:#fff}
+.stul{font-size:13px;color:#777;display:block;margin-top:8px}
+.stutabs{display:flex;gap:4px}.stutabs button{flex:1;border:0;border-radius:10px;padding:8px 2px;background:#eee;font-weight:700;font-size:13px}.stutabs button.on{background:#ffcf3a}.stutabs small{display:block;font-size:10px;color:#999}
+.stupv{position:relative;height:150px;border-radius:14px;background:linear-gradient(#cfeeff 65%,#bfe6a8 65%);display:flex;align-items:flex-end;justify-content:center;overflow:hidden;margin-bottom:6px}
+.stupvi{transform-origin:50% 100%}
+.stupv.a-walk .stupvi{animation:stuwk 2.6s ease-in-out infinite}.stupv.a-jump .stupvi{animation:stujp 1.04s ease-in-out infinite}.stupv.a-happy .stupvi{animation:stuhp .8s ease-in-out infinite}.stupv.a-sleep .stupvi{filter:brightness(.85)}.stupv.a-blink .stupvi{animation:stubr 2.4s ease-in-out infinite}
+@keyframes stuwk{0%,100%{transform:translateX(-50px)}50%{transform:translateX(50px)}}
+@keyframes stujp{0%,100%{transform:translateY(0) scaleY(1)}15%{transform:translateY(0) scaleY(.88)}45%{transform:translateY(-40px) scaleY(1.05)}75%{transform:translateY(0) scaleY(.92)}}
+@keyframes stuhp{0%,100%{transform:scale(1,1)}50%{transform:scale(1.08,.92)}}
+@keyframes stubr{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.03)}}
+.stuzz{position:absolute;right:30%;top:20px;font-weight:800;color:#5a6aa0;animation:stubr 1.6s infinite}.stuht{position:absolute;left:50%;top:14px;font-size:22px;animation:stujp 1s infinite}
+.stuanim{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px}.stuanim button.on,.stutools button.on{background:#ffcf3a}
+.stucvw{display:flex;justify-content:center;touch-action:none}#cpCv{touch-action:none;border-radius:6px;box-shadow:0 0 0 2px #e6e0d4}
+.stutools{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}.stutools select{border-radius:10px;padding:6px;border:2px solid #e6e0d4;font-size:14px}
+.stupal{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:8px}
+.stusw{height:40px;border-radius:10px;border:2px solid #0002;position:relative;cursor:pointer}.stusw.on{outline:3px solid #ff8a00;outline-offset:1px}
+.stusw span{position:absolute;left:2px;bottom:1px;font-size:10px;font-weight:800;color:#fff;text-shadow:0 0 2px #000,0 0 2px #000}
+.stufile{position:relative;overflow:hidden;display:inline-block}.stufile input{position:absolute;inset:0;opacity:0}
+.stu3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.stusk{display:grid;grid-template-columns:52px 1fr 1fr;gap:6px;align-items:center}.stusk span{font-size:13px;font-weight:700;color:#777}
+.stubtns{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+.stuback{margin-bottom:4px}
+.eggtag.cp{background:#ff8ac0}
+</style>`);
 </script>
 <script>
 let S={},st={tab:'home',rec:'p',pCat:'',kKid:'',kType:'獎金',kCat:'',sync:true,kid:'',kidView:'bank',depMonths:6,book:'__parent',noFixed:false,range:'this',stats:null,payer:'',sPayer:''},INB=null,CFG=null,recs=[],mems=[];
@@ -1209,6 +1283,7 @@ function go(p){st.tab=p;$$('#dock>div').forEach(d=>d.classList.toggle('on',d.dat
 let H_AT=0,LAST_MS=null,INB_RAW=null;
 // 按下通過／退回後先把那一筆從畫面拿掉，伺服器在背景處理；處理中的不會被舊資料又顯示回來
 const RV_BUSY=new Set();
+function studioClosed(){if(st.tab==='home')loadHome()}
 async function loadHome(pre){
   const [from,to]=rangeOf('this');
   let inb,ms;if(pre&&pre.inbox&&(pre.ms||LAST_MS)){inb=pre.inbox;ms=pre.ms||LAST_MS}else{try{[inb,ms]=await Promise.all([call('getInbox'),call('getStats',{book:'__parent',from,to,noFixed:false})])}catch(e){return toast(errMsg(e),1)}}
@@ -1222,12 +1297,14 @@ async function loadHome(pre){
   ${pinsHtml()}
   <div class="card"><div class="row"><h3>📥 審核收件匣 ${inb.items.length?`<span class="pill">${inb.items.length}</span>`:''}</h3>${tasks.length>1?'<button class="sbtn" onclick="okAll()">全部通過</button>':''}</div>
    ${inb.items.length?'':'<div class="empty">沒有要處理的事 ✨</div>'}
-   ${tasks.map(x=>x.type==='行事曆'?`<div class="it"><div class="ic">${av(x.kid,34)}</div><div class="t"><b>${esc(x.kid)}</b> 想加行程 📅「${esc(x.name)}」<div class="mu">${esc(x.note)}・${x.time.slice(5)} 送出</div></div>
+   ${tasks.map(x=>x.type==='寵物設計'?`<div class="it"><div class="ic">${av(x.kid,34)}</div><div class="t"><b>${esc(x.kid)}</b> 設計了新寵物 🎨「${esc(x.name)}」<div class="mu">${x.time.slice(5)} 送出・<a href="#" onclick="studioOpen();return false">看設計</a></div></div>
+     <div class="acts"><button class="ok" onclick="rv('${x.id}',1)">上架</button><button class="no" onclick="rv('${x.id}',0)">退回</button></div></div>`:x.type==='行事曆'?`<div class="it"><div class="ic">${av(x.kid,34)}</div><div class="t"><b>${esc(x.kid)}</b> 想加行程 📅「${esc(x.name)}」<div class="mu">${esc(x.note)}・${x.time.slice(5)} 送出</div></div>
      <div class="acts"><button class="ok" onclick="rv('${x.id}',1)">加入</button><button class="no" onclick="rv('${x.id}',0)">退回</button></div></div>`:`<div class="it"><div class="ic">${av(x.kid,34)}</div><div class="t"><b>${esc(x.kid)}</b> 完成${x.type==='團隊'?'🤝合作任務':''}「${esc(x.name)}」<div class="mu">${x.time.slice(5)}・+${x.exp} 經驗・+${n(x.coins)} 金幣${x.ntd?`・<b class="plus">+${n(x.ntd)} 元</b>`:''}${x.note?'・'+esc(x.note):''}</div></div>
      <div class="acts"><button class="ok" onclick="rv('${x.id}',1)">通過</button><button class="no" onclick="rv('${x.id}',0)">退回</button></div></div>`).join('')}
    ${buys.map(x=>`<div class="it"><div class="ic">${av(x.kid,34)}</div><div class="t"><b>${esc(x.kid)}</b> ${x.type==='兌換'?'要兌換':'買了'}「${esc(x.name)}」<div class="mu">${x.time.slice(5)}・${n(-x.coins)} 金幣${x.type==='兌換'?`・存進存摺 ${n(x.ntd)} 元`:''}</div></div>
      <div class="acts"><button class="ok" onclick="rv('${x.id}',1)">${x.type==='兌換'?'存入':'兌現'}</button><button class="no" onclick="rv('${x.id}',0)">退回</button></div></div>`).join('')}</div>
   <div id="calCard">${calCardHtml()}</div>
+  <div class="card" onclick="studioOpen()" style="cursor:pointer"><div class="row"><h3>🎨 寵物工作室</h3><span class="mu">›</span></div><div class="mu">大家自己設計的寵物。小孩送出的設計會出現在收件匣，按「上架」商店就買得到。</div></div>
   <div class="card"><h3>🏝️ 小孩們</h3>${S.kids.map(k=>{const g=inb.kids[k]||{};return `<div class="it" onclick="st.kid='${esc(k)}';st.kidView='game';go('kids')"><div class="ic">${av(k,38)}</div>
    <div class="t"><b>${esc(PF(k).nick||k)}</b> <span class="mu">${esc(k)}</span><div class="mu">Lv.${g.lv||1} ${titleOf(g.lv||1)}${g.pending?`・⏳ ${g.pending} 個待審核`:''}</div></div>
    <div style="text-align:right"><b class="gold">🪙 ${n(g.coins)}</b><div class="mu">💵 ${n(g.ntd)} 元</div></div></div>`}).join('')}</div>`;
@@ -1380,7 +1457,7 @@ async function logBox(id){const x=delItems[id];
   if(!ok)return;if(await run(null,'editLog',{id:x.id,name:$('#lg_n').value,exp:$('#lg_e').value,coins:$('#lg_c').value,note:$('#lg_t').value})!==null)loadKidGame()}
 async function delLog(id){const x=delItems[id];if(!await ask(`<h3>刪除這筆紀錄？</h3>${esc(x.kid)}：${esc(x.name)}<br>金幣、經驗會跟著扣回來。<br><span class="mu">刪除後無法復原。</span>`,'刪除'))return;
   if(await run(null,'deleteLog',{id:x.id})!==null)loadKidGame()}
-async function loadKidBadge(){let r;try{r=await call('kidGame',st.kid)}catch(e){return toast(errMsg(e),1)}const v=r.pet&&r.pet.now;
+async function loadKidBadge(){let r;try{r=await call('kidGame',st.kid)}catch(e){return toast(errMsg(e),1)}if(r.pet)cpReg(r.pet.types);const v=r.pet&&r.pet.now;
   $('#kidBody').innerHTML=`<div class="card"><h3>🐾 寵物</h3>${v?`<div style="display:flex;gap:10px;align-items:center">${petSvg(v.species,v.stage,{shiny:v.shiny,sick:v.sick,mood:v.mood,poops:v.poops},96)}<div style="flex:1"><b>${esc(v.name)}</b> <span class="mu">${v.typeName}・${v.stageName}${v.shiny?' ✨':''}</span>
    <div class="mu">${v.stage?'第 '+(v.ageDays+1)+' 天・還有 '+v.daysLeft+' 天長大・照顧分數 '+v.avg:'還要 '+Math.ceil(v.hatchIn)+' 小時孵化'}${v.sick?'・<b class="red">生病中</b>':''}</div>${v.stage?petBars(v):''}</div></div>`:'<div class="empty">還沒有養寵物</div>'}</div>${r.badges?badgeWall(r.badges):''}`}
 async function loadKidGame(){let r;try{r=await call('kidGame',st.kid)}catch(e){return toast(errMsg(e),1)}const g=r.me;
