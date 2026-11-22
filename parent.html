@@ -1009,7 +1009,7 @@ const CAL_IC=[[/生日/,'🎂'],[/考|測驗/,'📝'],[/醫|牙|診所|疫苗|�
 const CAL_BIG=/生日|出遊|旅行|旅遊|露營|出國|樂園|過年|畢業|運動會/;
 const CAL_WD='日一二三四五六',CAL_KC=['#ff8a4c','#e86aa6','#4c9dff','#36b37e','#9b6bff'];
 function calIc(t){for(const [r,i] of CAL_IC)if(r.test(t))return i;return '📌'}
-function calKc(name,kids){const i=(kids||[]).indexOf(name);return name==='全家'?'#8a7a5a':CAL_KC[(i<0?4:i)%5]}
+function calKc(name,kids){const i=(kids||[]).indexOf(name);return name==='全家'?'#8a7a5a':name==='爸媽'?'#5c7cfa':CAL_KC[(i<0?4:i)%5]}
 function calD(s){const p=String(s).split('-');return new Date(+p[0],p[1]-1,+p[2],12)}
 function calYmd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function calAddD(s,n){const d=calD(s);d.setDate(d.getDate()+n);return calYmd(d)}
@@ -1017,29 +1017,29 @@ function calDiff(a,b){return Math.round((calD(b)-calD(a))/864e5)}
 function calRel(today,d){const x=calDiff(today,d);return x===0?'今天':x===1?'明天':x===2?'後天':x>0?x+' 天後':''}
 function calMd(s){return (+s.slice(5,7))+'/'+(+s.slice(8,10))}
 function calWhen(e){let w=calMd(e.d)+'（'+CAL_WD[calD(e.d).getDay()]+'）';if(e.d2&&e.d2!==e.d)w+=' 到 '+calMd(e.d2);return w+(e.all?'':' '+e.t)}
-function calTitle(e){let t=e.title;(e.who||[]).forEach(n=>{if(t.indexOf(n)===0&&/^[：:、 ]/.test(t.slice(n.length)))t=t.slice(n.length).replace(/^[：:、 ]+/,'')});return t||e.title}
+function calTitle(e){let t=e.title;(e.pa?['爸媽']:e.who||[]).forEach(n=>{if(t.indexOf(n)===0&&/^[：:、 ]/.test(t.slice(n.length)))t=t.slice(n.length).replace(/^[：:、 ]+/,'')});return t||e.title}
 function calSort(L){return L.sort((a,b)=>a.d<b.d?-1:a.d>b.d?1:(a.all?'':a.t)<(b.all?'':b.t)?-1:1)}
-function calChips(e,kids){return (e.who&&e.who.length?e.who:['全家']).map(n=>`<span class="cwho" style="background:${calKc(n,kids)}">${esc(n)}</span>`).join('')}
+function calChips(e,kids){return (e.pa?['爸媽']:e.who&&e.who.length?e.who:['全家']).map(n=>`<span class="cwho" style="background:${calKc(n,kids)}">${esc(n)}</span>`).join('')}
 function calItem(e,o){o=o||{};const r=o.today&&e.d2>=o.today?(e.d<=o.today?'今天':calRel(o.today,e.d)):'';
   return `<div class="cit"><div class="cic">${calIc(e.title)}</div><div class="ct"><b>${esc(calTitle(e))}</b> ${calChips(e,o.kids)}<div class="mu">${calWhen(e)}${r?' ・<b class="crel">'+r+'</b>':''}${e.loc?' ・📍'+esc(e.loc):''}</div></div>${o.del&&!e.rec?`<button class="cdel" onclick="calEdit('${e.id}')">✏️</button><button class="cdel" onclick="calDelete('${e.id}')">🗑️</button>`:''}</div>`}
 // 之後的行程倒數小卡（有日期）
-function calCount(list,today,kids){return list.length?`<div class="ccw">${list.map(e=>`<div class="ccount">${calIc(e.title)} <b>${esc(calTitle(e))}</b> ${e.who&&e.who.length?calChips(e,kids):''}<div class="mu">${calWhen(e)}・還有 <b class="crel">${calDiff(today,e.d)}</b> 天</div></div>`).join('')}</div>`:''}
+function calCount(list,today,kids){return list.length?`<div class="ccw">${list.map(e=>`<div class="ccount">${calIc(e.title)} <b>${esc(calTitle(e))}</b> ${e.pa||e.who&&e.who.length?calChips(e,kids):''}<div class="mu">${calWhen(e)}・還有 <b class="crel">${calDiff(today,e.d)}</b> 天</div></div>`).join('')}</div>`:''}
 function calOn(list,d){return list.filter(e=>e.d<=d&&(e.d2||e.d)>=d)}
 // 月曆（m 從 0 開始）
 function calMonth(y,m,list,sel,today,kids){const first=new Date(y,m,1,12).getDay(),days=new Date(y,m+1,0).getDate();
   let h='<div class="cgrid">'+[...CAL_WD].map(w=>`<div class="cwd">${w}</div>`).join('');for(let i=0;i<first;i++)h+='<div></div>';
   for(let d=1;d<=days;d++){const s=calYmd(new Date(y,m,d,12)),ev=calOn(list,s);
-    h+=`<div class="cday${s===today?' tdy':''}${s===sel?' sel':''}" onclick="calPick('${s}')"><span>${d}</span><div class="cdots">${ev.slice(0,4).map(e=>`<i style="background:${calKc(e.who&&e.who.length===1?e.who[0]:'全家',kids)}"></i>`).join('')}</div></div>`}
+    h+=`<div class="cday${s===today?' tdy':''}${s===sel?' sel':''}" onclick="calPick('${s}')"><span>${d}</span><div class="cdots">${ev.slice(0,4).map(e=>`<i style="background:${calKc(e.pa?'爸媽':e.who&&e.who.length===1?e.who[0]:'全家',kids)}"></i>`).join('')}</div></div>`}
   return h+'</div>'}
 // 新增行程的表單（kid：小孩版，只能選自己或全家）
-function calFormHtml(date,kids,kid,ev){const ed=ev||null,dys=ed&&ed.all?calDiff(ed.d,ed.d2)+1:1,ew=ed&&ed.who&&ed.who.length?ed.who[0]:'全家',all=!ed||ed.all;
+function calFormHtml(date,kids,kid,ev){const ed=ev||null,dys=ed&&ed.all?calDiff(ed.d,ed.d2)+1:1,ew=ed&&ed.pa?'爸媽':ed&&ed.who&&ed.who.length?ed.who[0]:'全家',all=!ed||ed.all;
   return `<h3>${ed?'✏️ 修改行程':'📅 新增行程'}</h3>
   <label class="cfl">日期</label><input id="cfDate" type="date" value="${date}">
   <label class="cfl chk"><input id="cfAll" type="checkbox"${all?' checked':''} onchange="$('#cfTimeRow').classList.toggle('hidden',this.checked);$('#cfDaysRow').classList.toggle('hidden',!this.checked)"> 全天</label>
   <div id="cfTimeRow"${all?' class="hidden"':''}><label class="cfl">時間</label><input id="cfTime" type="time" value="${ed&&!ed.all?ed.t:'09:00'}"></div>
   <div id="cfDaysRow"${all?'':' class="hidden"'}><label class="cfl">共幾天</label><select id="cfDays">${[1,2,3,4,5,6,7,8,9,10,11,12,13,14].map(i=>`<option value="${i}"${i===dys?' selected':''}>${i} 天</option>`).join('')}</select></div>
   <label class="cfl">要做什麼</label><input id="cfTitle" maxlength="30" value="${ed?esc(calTitle(ed)):''}" placeholder="例如：數學考試、鋼琴課、宛芝生日">
-  <label class="cfl">是誰的</label><div class="cfwho">${(kid?[kid,'全家']:['全家'].concat(kids)).map((n,i)=>`<label><input type="radio" name="cfWho" value="${esc(n)}"${(ed?n===ew:i===0)?' checked':''}> ${esc(n)}</label>`).join('')}</div>`}
+  <label class="cfl">是誰的</label><div class="cfwho">${(kid?[kid,'全家']:['全家','爸媽'].concat(kids)).map((n,i)=>`<label><input type="radio" name="cfWho" value="${esc(n)}"${(ed?n===ew:i===0)?' checked':''}> ${esc(n)}</label>`).join('')}</div>`}
 function calFormVal(){const all=$('#cfAll').checked,w=document.querySelector('input[name=cfWho]:checked');
   return {date:$('#cfDate').value,time:all?'':$('#cfTime').value,days:all?+$('#cfDays').value:1,title:$('#cfTitle').value.trim(),who:w?w.value:'全家'}}
 document.head.insertAdjacentHTML('beforeend',`<style>
