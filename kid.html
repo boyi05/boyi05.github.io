@@ -177,6 +177,39 @@ input.amt{font-size:24px;text-align:right;color:var(--red)}
 .egg b{font-size:12px;line-height:1.2}.egg .mu{font-size:12px}.egg .go{padding:4px 0;width:100%;font-size:13px;margin-top:3px}
 .skb{margin-top:6px;padding:8px}.skb small{font-weight:600;opacity:.85;font-size:12px}
 .lookb{border:0;border-radius:10px;padding:3px 8px;margin-left:4px;font-size:12px;font-weight:700;background:#fff1c2;color:#7a5a00;vertical-align:middle}
+/* 小島收銀員 */
+.cscard{text-align:center}
+.cscus{display:flex;align-items:center;gap:8px;justify-content:center;margin:-4px 0 8px}
+.cscus .ce{width:78px;height:78px;flex:none;display:flex;align-items:center;justify-content:center;font-size:58px}
+.cscus .cb{background:#fff;border:2px solid #e6dcc8;border-radius:14px;padding:6px 10px;font-weight:800;position:relative;text-align:left;line-height:1.35}
+.cscus .cb small{display:block;font-size:12px;color:#9a8670;font-weight:700}
+.cscus .cb:before{content:'';position:absolute;left:-13px;top:50%;margin-top:-6px;border:6px solid transparent;border-right-color:#e6dcc8}
+.csitems{background:#fffaf0;border:2px dashed #e6dcc8;border-radius:14px;padding:8px 12px;text-align:left}
+.csit{display:flex;justify-content:space-between;align-items:center;font-size:17px;font-weight:700;padding:3px 0}
+.csit span:first-child{display:flex;align-items:center;gap:6px}.csit i{font-style:normal;font-size:26px}
+.csit b{color:#d0453b}
+.cstag{display:inline-block;background:#ffe9a8;color:#8a5a00;border-radius:10px;padding:3px 9px;font-weight:900;font-size:14px;margin:6px 4px 0 0}
+.cstot{border-top:2px solid #e6dcc8;margin-top:6px;padding-top:6px;font-size:18px;font-weight:900;display:flex;justify-content:space-between}
+.cspay{margin:10px 0 4px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap}
+.cstray{min-height:64px;background:#e9f6ee;border:2px solid #b7dfc6;border-radius:14px;padding:6px;display:flex;flex-wrap:wrap;gap:4px;justify-content:center;align-items:center;margin:8px 0 4px}
+.cstray .empty{color:#8aa;font-size:14px;padding:0}
+.cssum{font-weight:900;font-size:17px;margin-bottom:6px}
+.csdraw{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:#7a5a3c;border-radius:16px;padding:10px;box-shadow:inset 0 3px 0 #5d4430}
+.csdraw button{background:#a07a55;border:0;border-radius:10px;height:62px;display:flex;align-items:center;justify-content:center;padding:0}
+.csdraw button:active{transform:scale(.94)}
+.mo{display:inline-flex;align-items:center;justify-content:center;font-weight:900;flex:none;user-select:none}
+.mo.c{border-radius:50%;box-shadow:inset 0 -3px 0 rgba(0,0,0,.18),0 2px 0 rgba(0,0,0,.2)}
+.mo.c1{width:30px;height:30px;font-size:13px;background:radial-gradient(circle at 35% 35%,#f0b27a,#c47a3a);color:#5a2e0c}
+.mo.c5{width:34px;height:34px;font-size:14px;background:radial-gradient(circle at 35% 35%,#f4f4f4,#b9bcc2);color:#4a4f57}
+.mo.c10{width:38px;height:38px;font-size:14px;background:radial-gradient(circle at 35% 35%,#f4f4f4,#a9adb5);color:#3f444c;border:2px solid #d3a54a}
+.mo.c50{width:42px;height:42px;font-size:15px;background:radial-gradient(circle at 35% 35%,#ffe68a,#d8a520);color:#6b4a00}
+.mo.b{width:54px;height:30px;border-radius:5px;font-size:14px;color:#fff;box-shadow:0 2px 0 rgba(0,0,0,.2);border:2px solid rgba(255,255,255,.55);text-shadow:0 1px 0 rgba(0,0,0,.25)}
+.mo.b100{background:linear-gradient(135deg,#ef7b6e,#c9453b)}.mo.b500{background:linear-gradient(135deg,#c79363,#8c5a2c)}.mo.b1000{background:linear-gradient(135deg,#6fa8ef,#2f6ab8)}
+.cstray .mo{cursor:pointer}
+.csbtns{display:flex;gap:8px;margin-top:10px}.csbtns .go{flex:1;margin:0}
+.csres{margin-top:10px;font-weight:800;font-size:17px}.csres.ok{color:#2f9a5a}.csres.ng{color:#d0453b}
+.csres small{display:block;font-weight:700;font-size:14px;color:#7a6a58;margin-top:4px}
+.cssteps{background:#fff6e0;border-radius:12px;padding:8px 10px;margin-top:6px;font-size:15px;color:#5a4a38;text-align:left;line-height:1.6}
 </style></head><body>
 <header id="hud"></header>
 <main>
@@ -1701,15 +1734,18 @@ const GMS=[
  ['sudoku','🏝️','小島數獨','每行每列每格不重複','#5cbf6a'],
  ['p24','🃏','24 點','用加減乘除算出 24','#e5484d'],
  ['pizza','🍕','分數披薩','看披薩學分數','#ff8a3c'],
- ['word','🔤','英文單字拼拼看','看圖拼出英文單字','#4d8de6']];
+ ['word','🔤','英文單字拼拼看','看圖拼出英文單字','#4d8de6'],
+ ['cash','🧾','小島收銀員','當老闆找錢給客人','#f2a93b']];
 const GLV={sudoku:[['4×4 圖案','一年級起'],['6×6 數字','二年級起'],['6×6 挑戰','二年級起'],['9×9 入門','三年級起']],
  p24:[['入門・數字 1～6','二年級起'],['數字 1～9','三年級起'],['數字 1～13','高手']],
  pizza:[['認識分數','二年級起'],['比大小・等值分數','三年級起'],['分數加減','四年級起']],
- word:[['3 個字母','一年級起'],['4～5 個字母','二年級起'],['6 個字母以上','高年級']]};
+ word:[['3 個字母','一年級起'],['4～5 個字母','二年級起'],['6 個字母以上','高年級']],
+ cash:[['50 元找錢','一年級'],['100 元找錢','二年級'],['好幾樣東西加起來','三年級'],['買好幾個（乘法）','四年級'],['客人湊零錢','五年級'],['打折','六年級'],['綜合挑戰：打折＋滿額折','國一']]};
 const GHELP={sudoku:'每一橫排、每一直排、每一個粗框裡，每個圖案（數字）只能出現一次。完成就有獎勵，越快越好！',
  p24:'每題 4 張數字牌，用 ＋ − × ÷ 把 4 張全部用上算出 24。先點一張牌、點符號、再點另一張牌。一場 5 題。入門只要用 ＋ − × 就能解。',
  pizza:'看披薩回答分數問題，一場 10 題。',
- word:'看圖片和中文，點字母拼出英文單字，一場 10 個字。按 🔊 可以聽發音。'};
+ word:'看圖片和中文，點字母拼出英文單字，一場 10 個字。按 🔊 可以聽發音。',
+ cash:'你是小島商店的老闆！家裡的寵物來買東西，點錢箱裡的錢找給客人。Lv1～4 一場 10 位客人，Lv5～7 一場 6 位。'};
 let GM=null;
 function GI(){const x=G.games||{};x.left=x.left||{};x.best=x.best||{};if(x.daily==null)x.daily=3;x.dailyBy=x.dailyBy||{};if(x.coinCap==null)x.coinCap=0;x.coinsToday=x.coinsToday||0;G.games=x;return x}
 function shuf(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
@@ -1723,9 +1759,9 @@ const backBtn=()=>`<button class="back" onclick="gmQuit()">‹ 遊樂區</button
 async function gmQuit(){if(GM&&GM.live&&!await ask('<h3>要離開嗎？</h3>這一場不會算成績喔。','離開'))return;if(GM)GM.dead=true;GM=null;go('play')}
 function gmLevels(g){if(GM)GM.dead=true;GM=null;const info=GMS.find(x=>x[0]===g),x=GI(),b=x.best[g]||{};
   $('#pg-gm').innerHTML=`${backBtn()}<div class="sign"><h3>${info[1]} ${info[2]}</h3></div><div class="card"><div class="mu">${GHELP[g]} 今天還有 <b class="gold">${x.left[g]==null?(x.dailyBy[g]||x.daily):x.left[g]}</b> 場有獎勵。</div>${g==='p24'?'<button class="go wide" style="margin-top:10px;background:#ffb347;box-shadow:0 4px 0 #c47a1a" onclick="p24Tips()">📖 24 點小技巧（先看這個！）</button>':''}</div>
-  <div class="mlv">${GLV[g].map((l,i)=>`<button class="mlb" onclick="gmStart('${g}',${i+1})"><b>Lv${i+1}</b><span>${l[0]}</span><small>${l[1]}${b[i+1]?'・最佳 '+(g==='sudoku'?fmtT(b[i+1]):b[i+1]+(g==='p24'?' / 5':' / 10')):''}</small></button>`).join('')}</div>`;
+  <div class="mlv">${GLV[g].map((l,i)=>`<button class="mlb" onclick="gmStart('${g}',${i+1})"><b>Lv${i+1}</b><span>${l[0]}</span><small>${l[1]}${b[i+1]?'・最佳 '+(g==='sudoku'?fmtT(b[i+1]):b[i+1]+(g==='p24'?' / 5':g==='cash'&&i>=4?' / 6':' / 10')):''}</small></button>`).join('')}</div>`;
   if(st.tab!=='gm')go('gm');window.scrollTo(0,0)}
-function gmStart(g,lv){if(GM)GM.dead=true;({sudoku:sdStart,p24:p24Start,pizza:pzStart,word:wdStart})[g](lv);window.scrollTo(0,0)}
+function gmStart(g,lv){if(GM)GM.dead=true;({sudoku:sdStart,p24:p24Start,pizza:pzStart,word:wdStart,cash:csStart})[g](lv);window.scrollTo(0,0)}
 async function gmEnd(g,lv,c,w,t,line){if(!GM||GM.done)return;GM.done=true;GM.live=false;
   $('#pg-gm').innerHTML=`<div class="card" style="text-align:center"><div style="font-size:48px">⏳</div><h3>送出成績中…</h3></div>`;
   let r=null;try{r=await call('submitGame',{game:g,lv,correct:c,wrong:w,time:t})}catch(e){toast(errMsg(e),1)}
@@ -1869,6 +1905,66 @@ function wdTap(i){const M=GM;if(!M||M.lock||M.tiles[i].used)return;const k=M.slo
   if(M.slots.indexOf(null)<0){M.lock=true;const got=M.slots.map(t=>M.tiles[t].ch).join(''),ok=got===M.W.w;if(ok)M.c++;else M.w++;sfx(ok?'ok':'bad');wdDraw(ok?'ok':'ng');M.q++;say(M.W.w);if(ok)setTimeout(()=>{if(GM===M&&!M.dead)wdNext()},1000);else $('.wdcard').insertAdjacentHTML('beforeend',gmNextBtn('wdGo()'))}
   else wdDraw()}
 function wdGo(){const M=GM;if(M&&!M.dead)wdNext()}
+// ----- 小島收銀員 -----
+const CSM=[1000,500,100,50,10,5,1];
+/* 等級：n＝幾行商品、q＝每樣買幾個、u＝單價、t＝合計範圍；hide＝合計要自己算；odd＝客人湊零錢；disc＝打折；full＝滿額折扣 */
+const CSL={1:{n:[1,1],t:[11,49],coins:[1,5,10]},
+ 2:{n:[1,2],t:[12,99],coins:[1,5,10,50]},
+ 3:{n:[2,3],t:[120,980],hide:1},
+ 4:{n:[1,2],q:[2,5],u:[12,180],t:[100,980],hide:1},
+ 5:{n:[2,3],q:[1,4],u:[15,350],t:[300,1900],hide:1,odd:1},
+ 6:{n:[1,3],q:[1,3],u:[20,400],t:[200,1980],hide:1,disc:1},
+ 7:{n:[2,3],q:[1,4],u:[20,450],t:[300,2900],hide:1,disc:1,full:1,odd:1}};
+const CSDISC=[[90,'9 折'],[80,'8 折'],[70,'7 折'],[75,'75 折'],[85,'85 折'],[60,'6 折']];
+const CSCUS=['🐶','🐱','🐰','🐻','🐼','🦊','🐨','🐯','🐷','🐸','🐵','🐧','🐑','🦁'];
+const CSIT=[['🍎','蘋果'],['🍌','香蕉'],['🍙','飯糰'],['🍞','麵包'],['🧃','果汁'],['🥛','牛奶'],['🍦','冰淇淋'],['🍪','餅乾'],['🍭','棒棒糖'],['✏️','鉛筆'],['📒','筆記本'],['🧸','小熊玩偶'],['⚽','足球'],['🎈','氣球'],['🧦','襪子'],['🍉','西瓜'],['🍓','草莓'],['🥚','雞蛋'],['🧁','杯子蛋糕'],['🖍️','蠟筆'],['🎒','書包'],['🧢','帽子'],['🪁','風箏'],['🎲','桌遊']];
+const csN=lv=>lv<=4?10:6;
+function moH(v,on){const b=v>=100;return `<span class="mo ${b?'b b':'c c'}${v}"${on?` onclick="${on}"`:''}>${v}</span>`}
+function csFew(x){const r=[];for(const m of CSM)while(x>=m){r.push(m);x-=m}return r}
+function csSplit(tot,k,min){let left=tot;return [...Array(k)].map((_,i)=>{if(i===k-1)return left;const v=RI(min,left-min*(k-1-i));left-=v;return v})}
+function csQ(lv){const C=CSL[lv];for(let tries=0;;tries++){const k=RI(C.n[0],C.n[1]),its=shuf(CSIT).slice(0,k);let lines;
+  if(C.q){lines=its.map(x=>({e:x[0],n:x[1],q:RI(C.q[0],C.q[1]),p:RI(C.u[0],C.u[1])*(C.disc?1:1)}));if(C.disc)lines.forEach(l=>l.p=Math.round(l.p/5)*5)}
+  else{const tot=RI(C.t[0],C.t[1]);if(tot<(lv>=3?20:5)*k)continue;lines=csSplit(tot,k,lv>=3?20:5).map((p,i)=>({e:its[i][0],n:its[i][1],q:1,p}))}
+  const sub=lines.reduce((a,l)=>a+l.p*l.q,0);if(sub<C.t[0]||sub>C.t[1])continue;
+  const steps=[];let tot=sub;
+  if(lv>=3)steps.push(lines.map(l=>l.q>1?`${l.p}×${l.q}`:l.p).join(' + ')+` = ${sub}`);
+  let disc=null,full=null;
+  if(C.disc){if(sub%20)continue;disc=CSDISC[RI(0,CSDISC.length-1)];tot=sub*disc[0]/100;steps.push(`打 ${disc[1]}：${sub} × ${(disc[0]/100)} = ${tot}`)}
+  if(C.full){full=Math.random()<.5?[1000,100]:[500,50];if(tot>=full[0]){steps.push(`滿 ${full[0]} 折 ${full[1]}：${tot} − ${full[1]} = ${tot-full[1]}`);tot-=full[1]}else steps.push(`${tot} 沒有滿 ${full[0]}，不能折`)}
+  let base=lv===1?50:lv===2?100:tot<500?500:Math.ceil(tot/1000)*1000;if(base<=tot)base+=lv<=2?0:1000;if(base<=tot)continue;
+  let extra=0;if(C.odd&&Math.random()<.75){const opts=[tot%10,tot%100,tot%50].filter(x=>x>0);if(opts.length)extra=opts[RI(0,opts.length-1)]}
+  const pay=base+extra,chg=pay-tot;if(chg<=0||chg>=1000)continue;
+  steps.push(`${pay} − ${tot} = ${chg}`);
+  return {lines,sub,tot,disc,full,pay,extra,chg,steps,cus:csCus()}}}
+function csCus(){const F=(G.fam&&G.fam.list)||[];if(F.length){const p=F[RI(0,F.length-1)];
+  let art='';try{art=petSvg(p.species,p.stage,{shiny:p.shiny,mood:90,poops:0,photo:1},78)}catch(e){}
+  if(art)return {art,who:`${p.kid===S.me?'我是你的':'我是'+esc(p.kid)+'的'}「${esc(p.name)}」`}}
+  return {art:CSCUS[RI(0,CSCUS.length-1)],who:'我是島上的客人'}}
+function csStart(lv){try{if(G.fam)cpReg(G.fam.art)}catch(e){}GM={g:'cash',lv,live:true,q:0,c:0,w:0};csNext()}
+function csNext(){const M=GM,N=csN(M.lv);if(M.q>=N)return gmEnd('cash',M.lv,M.c,M.w,0,`<div class="mbig">${M.c}<small> / ${N} 位</small></div><div class="mu">找錯 ${M.w} 次</div>`);
+  M.Q=csQ(M.lv);M.give=[];M.lock=false;csDraw()}
+function csDraw(res){const M=GM,Q=M.Q,C=CSL[M.lv],sum=M.give.reduce((a,b)=>a+b,0),N=csN(M.lv);
+  const ask=Q.extra?`我給你 ${Q.pay} 元，多 ${Q.extra} 元比較好找！`:Q.lines.length>1||Q.lines[0].q>1?'我要買這些！':'我要買這個！';
+  $('#pg-gm').innerHTML=`${backBtn()}<div class="gtop"><b>🧾 小島收銀員 Lv${M.lv}</b><span>第 ${M.q+1} / ${N} 位　✅ ${M.c}</span></div>
+  <div class="card cscard"><div class="cscus"><span class="ce">${Q.cus.art}</span><span class="cb"><small>${Q.cus.who}</small>${ask}</span></div>
+   <div class="csitems">${Q.lines.map(x=>`<div class="csit"><span><i>${x.e}</i>${x.n}</span><span>${x.p} 元${x.q>1?` <b>× ${x.q}</b>`:''}</span></div>`).join('')}
+    ${Q.disc||Q.full?`<div>${Q.disc?`<span class="cstag">🏷️ 全部打 ${Q.disc[1]}</span>`:''}${Q.full?`<span class="cstag">🎁 滿 ${Q.full[0]} 折 ${Q.full[1]}</span>`:''}</div>`:''}
+    <div class="cstot"><span>${Q.disc||Q.full?'要付':'合計'}</span><span>${C.hide&&!res?'？':Q.tot} 元</span></div></div>
+   <div class="cspay">客人付了 ${csFew(Q.pay).map(v=>moH(v)).join('')}</div><div class="mu">要找多少錢呢？</div>
+   <div class="cstray">${M.give.length?M.give.map((v,i)=>moH(v,res?'':`csBack(${i})`)).join(''):'<span class="empty">點下面的錢，找給客人</span>'}</div>
+   <div class="cssum">要找給客人：${sum} 元</div>
+   ${res||`<div class="csdraw">${(C.coins||[1,5,10,50,100,500]).slice().reverse().map(v=>`<button onclick="csAdd(${v})">${moH(v)}</button>`).join('')}</div>
+   <div class="csbtns"><button class="go" style="background:#9a8670;box-shadow:0 4px 0 #6f5f4f" onclick="csClr()">清空</button><button class="go" onclick="csOk()">找錢！</button></div>`}</div>`}
+function csAdd(v){const M=GM;if(!M||M.lock||M.give.length>=30)return;M.give.push(v);M.give.sort((a,b)=>b-a);sfx('coin');csDraw()}
+function csBack(i){const M=GM;if(!M||M.lock)return;M.give.splice(i,1);csDraw()}
+function csClr(){const M=GM;if(!M||M.lock)return;M.give=[];csDraw()}
+function csOk(){const M=GM;if(!M||M.lock)return;if(!M.give.length)return toast('先點下面的錢找給客人');M.lock=true;
+  const Q=M.Q,sum=M.give.reduce((a,b)=>a+b,0),ok=sum===Q.chg,few=csFew(Q.chg),best=ok&&M.give.length===few.length;M.q++;
+  if(ok)M.c++;else M.w++;sfx(ok?'ok':'bad');
+  const fewH=`<div class="cstray" style="min-height:0">${few.map(v=>moH(v)).join('')}</div>`,stH=`<div class="cssteps">${Q.steps.join('<br>')}</div>`;
+  csDraw(ok?`<div class="csres ok">✅ 答對了！謝謝老闆～${best?'<small>而且用了最少張數，太厲害了！</small>':`<small>也可以用更少張：</small>${fewH}`}</div>${gmNextBtn('csGo()')}`
+   :`<div class="csres ng">❌ 找錯了，應該找 ${Q.chg} 元<small>算法：</small>${stH}<small>可以這樣找：</small>${fewH}</div>${gmNextBtn('csGo()')}`)}
+function csGo(){const M=GM;if(M&&!M.dead)csNext()}
 function wdBack(k){const M=GM;if(!M||M.lock||M.slots[k]==null)return;M.tiles[M.slots[k]].used=false;M.slots[k]=null;wdDraw()}
 function petMini(v){const L=(PET&&PET.list)||[];if(!v)return `<div class="card" onclick="go('pet')" style="cursor:pointer;display:flex;align-items:center;gap:10px">${petSvg('sheep',0,{},56)}<div style="flex:1"><b>還沒有寵物</b><div class="mu">去領養一顆蛋，把牠養大吧！${PET&&PET.zoo&&PET.zoo.length?'<br>🏞️ 動物園裡有 '+PET.zoo.length+' 隻老朋友':''}</div></div><span class="mu">›</span></div>`;
   const wv=x=>x.ready?'💝 長大了，帶牠去動物園':x.sick?'🤒 生病了！':x.poops>=2?'💩 要清大便了':x.full<30?'🍙 肚子餓了':x.mood<30?'😢 想要玩':'';
