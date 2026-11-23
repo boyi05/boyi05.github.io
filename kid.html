@@ -1640,9 +1640,9 @@ function profBadges(b){if(!b)return '';const L=b.list.filter(x=>x.tier).sort((x,
 /* ===== 行事曆 ===== */
 let CAL={list:[],kids:[],at:0,busy:0},CALM=null;
 async function calLoad(){if(CAL.busy)return;CAL.busy=1;try{const r=await call('getCal',{from:S.today,to:calAddD(S.today,45)});CAL.list=calSort(r.list);CAL.kids=r.kids;CAL.at=Date.now()}catch(e){CAL.err=1}CAL.busy=0;const c=$('#calCard');if(c)c.innerHTML=calCardHtml()}
-// 小島首頁：這週跟我有關的行程＋大事倒數
-function calCardHtml(){if(Date.now()-CAL.at>60000)setTimeout(calLoad,0);const me_=me(),t=S.today,wk=calAddD(t,7);
-  const mine=CAL.list.filter(e=>(!e.who.length||e.who.indexOf(me_)>=0)&&e.d2>=t&&e.d<=wk).slice(0,5);
+// 小島首頁：這週全家的行程（不分是誰的）＋大事倒數
+function calCardHtml(){if(Date.now()-CAL.at>60000)setTimeout(calLoad,0);const t=S.today,wk=calAddD(t,7);
+  const mine=CAL.list.filter(e=>e.d2>=t&&e.d<=wk);
   const big=CAL.list.filter(e=>CAL_BIG.test(e.title)&&e.d>wk).slice(0,3);
   return `<div class="card"><div class="row" style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">📅 最近行程</h3><button class="mini" onclick="go('cal')">看月曆 ›</button></div>
    ${!CAL.at?'<div class="mu" style="padding:6px 0">⏳ 讀取中…</div>':mine.length?mine.map(e=>calItem(e,{today:t,kids:CAL.kids})).join(''):'<div class="mu" style="padding:6px 0">這週沒有行程 ✨</div>'}
