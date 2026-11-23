@@ -1753,7 +1753,7 @@ const GHELP={sudoku:'每一橫排、每一直排、每一個粗框裡，每個�
  p24:'每題 4 張數字牌，用 ＋ − × ÷ 把 4 張全部用上算出 24。先點一張牌、點符號、再點另一張牌。一場 5 題。入門只要用 ＋ − × 就能解。',
  pizza:'看披薩回答分數問題，一場 10 題。',
  word:'看圖片和中文，點字母拼出英文單字，一場 10 個字。按 🔊 可以聽發音。',
- cash:'你是小島商店的老闆！家裡的寵物來買東西，點錢箱裡的錢找給客人。Lv1～4 一場 10 位客人，Lv5～7 一場 6 位。'};
+ cash:'你是小島商店的老闆！家裡的寵物來買東西，點錢箱裡的錢找給客人。一場 7 位客人，Lv3 起可以打開收銀機計算機。'};
 let GM=null;
 function GI(){const x=G.games||{};x.left=x.left||{};x.best=x.best||{};if(x.daily==null)x.daily=3;x.dailyBy=x.dailyBy||{};if(x.coinCap==null)x.coinCap=0;x.coinsToday=x.coinsToday||0;G.games=x;return x}
 function shuf(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
@@ -1767,7 +1767,7 @@ const backBtn=()=>`<button class="back" onclick="gmQuit()">‹ 遊樂區</button
 async function gmQuit(){if(GM&&GM.live&&!await ask('<h3>要離開嗎？</h3>這一場不會算成績喔。','離開'))return;if(GM)GM.dead=true;GM=null;go('play')}
 function gmLevels(g){if(GM)GM.dead=true;GM=null;const info=GMS.find(x=>x[0]===g),x=GI(),b=x.best[g]||{};
   $('#pg-gm').innerHTML=`${backBtn()}<div class="sign"><h3>${info[1]} ${info[2]}</h3></div><div class="card"><div class="mu">${GHELP[g]} 今天還有 <b class="gold">${x.left[g]==null?(x.dailyBy[g]||x.daily):x.left[g]}</b> 場有獎勵。</div>${g==='p24'?'<button class="go wide" style="margin-top:10px;background:#ffb347;box-shadow:0 4px 0 #c47a1a" onclick="p24Tips()">📖 24 點小技巧（先看這個！）</button>':''}</div>
-  <div class="mlv">${GLV[g].map((l,i)=>`<button class="mlb" onclick="gmStart('${g}',${i+1})"><b>Lv${i+1}</b><span>${l[0]}</span><small>${l[1]}${b[i+1]?'・最佳 '+(g==='sudoku'?fmtT(b[i+1]):b[i+1]+(g==='p24'?' / 5':g==='cash'&&i>=4?' / 6':' / 10')):''}</small></button>`).join('')}</div>`;
+  <div class="mlv">${GLV[g].map((l,i)=>`<button class="mlb" onclick="gmStart('${g}',${i+1})"><b>Lv${i+1}</b><span>${l[0]}</span><small>${l[1]}${b[i+1]?'・最佳 '+(g==='sudoku'?fmtT(b[i+1]):b[i+1]+(g==='p24'?' / 5':g==='cash'?' / 7':' / 10')):''}</small></button>`).join('')}</div>`;
   if(st.tab!=='gm')go('gm');window.scrollTo(0,0)}
 function gmStart(g,lv){if(GM)GM.dead=true;({sudoku:sdStart,p24:p24Start,pizza:pzStart,word:wdStart,cash:csStart})[g](lv);window.scrollTo(0,0)}
 async function gmEnd(g,lv,c,w,t,line){if(!GM||GM.done)return;GM.done=true;GM.live=false;
@@ -1918,17 +1918,17 @@ const CSM=[1000,500,100,50,10,5,1];
 /* 等級：n＝幾行商品、q＝每樣買幾個、u＝單價、t＝合計範圍；hide＝合計要自己算；odd＝客人湊零錢；disc＝打折；full＝滿額折扣 */
 const CSL={1:{n:[1,1],t:[11,49],coins:[1,5,10]},
  2:{n:[1,2],t:[12,99],coins:[1,5,10,50]},
- 3:{n:[2,3],t:[120,980],hide:1},
- 4:{n:[1,2],q:[2,5],u:[12,180],t:[100,980],hide:1},
- 5:{n:[2,3],q:[1,4],t:[200,1900],hide:1,odd:1,nice:1},
+ 3:{n:[2,3],t:[120,980],hide:1,calc:1},
+ 4:{n:[1,2],q:[2,5],u:[12,180],t:[100,980],hide:1,calc:1},
+ 5:{n:[2,3],q:[1,4],t:[200,1900],hide:1,odd:1,nice:1,calc:1},
  6:{n:[1,3],q:[1,3],t:[200,1980],hide:1,disc:1,nice:1,calc:1},
  7:{n:[2,3],q:[1,4],t:[300,2900],hide:1,disc:1,full:1,odd:1,nice:1,calc:1}};
-/* Lv5 起價錢都是好算的整數（35、120、250），打折只有 9 折、8 折、半價；Lv6、Lv7 有收銀機計算機 */
+/* Lv5 起價錢都是好算的整數（35、120、250），打折只有 9 折、8 折、半價；Lv3 起有收銀機計算機 */
 const CSDISC=[[90,'全部打 9 折','打 9 折'],[80,'全部打 8 折','打 8 折'],[50,'全部半價','半價']];
 const csNice=d=>d?RI(2,45)*10:Math.random()<.5?RI(3,19)*5:RI(10,45)*10;
 const CSCUS=['🐶','🐱','🐰','🐻','🐼','🦊','🐨','🐯','🐷','🐸','🐵','🐧','🐑','🦁'];
 const CSIT=[['🍎','蘋果'],['🍌','香蕉'],['🍙','飯糰'],['🍞','麵包'],['🧃','果汁'],['🥛','牛奶'],['🍦','冰淇淋'],['🍪','餅乾'],['🍭','棒棒糖'],['✏️','鉛筆'],['📒','筆記本'],['🧸','小熊玩偶'],['⚽','足球'],['🎈','氣球'],['🧦','襪子'],['🍉','西瓜'],['🍓','草莓'],['🥚','雞蛋'],['🧁','杯子蛋糕'],['🖍️','蠟筆'],['🎒','書包'],['🧢','帽子'],['🪁','風箏'],['🎲','桌遊']];
-const csN=lv=>lv<=4?10:6;
+const csN=lv=>7;
 function moH(v,on){const b=v>=100;return `<span class="mo ${b?'b b':'c c'}${v}"${on?` onclick="${on}"`:''}>${v}</span>`}
 function csFew(x){const r=[];for(const m of CSM)while(x>=m){r.push(m);x-=m}return r}
 function csSplit(tot,k,min){let left=tot;return [...Array(k)].map((_,i)=>{if(i===k-1)return left;const v=RI(min,left-min*(k-1-i));left-=v;return v})}
