@@ -1343,7 +1343,7 @@ function calPaint(){const b=$('#calBody');if(!b||!CALM)return;const L=CALM.list,
   b.innerHTML=`<div class="card"><div class="cnav"><button onclick="calMove(-1)">‹</button><b>${CALM.y} 年 ${CALM.m+1} 月</b><button onclick="calMove(1)">›</button></div>
    ${L?calMonth(CALM.y,CALM.m,L,sel,S.today,S.kids):'<div class="empty">⏳ 讀取中…</div>'}</div>
    <div class="card"><div class="row"><h3>${calMd(sel)}（${CAL_WD[calD(sel).getDay()]}）</h3><button class="sbtn" onclick="calNew('${sel}')">＋ 新增</button></div>${L?(calOn(L,sel).map(e=>calItem(e,{kids:S.kids,del:1})).join('')||'<div class="empty">這天沒有行程</div>'):''}</div>
-   <div class="card mu" style="font-size:13px;line-height:1.7">💡 行程放在 Google 日曆「海星家行事曆」，iPhone 行事曆也看得到、會提醒。<br>名稱前面寫名字（例如「晨郗：數學考」、「海星、宛芝：看牙醫」）就是那幾個人的，沒寫名字就是全家；只有海星／海膽的行程，或名稱有繳費、帳單、保費、稅的，小孩看不到。<br>在手機上改的，最多 5 分鐘後這裡會更新。重複的行程請在手機上改。</div>`}
+   <div class="card mu" style="font-size:13px;line-height:1.7">💡 行程放在 Google 日曆「海星家行事曆」，iPhone 行事曆也看得到、會提醒。<br>名稱前面寫名字（例如「晨郗：數學考」、「海星、宛芝：看牙醫」）就是那幾個人的，沒寫名字就是全家。所有行程大家都看得到。<br>在手機上改的，最多 5 分鐘後這裡會更新。重複的行程請在手機上改。</div>`}
 function calMove(d){let m=CALM.m+d,y=CALM.y;if(m<0){m=11;y--}if(m>11){m=0;y++}CALM.y=y;CALM.m=m;const t=calD(S.today);CALM.sel=(y===t.getFullYear()&&m===t.getMonth())?S.today:calYmd(new Date(y,m,1,12));drawCal()}
 function calPick(d){CALM.sel=d;calPaint()}
 async function calNew(date){if(!await ask(calFormHtml(date||S.today,S.kids),'加入'))return;const v=calFormVal();
