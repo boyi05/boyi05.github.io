@@ -1660,7 +1660,7 @@ let MG=null;const RI=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 function mathMini(){const m=G.math;if(!m)return '';return `<div class="card mcard" onclick="go('math')"><div class="mico">🧮</div><div style="flex:1"><b>心算快手</b><div class="mu">${m.left?`今天還有 <b class="gold">${m.left}</b> 場可以拿金幣`:'今天的金幣拿完了，還可以練習破紀錄'}</div></div><span class="go">開始 ›</span></div>`}
 function drawMath(){MG=null;const m=G.math||{best:{},left:0,daily:3};
   $('#pg-math').innerHTML=`<button class="back" onclick="go('play')">‹ 遊樂區</button><div class="sign"><h3>🧮 心算快手</h3></div><div class="card"><div class="mu">60 秒內答越多題越好！每天前 ${m.daily} 場可以拿金幣和經驗（今天還有 <b class="gold">${m.left}</b> 場）。答對越多、等級越高，金幣越多。</div></div>
-  <div class="mlv">${MLV.slice(1).map((x,i)=>`<button class="mlb" onclick="mathStart(${i+1})"><b>Lv${i+1}</b><span>${x[0]}</span><small>${x[1]}${m.best[i+1]?`・最佳 ${m.best[i+1]} 題`:''}</small></button>`).join('')}</div>`}
+  <div class="mlv">${MLV.map((x,i)=>i<2?'':`<button class="mlb" onclick="mathStart(${i})"><b>Lv${i}</b><span>${x[0]}</span><small>${x[1]}${m.best[i]?`・最佳 ${m.best[i]} 題`:''}</small></button>`).join('')}</div>`}
 function mathQ(lv){let a,b,c,q,ans;const h=Math.random()<.5;
   if(lv===1){if(h){a=RI(0,10);b=RI(0,10-a);q=`${a} + ${b}`;ans=a+b}else{a=RI(1,10);b=RI(0,a);q=`${a} − ${b}`;ans=a-b}}
   else if(lv===2){if(h){a=RI(2,15);b=RI(2,20-a);q=`${a} + ${b}`;ans=a+b}else{a=RI(8,20);b=RI(2,a);q=`${a} − ${b}`;ans=a-b}}
@@ -1702,7 +1702,7 @@ const GMS=[
  ['p24','🃏','24 點','用加減乘除算出 24','#e5484d'],
  ['pizza','🍕','分數披薩','看披薩學分數','#ff8a3c'],
  ['word','🔤','英文單字拼拼看','看圖拼出英文單字','#4d8de6']];
-const GLV={sudoku:[['4×4 圖案','一年級起'],['6×6 數字','二年級起'],['9×9 簡單','三年級起'],['9×9 挑戰','高手']],
+const GLV={sudoku:[['4×4 圖案','一年級起'],['6×6 數字','二年級起'],['6×6 挑戰','二年級起'],['9×9 入門','三年級起']],
  p24:[['入門・數字 1～6','二年級起'],['數字 1～9','三年級起'],['數字 1～13','高手']],
  pizza:[['認識分數','二年級起'],['比大小・等值分數','三年級起'],['分數加減','四年級起']],
  word:[['3 個字母','一年級起'],['4～5 個字母','二年級起'],['6 個字母以上','高年級']]};
@@ -1737,7 +1737,7 @@ async function gmEnd(g,lv,c,w,t,line){if(!GM||GM.done)return;GM.done=true;GM.liv
   if(r&&(r.coins||r.exp))loadGame()}
 
 // ----- 小島數獨 -----
-const SDC={1:{n:4,br:2,bc:2,holes:8,sym:['🐚','⭐','🐠','🌴']},2:{n:6,br:2,bc:3,holes:20},3:{n:9,br:3,bc:3,holes:44},4:{n:9,br:3,bc:3,holes:54}};
+const SDC={1:{n:4,br:2,bc:2,holes:8,sym:['🐚','⭐','🐠','🌴']},2:{n:6,br:2,bc:3,holes:20},3:{n:6,br:2,bc:3,holes:25},4:{n:9,br:3,bc:3,holes:30}};
 function sdCan(a,n,br,bc,i,v){const r=Math.floor(i/n),c=i%n;for(let k=0;k<n;k++){if(a[r*n+k]===v||a[k*n+c]===v)return false}
   const r0=r-r%br,c0=c-c%bc;for(let y=r0;y<r0+br;y++)for(let x=c0;x<c0+bc;x++)if(a[y*n+x]===v)return false;return true}
 function sdCount(a,n,br,bc,limit){let cnt=0,steps=0;const nums=[...Array(n)].map((_,i)=>i+1);
