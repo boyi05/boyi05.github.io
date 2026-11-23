@@ -207,6 +207,14 @@ input.amt{font-size:24px;text-align:right;color:var(--red)}
 .mo.b100{background:linear-gradient(135deg,#ef7b6e,#c9453b)}.mo.b500{background:linear-gradient(135deg,#c79363,#8c5a2c)}.mo.b1000{background:linear-gradient(135deg,#6fa8ef,#2f6ab8)}
 .cstray .mo{cursor:pointer}
 .csbtns{display:flex;gap:8px;margin-top:10px}.csbtns .go{flex:1;margin:0}
+.cscalb{display:block;width:100%;border:0;border-radius:12px;background:#4a5563;color:#fff;font-weight:800;font-size:15px;padding:9px;margin:0 0 8px;box-shadow:0 3px 0 #2f3742}
+.cscalc{background:#3b4450;border-radius:16px;padding:10px;margin:0 0 8px;box-shadow:inset 0 2px 0 #56606e}
+.cslcd{background:#c8e6b0;border-radius:8px;padding:4px 10px;text-align:right;font-family:ui-monospace,Menlo,monospace;color:#23361a;box-shadow:inset 0 2px 4px rgba(0,0,0,.25);margin-bottom:8px}
+.cslcd small{display:block;font-size:13px;min-height:17px;opacity:.75}.cslcd b{font-size:30px;line-height:1.15;letter-spacing:1px}
+.cskeys{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.cskeys button{border:0;border-radius:10px;height:44px;font-size:20px;font-weight:900;background:#eef0f3;color:#2f3742;box-shadow:0 3px 0 #a9b0ba}
+.cskeys button:active{transform:translateY(2px);box-shadow:0 1px 0 #a9b0ba}
+.cskeys .o{background:#ffd27a;box-shadow:0 3px 0 #c9962e}.cskeys .f{background:#c6ccd4}.cskeys .eq{background:#5cbf6a;color:#fff;box-shadow:0 3px 0 #3a8a46;grid-row:span 2;height:auto}.cskeys .z{grid-column:span 2}
 .csres{margin-top:10px;font-weight:800;font-size:17px}.csres.ok{color:#2f9a5a}.csres.ng{color:#d0453b}
 .csres small{display:block;font-weight:700;font-size:14px;color:#7a6a58;margin-top:4px}
 .cssteps{background:#fff6e0;border-radius:12px;padding:8px 10px;margin-top:6px;font-size:15px;color:#5a4a38;text-align:left;line-height:1.6}
@@ -1912,10 +1920,12 @@ const CSL={1:{n:[1,1],t:[11,49],coins:[1,5,10]},
  2:{n:[1,2],t:[12,99],coins:[1,5,10,50]},
  3:{n:[2,3],t:[120,980],hide:1},
  4:{n:[1,2],q:[2,5],u:[12,180],t:[100,980],hide:1},
- 5:{n:[2,3],q:[1,4],u:[15,350],t:[300,1900],hide:1,odd:1},
- 6:{n:[1,3],q:[1,3],u:[20,400],t:[200,1980],hide:1,disc:1},
- 7:{n:[2,3],q:[1,4],u:[20,450],t:[300,2900],hide:1,disc:1,full:1,odd:1}};
-const CSDISC=[[90,'9 折'],[80,'8 折'],[70,'7 折'],[75,'75 折'],[85,'85 折'],[60,'6 折']];
+ 5:{n:[2,3],q:[1,4],t:[200,1900],hide:1,odd:1,nice:1},
+ 6:{n:[1,3],q:[1,3],t:[200,1980],hide:1,disc:1,nice:1,calc:1},
+ 7:{n:[2,3],q:[1,4],t:[300,2900],hide:1,disc:1,full:1,odd:1,nice:1,calc:1}};
+/* Lv5 起價錢都是好算的整數（35、120、250），打折只有 9 折、8 折、半價；Lv6、Lv7 有收銀機計算機 */
+const CSDISC=[[90,'全部打 9 折','打 9 折'],[80,'全部打 8 折','打 8 折'],[50,'全部半價','半價']];
+const csNice=d=>d?RI(2,45)*10:Math.random()<.5?RI(3,19)*5:RI(10,45)*10;
 const CSCUS=['🐶','🐱','🐰','🐻','🐼','🦊','🐨','🐯','🐷','🐸','🐵','🐧','🐑','🦁'];
 const CSIT=[['🍎','蘋果'],['🍌','香蕉'],['🍙','飯糰'],['🍞','麵包'],['🧃','果汁'],['🥛','牛奶'],['🍦','冰淇淋'],['🍪','餅乾'],['🍭','棒棒糖'],['✏️','鉛筆'],['📒','筆記本'],['🧸','小熊玩偶'],['⚽','足球'],['🎈','氣球'],['🧦','襪子'],['🍉','西瓜'],['🍓','草莓'],['🥚','雞蛋'],['🧁','杯子蛋糕'],['🖍️','蠟筆'],['🎒','書包'],['🧢','帽子'],['🪁','風箏'],['🎲','桌遊']];
 const csN=lv=>lv<=4?10:6;
@@ -1923,13 +1933,13 @@ function moH(v,on){const b=v>=100;return `<span class="mo ${b?'b b':'c c'}${v}"$
 function csFew(x){const r=[];for(const m of CSM)while(x>=m){r.push(m);x-=m}return r}
 function csSplit(tot,k,min){let left=tot;return [...Array(k)].map((_,i)=>{if(i===k-1)return left;const v=RI(min,left-min*(k-1-i));left-=v;return v})}
 function csQ(lv){const C=CSL[lv];for(let tries=0;;tries++){const k=RI(C.n[0],C.n[1]),its=shuf(CSIT).slice(0,k);let lines;
-  if(C.q){lines=its.map(x=>({e:x[0],n:x[1],q:RI(C.q[0],C.q[1]),p:RI(C.u[0],C.u[1])*(C.disc?1:1)}));if(C.disc)lines.forEach(l=>l.p=Math.round(l.p/5)*5)}
+  if(C.q){lines=its.map(x=>({e:x[0],n:x[1],q:RI(C.q[0],C.q[1]),p:C.nice?csNice(C.disc):RI(C.u[0],C.u[1])}))}
   else{const tot=RI(C.t[0],C.t[1]);if(tot<(lv>=3?20:5)*k)continue;lines=csSplit(tot,k,lv>=3?20:5).map((p,i)=>({e:its[i][0],n:its[i][1],q:1,p}))}
   const sub=lines.reduce((a,l)=>a+l.p*l.q,0);if(sub<C.t[0]||sub>C.t[1])continue;
   const steps=[];let tot=sub;
   if(lv>=3)steps.push(lines.map(l=>l.q>1?`${l.p}×${l.q}`:l.p).join(' + ')+` = ${sub}`);
   let disc=null,full=null;
-  if(C.disc){if(sub%20)continue;disc=CSDISC[RI(0,CSDISC.length-1)];tot=sub*disc[0]/100;steps.push(`打 ${disc[1]}：${sub} × ${(disc[0]/100)} = ${tot}`)}
+  if(C.disc){disc=CSDISC[RI(0,CSDISC.length-1)];if(sub*disc[0]%100)continue;tot=sub*disc[0]/100;steps.push(`${disc[2]}：${sub} × ${(disc[0]/100)} = ${tot}`)}
   if(C.full){full=Math.random()<.5?[1000,100]:[500,50];if(tot>=full[0]){steps.push(`滿 ${full[0]} 折 ${full[1]}：${tot} − ${full[1]} = ${tot-full[1]}`);tot-=full[1]}else steps.push(`${tot} 沒有滿 ${full[0]}，不能折`)}
   let base=lv===1?50:lv===2?100:tot<500?500:Math.ceil(tot/1000)*1000;if(base<=tot)base+=lv<=2?0:1000;if(base<=tot)continue;
   let extra=0;if(C.odd&&Math.random()<.75){const opts=[tot%10,tot%100,tot%50].filter(x=>x>0);if(opts.length)extra=opts[RI(0,opts.length-1)]}
@@ -1948,13 +1958,31 @@ function csDraw(res){const M=GM,Q=M.Q,C=CSL[M.lv],sum=M.give.reduce((a,b)=>a+b,0
   $('#pg-gm').innerHTML=`${backBtn()}<div class="gtop"><b>🧾 小島收銀員 Lv${M.lv}</b><span>第 ${M.q+1} / ${N} 位　✅ ${M.c}</span></div>
   <div class="card cscard"><div class="cscus"><span class="ce">${Q.cus.art}</span><span class="cb"><small>${Q.cus.who}</small>${ask}</span></div>
    <div class="csitems">${Q.lines.map(x=>`<div class="csit"><span><i>${x.e}</i>${x.n}</span><span>${x.p} 元${x.q>1?` <b>× ${x.q}</b>`:''}</span></div>`).join('')}
-    ${Q.disc||Q.full?`<div>${Q.disc?`<span class="cstag">🏷️ 全部打 ${Q.disc[1]}</span>`:''}${Q.full?`<span class="cstag">🎁 滿 ${Q.full[0]} 折 ${Q.full[1]}</span>`:''}</div>`:''}
+    ${Q.disc||Q.full?`<div>${Q.disc?`<span class="cstag">🏷️ ${Q.disc[1]}</span>`:''}${Q.full?`<span class="cstag">🎁 滿 ${Q.full[0]} 折 ${Q.full[1]}</span>`:''}</div>`:''}
     <div class="cstot"><span>${Q.disc||Q.full?'要付':'合計'}</span><span>${C.hide&&!res?'？':Q.tot} 元</span></div></div>
    <div class="cspay">客人付了 ${csFew(Q.pay).map(v=>moH(v)).join('')}</div><div class="mu">要找多少錢呢？</div>
    <div class="cstray">${M.give.length?M.give.map((v,i)=>moH(v,res?'':`csBack(${i})`)).join(''):'<span class="empty">點下面的錢，找給客人</span>'}</div>
    <div class="cssum">要找給客人：${sum} 元</div>
-   ${res||`<div class="csdraw">${(C.coins||[1,5,10,50,100,500]).slice().reverse().map(v=>`<button onclick="csAdd(${v})">${moH(v)}</button>`).join('')}</div>
+   ${res||`${C.calc?csCalcH():''}<div class="csdraw">${(C.coins||[1,5,10,50,100,500]).slice().reverse().map(v=>`<button onclick="csAdd(${v})">${moH(v)}</button>`).join('')}</div>
    <div class="csbtns"><button class="go" style="background:#9a8670;box-shadow:0 4px 0 #6f5f4f" onclick="csClr()">清空</button><button class="go" onclick="csOk()">找錢！</button></div>`}</div>`}
+function csCalcH(){const K=GM.calc||(GM.calc={open:false,d:'0',acc:null,op:null,fresh:true,h:''});
+  if(!K.open)return `<button class="cscalb" onclick="csCalcT()">🧮 打開收銀機計算機</button>`;
+  const b=(k,c,t)=>`<button class="${c||''}" onclick="csK('${k}')">${t||k}</button>`;
+  return `<div class="cscalc"><div class="cslcd"><small>${K.h||'&nbsp;'}</small><b>${K.d}</b></div><div class="cskeys">
+   ${b('C','f')}${b('B','f','⌫')}${b('/','o','÷')}${b('*','o','×')}${b('7')}${b('8')}${b('9')}${b('-','o','−')}${b('4')}${b('5')}${b('6')}${b('+','o','+')}${b('1')}${b('2')}${b('3')}${b('=','eq','=')}${b('0','z')}${b('.')}</div>
+   <button class="cscalb" style="margin:8px 0 0" onclick="csCalcT()">收起計算機</button></div>`}
+function csCalcT(){const M=GM;if(!M||M.lock)return;csCalcH();M.calc.open=!M.calc.open;csDraw()}
+const CSOP={'+':'+','-':'−','*':'×','/':'÷'};
+function csFmt(x){return isFinite(x)?String(+x.toFixed(6)):'錯誤'}
+function csDo(a,op,b){return op==='+'?a+b:op==='-'?a-b:op==='*'?a*b:a/b}
+function csK(k){const M=GM;if(!M||M.lock)return;const K=M.calc,n=+K.d||0;
+  if(K.d==='錯誤'&&k!=='C')K.d='0';
+  if(/[0-9.]/.test(k)){if(K.fresh){K.d=k==='.'?'0.':k;K.fresh=false}else if(K.d.length<12&&!(k==='.'&&K.d.includes('.')))K.d=K.d==='0'&&k!=='.'?k:K.d+k}
+  else if(k==='C')Object.assign(K,{d:'0',acc:null,op:null,fresh:true,h:''});
+  else if(k==='B'){if(!K.fresh)K.d=K.d.length>1?K.d.slice(0,-1):'0'}
+  else if(k==='='){if(K.op&&K.acc!=null){const r=csDo(K.acc,K.op,n);K.h=`${csFmt(K.acc)} ${CSOP[K.op]} ${csFmt(n)} =`;K.d=csFmt(r);K.acc=null;K.op=null;K.fresh=true}}
+  else{if(K.op&&K.acc!=null&&!K.fresh)K.acc=csDo(K.acc,K.op,n);else if(K.acc==null||!K.op)K.acc=n;K.op=k;K.fresh=true;K.d=csFmt(K.acc);K.h=`${K.d} ${CSOP[k]}`}
+  sfx('click');csDraw()}
 function csAdd(v){const M=GM;if(!M||M.lock||M.give.length>=30)return;M.give.push(v);M.give.sort((a,b)=>b-a);sfx('coin');csDraw()}
 function csBack(i){const M=GM;if(!M||M.lock)return;M.give.splice(i,1);csDraw()}
 function csClr(){const M=GM;if(!M||M.lock)return;M.give=[];csDraw()}
