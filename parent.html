@@ -189,13 +189,13 @@ const FTYPE={'公告':['📢','#e5484d'],'許願':['🌠','#8a5cf6'],'聊天':['
 .pacts button,.rep button{border:0;background:rgba(0,0,0,.06);border-radius:10px;padding:6px 10px;font-size:13px;font-weight:700;color:inherit}
 .fo-ta{width:100%;min-height:120px;margin-top:10px;padding:12px;font:inherit;font-size:16px;border:2px solid #e2e2e2;border-radius:14px;resize:vertical;-webkit-appearance:none}
 .donebadge{color:#d98a00;font-weight:700;font-size:14px}
-.pinc{border-left:5px solid #ffcf40;cursor:pointer}.pinc .it{cursor:pointer}
+.pinc{border-left:5px solid #ffcf40;cursor:pointer}.pinc .it{cursor:pointer;padding:9px 0;border-bottom:2px solid #f2c94c;align-items:flex-start}.pinc .it:last-child{border-bottom:0}.pinc .it .pn{flex:none;width:20px;height:20px;border-radius:50%;background:#ffcf40;color:#6b4a00;font-weight:900;font-size:12px;display:flex;align-items:center;justify-content:center;margin-top:2px}
 .fbadge{position:absolute;top:0;right:22%;width:10px;height:10px;border-radius:50%;background:#e5484d;border:2px solid #fff}
 `;document.head.appendChild(c)})();
 const isPar=()=>S.role==='parent';
 const fWho=n=>(FO&&FO.people[n])||(S.profiles||{})[n]||{nick:n};
 const fBig=()=>isPar()?'btn':'go wide';
-function pinsHtml(){if(!PINS.length)return '';const ph=p=>p.photo||(p.photos||[])[0]||'';setTimeout(()=>loadImgs(PINS.map(ph)),0);return `<div class="card pinc" onclick="go('forum')"><h3>📢 公告</h3>${PINS.map(p=>`<div class="it"><div class="t" style="flex:1;white-space:pre-wrap;word-break:break-word">${esc(p.text)||'📷 照片'}<div class="mu">${esc((fWho(p.author).nick)||p.author)}・${p.time.slice(5)}</div></div>${ph(p)?`<img data-img="${ph(p)}" src="${imgSrc(ph(p))}" style="width:54px;height:54px;object-fit:cover;border-radius:10px;flex:none">`:''}</div>`).join('')}</div>`}
+function pinsHtml(){if(!PINS.length)return '';const ph=p=>p.photo||(p.photos||[])[0]||'';setTimeout(()=>loadImgs(PINS.map(ph)),0);return `<div class="card pinc" onclick="go('forum')"><h3>📢 公告</h3>${PINS.map((p,i)=>`<div class="it">${PINS.length>1?`<span class="pn">${i+1}</span>`:''}<div class="t" style="flex:1;white-space:pre-wrap;word-break:break-word">${esc(p.text)||'📷 照片'}<div class="mu">${esc((fWho(p.author).nick)||p.author)}・${p.time.slice(5)}</div></div>${ph(p)?`<img data-img="${ph(p)}" src="${imgSrc(ph(p))}" style="width:54px;height:54px;object-fit:cover;border-radius:10px;flex:none">`:''}</div>`).join('')}</div>`}
 async function loadForum(){if(!FO)$('#foBody').innerHTML='<div class="card empty">⏳ 讀取中…</div>';
   try{FO=await call('getForum')}catch(e){return toast(errMsg(e),1)}
   PINS=FO.posts.filter(p=>p.pin).slice(0,3);drawForum();foSeen()}
