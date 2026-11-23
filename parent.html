@@ -1010,7 +1010,7 @@ const CAL_BIG=/生日|出遊|旅行|旅遊|露營|出國|樂園|過年|畢業|�
 const CAL_WD='日一二三四五六',CAL_KC=['#ff8a4c','#e86aa6','#4c9dff','#36b37e','#9b6bff'];
 function calIc(t){for(const [r,i] of CAL_IC)if(r.test(t))return i;return '📌'}
 const CAL_PAR=['海星','海膽'];
-function calKc(name,kids){const i=(kids||[]).indexOf(name);return name==='全家'?'#8a7a5a':name==='爸媽'?'#5c7cfa':name==='海星'?'#3d86d6':name==='海膽'?'#8a5cd0':CAL_KC[(i<0?4:i)%5]}
+function calKc(name,kids){const i=(kids||[]).indexOf(name);return name==='全家'?'#8a7a5a':name==='爸媽'?'#5c7cfa':name==='海星'?'#159a86':name==='海膽'?'#8a5cd0':CAL_KC[(i<0?4:i)%5]}
 function calD(s){const p=String(s).split('-');return new Date(+p[0],p[1]-1,+p[2],12)}
 function calYmd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function calAddD(s,n){const d=calD(s);d.setDate(d.getDate()+n);return calYmd(d)}
@@ -1041,11 +1041,14 @@ function calFormHtml(date,kids,kid,ev){const ed=ev||null,dys=ed&&ed.all?calDiff(
   <div id="cfTimeRow"${all?' class="hidden"':''}><label class="cfl">時間</label><input id="cfTime" type="time" value="${ed&&!ed.all?ed.t:'09:00'}"></div>
   <div id="cfDaysRow"${all?'':' class="hidden"'}><label class="cfl">共幾天</label><select id="cfDays">${[1,2,3,4,5,6,7,8,9,10,11,12,13,14].map(i=>`<option value="${i}"${i===dys?' selected':''}>${i} 天</option>`).join('')}</select></div>
   <label class="cfl">要做什麼</label><input id="cfTitle" maxlength="30" value="${ed?esc(calTitle(ed)):''}" placeholder="例如：數學考試、鋼琴課、宛芝生日">
-  <label class="cfl">是誰的（可以選好幾個）<button type="button" class="cfallb" onclick="const b=[...document.querySelectorAll('input[name=cfWho]')],on=!b.every(x=>x.checked);b.forEach(x=>x.checked=on)">全家</button></label><div class="cfwho">${ppl.map(n=>`<label><input type="checkbox" name="cfWho" value="${esc(n)}"${ew.indexOf(n)>=0?' checked':''}> ${esc(n)}</label>`).join('')}</div>`}
-function calFormVal(){const all=$('#cfAll').checked,b=[...document.querySelectorAll('input[name=cfWho]')],w=b.filter(x=>x.checked).map(x=>x.value);
+  <label class="cfl">是誰的（可以選好幾個）<button type="button" class="cfallb" onpointerdown="calBlur()" onclick="calWhoAll()">全家</button></label><div class="cfwho">${ppl.map(n=>`<button type="button" class="cfp${ew.indexOf(n)>=0?' on':''}" data-n="${esc(n)}" style="--c:${calKc(n,kids)}" onpointerdown="calBlur()" onclick="this.classList.toggle('on')">${esc(n)}</button>`).join('')}</div>`}
+/* 點名字前先收起鍵盤、日期選單（iPhone 上第一下常被拿去收鍵盤） */
+function calBlur(){const a=document.activeElement;if(a&&a!==document.body&&/INPUT|SELECT|TEXTAREA/.test(a.tagName))a.blur()}
+function calWhoAll(){const b=[...document.querySelectorAll('.cfp')],on=!b.every(x=>x.classList.contains('on'));b.forEach(x=>x.classList.toggle('on',on))}
+function calFormVal(){const all=$('#cfAll').checked,b=[...document.querySelectorAll('.cfp')],w=b.filter(x=>x.classList.contains('on')).map(x=>x.dataset.n);
   return {date:$('#cfDate').value,time:all?'':$('#cfTime').value,days:all?+$('#cfDays').value:1,title:$('#cfTitle').value.trim(),who:w.length===b.length?[]:w}}
 document.head.insertAdjacentHTML('beforeend',`<style>
-.cfallb{margin-left:8px;border:0;border-radius:8px;padding:2px 10px;background:#ffe7a8;font-weight:700;font-size:12px}
+.cfallb{margin-left:8px;border:0;border-radius:10px;padding:6px 12px;background:#ffe7a8;font-weight:800;font-size:14px;touch-action:manipulation}
 .cit{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:2px dashed #f0e2cc}.cit:last-child{border-bottom:0}
 .cic{font-size:24px;width:34px;text-align:center;flex:none}.ct{flex:1;min-width:0}.ct b{font-size:15px}
 .cwho{display:inline-block;color:#fff;font-size:11px;font-weight:700;border-radius:8px;padding:1px 6px;margin-left:2px;vertical-align:2px}
@@ -1055,7 +1058,7 @@ document.head.insertAdjacentHTML('beforeend',`<style>
 .cday.tdy{background:#ffe7b8}.cday.sel{outline:3px solid #ff9f43}.cdots{display:flex;justify-content:center;gap:2px;margin-top:3px;min-height:6px}.cdots i{width:6px;height:6px;border-radius:50%}
 .cnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.cnav b{font-size:18px}.cnav button{border:0;background:#fff3dc;border-radius:10px;padding:6px 12px;font-size:16px;cursor:pointer}
 .cfl{display:block;font-size:13px;color:#8a7a5a;margin:10px 0 4px;text-align:left}#mBody input[type=date],#mBody input[type=time],#mBody #cfTitle,#mBody select{width:100%;box-sizing:border-box;font-size:16px;padding:8px;border:2px solid #eadfc8;border-radius:10px}
-.cfwho{display:flex;flex-wrap:wrap;gap:8px 14px;text-align:left}.cfwho label{font-size:15px;display:inline-flex;align-items:center;color:#4a3b2a}
+.cfwho{display:flex;flex-wrap:wrap;gap:6px;text-align:left}.cfp{min-height:44px;padding:8px 10px;border-radius:22px;border:2px solid var(--c);background:#fff;color:var(--c);font-size:15px;font-weight:800;touch-action:manipulation;-webkit-tap-highlight-color:transparent}.cfp.on{background:var(--c);color:#fff}.cfp.on::before{content:'✓ '}
 #mBody input[type=checkbox],#mBody input[type=radio]{width:20px!important;height:20px;min-height:0;margin:0 6px 0 0;padding:0;vertical-align:middle;appearance:auto;-webkit-appearance:auto;border:0;background:none;box-shadow:none;display:inline-block;flex:none}
 .cfl.chk{display:flex;align-items:center;color:#4a3b2a;font-size:15px}
 .ccw{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.ccount{background:#fff3dc;border-radius:12px;padding:6px 10px;font-size:14px;line-height:1.4}.ccount .mu{font-size:12px}
