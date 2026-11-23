@@ -125,7 +125,7 @@ function addMonths(s,m){const p=s.split('-').map(Number);const last=new Date(p[0
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 const EMO={'飲食':'🍔','日常':'🧻','交通':'🚌','娛樂':'🎮','學費':'📚','醫療':'💊','通訊':'📱','其他':'📦','衣鞋':'👕','水電油':'⛽','學習':'✏️','膽膽':'🦔'};
 const em=c=>EMO[c]||'🔹';
-const TYPE={'獎金':'🎁','花錢':'🛒','存定存':'📦','領定存':'🔓','利息':'✨'};
+const TYPE={'獎金':'🎁','花錢':'🛒','存定存':'📦','領定存':'🔓','利息':'✨','市集買入':'🏝️','市集賣出':'💰','市集退款':'↩️'};
 const PAL={"K": "#16182e", "W": "#f4f4f4", "B": "#a0522d", "R": "#e63946", "S": "#c9d1dc", "O": "#ff8c2b", "P": "#ff9fb8", "G": "#9aa0aa", "Y": "#ffd23f", "T": "#d9a066", "L": "#cdb8ff"};
 const SPR={"城堡": ["#5fb8ff", "................/..K.K.K..K.K.K../..KWKWK..KWKWK../..KWWWK..KWWWK../..KWWWKKKKWWWK../..KWWWWWWWWWWK../..KWWKWWWWKWWK../..KWWKWWWWKWWK../..KWWWWWWWWWWK../..KWWWWKKWWWWK../..KWWWKBBKWWWK../..KWWKBBBBKWWK../..KWWKBBBBKWWK../..KKKKKKKKKKKK../................/................"], "騎士": ["#ff6b5e", ".......RR......./......RRRR....../.......RR......./.....KKKKKK...../....KSSSSSSK..../...KSSSSSSSSK.../...KSSSSSSSSK.../...KKKKKKKKKK.../...KSKKKKKKSK.../...KSSSSSSSSK.../...KSSKSSKSSK.../...KSSKSSKSSK.../...KSSSSSSSSK.../....KSSSSSSK..../.....KKKKKK...../................"], "狐狸": ["#58c45a", "................/..KK........KK../..KOK......KOK../..KOOK....KOOK../..KOOOKKKKOOOK../..KOOOOOOOOOOK../.KOOOOOOOOOOOOK./.KOOKKOOOOKKOOK./.KOOOOOOOOOOOOK./.KWWOOOOOOOOWWK./..KWWWOOOOWWWK../...KWWWKKWWWK.../....KWWWWWWK..../.....KKWWKK...../.......KK......./................"], "兔子": ["#ffd43b", "....KK....KK..../...KWK....KWK.../...KPK....KPK.../...KPK....KPK.../...KPK....KPK.../...KWK....KWK.../..KKWWKKKKWWKK../.KWWWWWWWWWWWWK./.KWWWWWWWWWWWWK./.KWWKKWWWWKKWWK./.KWWWWWWWWWWWWK./.KPPWWWKKWWWPPK./.KWWWWWKKWWWWWK./..KWWWWWWWWWWK../...KKKKKKKKKK.../................"], "熊貓": ["#ff9ecb", "................/..KKK......KKK../.KKKKKKKKKKKKKK./.KKKWWWWWWWWKKK./..KWWWWWWWWWWK../.KWWKKWWWWKKWWK./.KWKKKKWWKKKKWK./.KWKWKKWWKKWKWK./.KWWKKWWWWKKWWK./.KWWWWWKKWWWWWK./.KWWWWWKKWWWWWK./.KWWWWKWWKWWWWK./..KWWWWWWWWWWK../...KKWWWWWWKK.../.....KKKKKK...../................"], "貓咪": ["#5fb8ff", "................/..K..........K../..KK........KK../..KGK......KGK../..KGGKKKKKKGGK../..KGGGGGGGGGGK../.KGGGGGGGGGGGGK./.KGGKKGGGGKKGGK./.KGGKYGGGGKYGGK./.KGGGGGGGGGGGGK./.KGGGGGKKGGGGGK./KKKGGGGGGGGGGKKK/.KGGGKGGGGKGGGK./..KGGGKKKKGGGK../...KKKKKKKKKK.../................"], "寶箱": ["#ff6b5e", "................/................/...KKKKKKKKKK.../..KBBBBBBBBBBK../.KBBBBBBBBBBBBK./.KBBBBBBBBBBBBK./.KKKKKKKKKKKKKK./.KYYYYYKKYYYYYK./.KBBBBKYYKBBBBK./.KBBBBKYYKBBBBK./.KBBBBBKKBBBBBK./.KBBBBBBBBBBBBK./.KYYYYYYYYYYYYK./.KKKKKKKKKKKKKK./................/................"], "錢袋": ["#58c45a", "................/......KKKK....../.....KTTTTK...../......KTTK....../.....KKKKKK...../....KTTTTTTK..../...KTTTTTTTTK.../..KTTTTYYTTTTK../..KTTTYYYYTTTK../.KTTTTYYTTTTTTK./.KTTTTTYYTTTTTK./.KTTTYYYYTTTTTK./.KTTTTYYTTTTTTK./..KTTTTTTTTTTK../...KKKKKKKKKK.../................"], "柴犬": ["#ffd43b", "................/..KK........KK../.KOOK......KOOK./.KOWOK....KOWOK./.KOOOOKKKKOOOOK./.KOOOOOOOOOOOOK./KOOOOOOOOOOOOOOK/KOOKKOOOOOOKKOOK/KOOOOOOOOOOOOOOK/KOWWWWOKKOWWWWOK/.KWWWWWWWWWWWWK./.KWWWWKWWKWWWWK./..KWWWWKKWWWWK../...KKWWWWWWKK.../.....KKKKKK...../................"], "柯基": ["#5fb8ff", ".KK..........KK./.KOK........KOK./.KOOK......KOOK./.KOPOK....KOPOK./.KOOOOKKKKOOOOK./.KOOOOOWWOOOOOK./KOOOOOOWWOOOOOOK/KOOKKOOWWOOKKOOK/KOOOOOWWWWOOOOOK/KOOWWWWKKWWWWOOK/.KWWWWWWWWWWWWK./.KWWWWKWWKWWWWK./..KWWWWKKWWWWK../...KKWWWWWWKK.../.....KKKKKK...../................"], "小白狗": ["#ff8f8f", "................/....KKKKKKKK..../...KWWWWWWWWK.../.KKWWWWWWWWWWKK./KBBKWWWWWWWWKBBK/KBBKWWWWWWWWKBBK/KBBKWKKWWKKWKBBK/KBBKWKKWWKKWKBBK/KBBKWWWWWWWWKBBK/.KKWWPWKKWPWWKK./...KWWWKKWWWK.../...KWWKWWKWWK.../....KWWWWWWK..../.....KKPPKK...../......KPPK....../.......KK......."], "倉鼠": ["#9fe08f", "................/...KKK....KKK.../..KPOOK..KOOPK../..KOOOKKKKOOOK../...KOOOOOOOOK.../..KOOOOOOOOOOK../.KOOKKOOOOKKOOK./.KOOKKOOOOKKOOK./.KWWOOOKKOOOWWK./.KWPPWWWWWWPPWK./.KWWWWWKKWWWWWK./..KWWWWWWWWWWK../..KWKWWWWWWKWK../...KKKKKKKKKK.../................/................"], "小雞": ["#ff9ecb", "................/.......KK......./......KYYK....../....KKKYYKKK..../...KYYYYYYYYK.../..KYYYYYYYYYYK../..KYYKKYYKKYYK../.KYYYKKYYKKYYYK./.KYPYYYOOYYYPYK./.KYYYYOOOOYYYYK./.KYYYYYOOYYYYYK./.KYYYYYYYYYYYYK./..KYYYYYYYYYYK../...KKKKKKKKKK.../.....KO..OK...../....KOO..OOK...."], "雲朵怪": ["#5fb8ff", "................/................/.....KKKK......./....KWWWWK.KK.../..KKWWWWWWKWWK../.KWWWWWWWWWWWWK./KWWWWWWWWWWWWWWK/KWWWKKWWWWKKWWWK/KWWWKKWWWWKKWWWK/KWPPWWWKKWWWPPWK/KWWWWWWWWWWWWWWK/.KWWWWWWWWWWWWK./..KKWWKKKKWWKK../....KK....KK..../................/................"], "小幽靈": ["#ffd43b", "................/.....KKKKKK...../....KLLLLLLK..../...KLLLLLLLLK.../..KLLLLLLLLLLK../..KLLKKLLKKLLK../..KLLKKLLKKLLK../..KLPLLLLLLPLK../..KLLLLKKLLLLK../..KLLLLLLLLLLK../..KLLLLLLLLLLK../..KLLLLLLLLLLK../..KLKLLKKLLKLK../..KK.KK..KK.KK../................/................"], "杯子蛋糕": ["#7fd6ff", ".......RR......./......KRRK....../.....KPPPPK...../....KPPWPPPK..../...KPPPPPPWPK.../..KPWPPPPPPPPK../..KPPPPPWPPPPK../..KKKKKKKKKKKK../...KTBTBTBTBK.../...KTBTBTBTBK.../....KTBTBTBTK.../....KTBTBTBTK.../.....KKKKKKK..../................/................/................"]};
 function sprite(name,size){const d=SPR[name]||SPR['柴犬'];const rows=d[1].split('/');let r='';
@@ -1271,6 +1271,113 @@ document.head.insertAdjacentHTML('beforeend',`<style>
 .stuback{margin-bottom:4px}
 .eggtag.cp{background:#ff8ac0}
 </style>`);
+/* ===== 小島市集（2026/11/23）：大家都能擺攤 =====
+   小孩：底部「市集」分頁；爸媽：首頁「小島市集」卡片（全螢幕）。
+   保管制：下單先扣錢 → 賣家交貨 → 買家按「收到了」才付給賣家（扣 5% 手續費，最少 1）。 */
+let MK=null;   // {d:getMarket 的資料, el:畫在哪, tab, who}
+const MK_ST={'待交貨':'#e08a00','已交貨':'#2a7ad0','已完成':'#2a9a4a','已取消':'#999'};
+function mkMoney(cur,v){return cur==='台幣'?`💵 ${v} 元`:`🪙 ${v}`}
+function mkFee(o){return MK.d.parents.indexOf(o.seller)>=0?0:Math.min(o.total,Math.max(1,Math.round(o.total*MK.d.fee)))}
+async function mktOpen(el,keep){if(!el){let o=$('#mkt');if(!o){o=document.createElement('div');o.id='mkt';o.className='stu';document.body.appendChild(o)}
+    o.innerHTML='<div class="stuh"><b>🏝️ 小島市集</b><button class="stux" onclick="mktClose()">✕</button></div><div class="stub" id="mktB"></div>';document.body.style.overflow='hidden';el='#mktB'}
+  const box=$(el);if(!MK||MK.el!==el||!keep)MK=Object.assign({tab:MK&&MK.el===el?MK.tab:'browse',who:''},MK&&MK.el===el?{tab:MK.tab,who:MK.who}:{},{el:el,d:MK&&MK.el===el?MK.d:null});
+  if(!MK.d)box.innerHTML='<div class="card mu" style="text-align:center">⏳ 市集開張中…</div>';
+  try{MK.d=await call('getMarket')}catch(e){box.innerHTML='<div class="card">'+esc(errMsg(e))+'</div>';return}mktDraw()}
+function mktClose(){const o=$('#mkt');if(o)o.remove();document.body.style.overflow='';if(typeof mktClosed==='function')mktClosed()}
+function mktCounts(){const D=MK.d,me=D.name,par=D.parent;
+  return {sell:D.orders.filter(o=>o.status==='待交貨'&&(o.seller===me||(par&&D.parents.indexOf(o.seller)>=0))).length,
+    recv:D.orders.filter(o=>o.status==='已交貨'&&o.buyer===me).length}}
+function mktDraw(){if(!MK||!$(MK.el))return;const D=MK.d,c=mktCounts(),T=[['browse','🛍️ 逛市集',0],['stall',D.parent?'🏪 爸媽的攤位':'🏪 我的攤位',c.sell],['orders',D.parent?'📋 全部訂單':'📦 我的訂單',D.parent?0:c.recv]];
+  $(MK.el).innerHTML=`${D.me?`<div class="card mkbal"><span>我有</span><b class="gold">🪙 ${n(D.me.coins)}</b><b class="mkntd">💵 ${n(D.me.ntd)} 元</b></div>`:''}
+   <div class="mktabs">${T.map(([k,t,b])=>`<button class="${MK.tab===k?'on':''}" onclick="MK.tab='${k}';mktDraw()">${t}${b?`<i class="mkdot">${b}</i>`:''}</button>`).join('')}</div>
+   <div id="mkBody">${MK.tab==='browse'?mktBrowse():MK.tab==='stall'?mktStall():mktOrders()}</div>`;
+  loadImgs(D.items.map(x=>x.photo).concat(D.orders.map(o=>o.photo)))}
+function mkThumb(p,ph,big){return p?imgTag(p,big?'mkbig':'mkth'):`<div class="mkth mkph">${ph||'🎁'}</div>`}
+function mkStock(x){return x.stock===null?'':x.stock>0?`剩 ${x.stock}`:'<b style="color:#d04040">賣完了</b>'}
+function mktBrowse(){const D=MK.d,me=D.name;let L=D.items.filter(x=>x.status==='上架');
+  const sellers=[...new Set(D.parents.concat(L.map(x=>x.seller)))].filter(s=>L.some(x=>x.seller===s));
+  if(MK.who)L=L.filter(x=>x.seller===MK.who);
+  const ord=s=>{const i=D.parents.indexOf(s);return i>=0?i:9};
+  L.sort((a,b)=>((a.stock===0)-(b.stock===0))||(ord(a.seller)-ord(b.seller))||a.seller.localeCompare(b.seller)||(b.at-a.at));
+  return `<div class="mkwho"><button class="${MK.who?'':'on'}" onclick="MK.who='';mktDraw()">全部</button>${sellers.map(s=>`<button class="${MK.who===s?'on':''}" onclick="MK.who='${esc(s)}';mktDraw()">${esc(s)}的攤位</button>`).join('')}</div>
+   <div class="card">${L.map(x=>`<div class="mkit${x.stock===0?' out':''}"><span onclick="mktPic('${x.id}')">${mkThumb(x.photo,x.type==='兌換'?'💵':'🎁')}</span>
+     <div class="mkn"><b>${esc(x.name)}</b>${x.desc?`<div class="mu">${esc(x.desc)}</div>`:''}<div class="mkm"><span class="mksel">${esc(x.seller)}</span> ${mkStock(x)}</div></div>
+     <div class="mkr"><div class="mkp ${x.cur==='台幣'?'ntd':''}">${mkMoney(x.cur,x.price)}${x.type==='兌換'?`<div class="mu">→ ${x.ntd} 元</div>`:''}</div>
+     ${x.seller===me||D.parent?'':`<button class="go mkb" ${x.stock===0?'disabled':''} onclick="mktBuyBox('${x.id}')">買</button>`}</div></div>`).join('')||'<div class="empty">市集還沒有東西，去「我的攤位」上架第一個吧！</div>'}</div>
+   <div class="card mu">💡 買東西時錢會先由市集保管，對方交貨、你按「收到了」才會付給對方。賣東西要付 ${Math.round(D.fee*100)}% 手續費（最少 1）。</div>`}
+function mktPic(id){const x=MK.d.items.find(i=>i.id===id);if(!x||!x.photo)return;ask(`<h3>${esc(x.name)}</h3>${imgTag(x.photo,'mkbig')}${x.desc?`<div class="mu">${esc(x.desc)}</div>`:''}`,null,'關閉');loadImgs([x.photo])}
+async function mktBuyBox(id){const D=MK.d,x=D.items.find(i=>i.id===id);if(!x)return;const max=Math.min(20,x.stock===null?20:x.stock),have=x.cur==='台幣'?D.me.ntd:D.me.coins;
+  if(have<x.price)return toast((x.cur==='台幣'?'存摺的錢':'金幣')+'還差 '+(x.price-have)+' 喔',1);
+  const upd=()=>{const q=+$('#mkQ').value,t=q*x.price;$('#mkT').innerHTML=`共 <b>${mkMoney(x.cur,t)}</b>，買完還剩 <b>${n(have-t)}</b>${x.cur==='台幣'?' 元':' 金幣'}${t>have?'<br><b style="color:#d04040">不夠喔！</b>':''}`};
+  window.mkQ=d=>{const e=$('#mkQ');e.value=Math.max(1,Math.min(max,+e.value+d));upd()};
+  setTimeout(upd,0);
+  if(!await ask(`<h3>跟 ${esc(x.seller)} 買「${esc(x.name)}」</h3>${x.photo?imgTag(x.photo,'mkbig'):''}${x.desc?`<div class="mu">${esc(x.desc)}</div>`:''}
+    <div class="mkqty"><button type="button" onclick="mkQ(-1)">－</button><input id="mkQ" type="number" value="1" min="1" max="${max}" readonly><button type="button" onclick="mkQ(1)">＋</button></div>
+    <div id="mkT" style="text-align:center"></div><div class="mu" style="margin-top:6px">錢會先由市集保管，${esc(x.seller)} 交貨、你按「收到了」才會付給對方。交貨前都可以取消。</div>`,'下單'))return;
+  const q=+$('#mkQ').value;if(q*x.price>have)return toast('錢不夠喔',1);
+  const r=await run(null,'mktBuy',{id:id,qty:q});if(r){if(typeof sfx==='function')sfx('coin');MK.tab='orders';mktOpen(MK.el,1);if(typeof mktChanged==='function')mktChanged()}}
+function mkOrderRow(o,as){const D=MK.d,me=D.name,par=D.parent,isSeller=o.seller===me||(par&&D.parents.indexOf(o.seller)>=0),isBuyer=o.buyer===me;
+  const fee=o.status==='已完成'?o.fee:mkFee(o);
+  const acts=[];if(o.status==='待交貨'&&isSeller)acts.push(`<button class="ok" onclick="mktAct('mktShip','${o.id}')">📦 已交貨</button>`);
+  if(o.status==='已交貨'&&isBuyer)acts.push(`<button class="ok" onclick="mktAct('mktDone','${o.id}','收到「${esc(o.name)}」了嗎？按下去錢就會付給 ${esc(o.seller)}。')">✅ 收到了</button>`);
+  if(par&&!isBuyer&&(o.status==='待交貨'||o.status==='已交貨')&&!isSeller)acts.push(`<button onclick="mktAct('mktDone','${o.id}','幫 ${esc(o.buyer)} 按收到？錢會付給 ${esc(o.seller)}。')">幫忙完成</button>`);
+  if((o.status==='待交貨'&&(isBuyer||isSeller||par))||(o.status==='已交貨'&&(isSeller||par)))acts.push(`<button class="no" onclick="mktAct('mktCancel','${o.id}','取消這筆訂單？錢會全部退給 ${esc(o.buyer)}。')">取消</button>`);
+  const who=as==='sell'?`${esc(o.buyer)} 買的`:as==='buy'?`跟 ${esc(o.seller)} 買`:`${esc(o.buyer)} → ${esc(o.seller)}`;
+  return `<div class="mkit"><span>${mkThumb(o.photo)}</span><div class="mkn"><b>${esc(o.name)}${o.qty>1?' ×'+o.qty:''}</b><div class="mu">${who}・${new Date(o.at).toLocaleDateString('zh-TW',{month:'numeric',day:'numeric'})}</div>
+   <div class="mkm"><span class="mkst" style="background:${MK_ST[o.status]||'#888'}">${o.status}</span> ${mkMoney(o.cur,o.total)}${!D.parents.includes(o.seller)&&(as==='sell'||par)&&o.status!=='已取消'?`<span class="mu">（手續費 ${fee}，實拿 ${o.total-fee}）</span>`:''}</div>
+   ${o.note?`<div class="mu">${esc(o.note)}</div>`:''}${acts.length?`<div class="mkacts">${acts.join('')}</div>`:''}</div></div>`}
+async function mktAct(fn,id,q){if(q&&!await ask(`<h3>${q}</h3>`,'確定'))return;const r=await run(null,fn,{id:id});if(r!==null){if(fn==='mktDone'&&typeof sfx==='function')sfx('coin');mktOpen(MK.el,1);if(typeof mktChanged==='function')mktChanged()}}
+function mktStall(){const D=MK.d,me=D.name,par=D.parent,mine=x=>x.seller===me||(par&&D.parents.indexOf(x.seller)>=0);
+  const L=D.items.filter(mine).sort((a,b)=>(a.status!=='上架')-(b.status!=='上架')||a.seller.localeCompare(b.seller)||b.at-a.at);
+  const O=D.orders.filter(o=>mine({seller:o.seller})&&(o.status==='待交貨'||o.status==='已交貨'));
+  return `${O.length?`<div class="card"><h3>📮 要處理的訂單</h3>${O.map(o=>mkOrderRow(o,'sell')).join('')}</div>`:''}
+   <button class="stubig" onclick="mktItemBox()">＋ 上架商品</button>
+   <div class="card">${L.map(x=>`<div class="mkit${x.status!=='上架'?' out':''}"><span onclick="mktPic('${x.id}')">${mkThumb(x.photo,x.type==='兌換'?'💵':'🎁')}</span>
+     <div class="mkn"><b>${esc(x.name)}</b>${par?` <span class="mksel">${esc(x.seller)}</span>`:''}<div class="mkm">${mkMoney(x.cur,x.price)}${x.type==='兌換'?` → ${x.ntd} 元`:''}・${x.stock===null?'不限量':'庫存 '+x.stock}・賣出 ${x.sold}${x.status!=='上架'?'・<b>下架中</b>':''}</div>
+     <div class="mkacts"><button onclick="mktItemBox('${x.id}')">✏️ 修改</button><button onclick="mktToggle('${x.id}')">${x.status==='上架'?'下架':'上架'}</button><button class="no" onclick="mktDelOne('${x.id}')">🗑️</button></div></div></div>`).join('')||'<div class="empty">還沒有商品，按上面的按鈕上架第一個！</div>'}</div>
+   <div class="card mu">💡 可以賣自己做的東西、不要的玩具，或是服務（例如「幫你收碗一次」）。成交時扣 ${Math.round(D.fee*100)}% 手續費（最少 1）。</div>`}
+function mktOrders(){const D=MK.d,me=D.name;if(D.parent)return `<div class="card">${D.orders.map(o=>mkOrderRow(o,'all')).join('')||'<div class="empty">還沒有交易</div>'}</div>`;
+  const B=D.orders.filter(o=>o.buyer===me),S=D.orders.filter(o=>o.seller===me&&(o.status==='已完成'||o.status==='已取消'));
+  return `<div class="card"><h3>🛍️ 我買的</h3>${B.map(o=>mkOrderRow(o,'buy')).join('')||'<div class="empty">還沒買過東西</div>'}</div>
+   <div class="card"><h3>💰 我賣掉的</h3>${S.map(o=>mkOrderRow(o,'sell')).join('')||'<div class="empty">還沒賣出東西</div>'}</div>`}
+async function mktToggle(id){const x=MK.d.items.find(i=>i.id===id);const r=await run(null,'mktSave',Object.assign({},x,{status:x.status==='上架'?'下架':'上架',stock:x.stock===null?'':x.stock}));if(r!==null)mktOpen(MK.el,1)}
+async function mktDelOne(id){const x=MK.d.items.find(i=>i.id===id);if(!await ask(`<h3>刪除「${esc(x.name)}」？</h3>以前的交易紀錄不會不見。`,'刪除'))return;const r=await run(null,'mktDel',{id:id});if(r!==null)mktOpen(MK.el,1)}
+let MKF=null;
+async function mktItemBox(id){const D=MK.d,x=id?D.items.find(i=>i.id===id):null;MKF=x?Object.assign({},x,{photoData:'',clearPhoto:false}):{name:'',desc:'',cur:'金幣',price:10,stock:1,photo:'',status:'上架',type:'商品',ntd:''};
+  const chip=(k,v,lab)=>`<button type="button" class="chip ${MKF[k]===v?'on':''}" onclick="MKF.${k}='${v}';this.parentNode.querySelectorAll('.chip').forEach(b=>b.classList.remove('on'));this.classList.add('on');mkfSync()">${lab||v}</button>`;
+  window.mkfSync=()=>{const t=$('#mkfNtd');if(t)t.classList.toggle('hidden',!(MKF.type==='兌換'&&MKF.cur==='金幣'));const u=$('#mkfUnit');if(u)u.textContent=MKF.cur==='台幣'?'元':'金幣'};
+  window.mkfPhoto=async()=>{try{MKF.photoData=await pickPhoto(640,48000);MKF.clearPhoto=false;$('#mkfImg').innerHTML=`<img src="${MKF.photoData}" class="mkbig">`}catch(e){if(e.message!=='沒有選照片')toast(e.message,1)}};
+  if(!await ask(`<h3>${x?'修改商品':'上架商品'}</h3>
+    <div id="mkfImg" class="mkfimg" onclick="mkfPhoto()">${x&&x.photo?imgTag(x.photo,'mkbig'):'<span>📷<br>拍照或選照片</span>'}</div>
+    <label class="cfl">商品名稱</label><input id="mkfN" class="mkin" maxlength="20" value="${esc(MKF.name)}" placeholder="例如：自己做的書籤">
+    <label class="cfl">說明（可不填）</label><input id="mkfD" class="mkin" maxlength="60" value="${esc(MKF.desc)}" placeholder="例如：可以選喜歡的顏色">
+    <label class="cfl">用什麼付錢</label><div class="chips mkchips">${chip('cur','金幣','🪙 金幣')}${chip('cur','台幣','💵 台幣（存摺）')}</div>
+    <label class="cfl">單價（<span id="mkfUnit">${MKF.cur==='台幣'?'元':'金幣'}</span>）</label><input id="mkfP" class="mkin" type="number" min="1" value="${MKF.price}">
+    <label class="cfl">庫存（空白＝不限量，例如服務）</label><input id="mkfS" class="mkin" type="number" min="0" value="${MKF.stock===null?'':MKF.stock}">
+    ${D.parent?`<label class="cfl">類型</label><div class="chips mkchips">${chip('type','商品','🎁 一般商品')}${chip('type','兌換','💱 金幣換台幣')}</div>
+     <div id="mkfNtd" class="${MKF.type==='兌換'&&MKF.cur==='金幣'?'':'hidden'}"><label class="cfl">可以換多少台幣（元）</label><input id="mkfT" class="mkin" type="number" min="1" value="${MKF.ntd||''}"></div>`:''}
+    <label class="cfl">狀態</label><div class="chips mkchips">${chip('status','上架')}${chip('status','下架')}</div>`,x?'儲存':'上架'))return;
+  const arg={id:x?x.id:null,name:$('#mkfN').value,desc:$('#mkfD').value,cur:MKF.cur,price:+$('#mkfP').value,stock:$('#mkfS').value,status:MKF.status,type:MKF.type,ntd:$('#mkfT')?+$('#mkfT').value:'',photoData:MKF.photoData,clearPhoto:MKF.clearPhoto};
+  toast('儲存中…');const r=await run(null,'mktSave',arg);if(r!==null){MK.tab='stall';mktOpen(MK.el,1)}}
+document.head.insertAdjacentHTML('beforeend',`<style>
+.mkbal{display:flex;gap:14px;align-items:center;justify-content:center;font-size:16px}.mkntd{color:#2a7a3a}
+.mktabs{display:flex;gap:6px;margin:0 0 10px}.mktabs button{flex:1;border:0;border-radius:12px;padding:9px 2px;font-weight:800;font-size:14px;background:#fff;color:#6a5a3a;position:relative;box-shadow:0 2px 0 #0001}.mktabs button.on{background:#ffcf3a;color:#4a3000}
+.mkdot{position:absolute;top:-6px;right:4px;background:#ff4a4a;color:#fff;border-radius:10px;font-style:normal;font-size:11px;padding:1px 6px}
+.mkwho{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch}.mkwho button{flex:none;border:0;border-radius:16px;padding:6px 12px;background:#fff;font-weight:700;font-size:13px;color:#6a5a3a}.mkwho button.on{background:#4a90e2;color:#fff}
+.mkit{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:2px dashed #f0e2cc}.mkit:last-child{border-bottom:0}.mkit.out{opacity:.55}
+.mkth{width:54px;height:54px;flex:none;border-radius:12px;object-fit:cover;background:#f3ead9;display:flex;align-items:center;justify-content:center;font-size:26px}
+.mkbig{width:100%;max-height:50vh;object-fit:contain;border-radius:12px;background:#f3ead9;display:block;margin:6px 0}
+.mkn{flex:1;min-width:0}.mkn b{font-size:15px}.mkm{font-size:13px;color:#7a6a4a;margin-top:2px}
+.mksel{display:inline-block;background:#eef3ff;color:#3a5aa0;border-radius:8px;padding:0 6px;font-size:12px;font-weight:700}
+.mkr{text-align:right;flex:none}.mkp{font-weight:800;color:#b07a00;white-space:nowrap}.mkp.ntd{color:#2a7a3a}
+.mkb{margin-top:4px;min-width:56px;padding:6px 12px;border-radius:10px}
+.mkst{color:#fff;border-radius:8px;padding:0 6px;font-size:12px;font-weight:700}
+.mkacts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.mkacts button{border:0;border-radius:10px;padding:6px 10px;font-weight:700;font-size:13px;background:#eee}.mkacts .ok{background:#2a9a4a;color:#fff}.mkacts .no{background:#ffe0e0;color:#b02020}
+.mkqty{display:flex;justify-content:center;align-items:center;gap:10px;margin:10px 0}.mkqty button{width:44px;height:44px;border-radius:50%;border:0;background:#ffe7a8;font-size:22px;font-weight:800}.mkqty input{width:60px;text-align:center;font-size:20px;font-weight:800;border:2px solid #eadfc8;border-radius:10px;padding:6px}
+.mkfimg{border:2px dashed #e0d2b8;border-radius:14px;min-height:110px;display:flex;align-items:center;justify-content:center;text-align:center;color:#a08a60;cursor:pointer;overflow:hidden}
+.mkchips{display:flex;gap:6px;flex-wrap:wrap}.mkchips .chip{flex:1;padding:8px 6px;border-radius:12px;border:2px solid #eadfc8;background:#fff;font-weight:700;font-size:14px}.mkchips .chip.on{background:#ffcf3a;border-color:#e0b020}
+.mkin{width:100%;box-sizing:border-box;font-size:16px;padding:8px;border:2px solid #eadfc8;border-radius:10px}
+</style>`);
 </script>
 <script>
 let S={},st={tab:'home',rec:'p',pCat:'',kKid:'',kType:'獎金',kCat:'',sync:true,kid:'',kidView:'bank',depMonths:6,book:'__parent',noFixed:false,range:'this',stats:null,payer:'',sPayer:''},INB=null,CFG=null,recs=[],mems=[];
@@ -1290,6 +1397,8 @@ let H_AT=0,LAST_MS=null,INB_RAW=null;
 // 按下通過／退回後先把那一筆從畫面拿掉，伺服器在背景處理；處理中的不會被舊資料又顯示回來
 const RV_BUSY=new Set();
 function studioClosed(){if(st.tab==='home')loadHome()}
+function mktClosed(){if(st.tab==='home')loadHome()}
+async function mkHome(fn,id){if(fn==='mktCancel'&&!await ask('<h3>取消這筆訂單？</h3>錢會全部退給小孩。','取消訂單','不要'))return;const r=await run(null,fn,{id:id});if(r!==null)loadHome()}
 async function loadHome(pre){
   const [from,to]=rangeOf('this');
   let inb,ms;if(pre&&pre.inbox&&(pre.ms||LAST_MS)){inb=pre.inbox;ms=pre.ms||LAST_MS}else{try{[inb,ms]=await Promise.all([call('getInbox'),call('getStats',{book:'__parent',from,to,noFixed:false})])}catch(e){return toast(errMsg(e),1)}}
@@ -1309,6 +1418,8 @@ async function loadHome(pre){
      <div class="acts"><button class="ok" onclick="rv('${x.id}',1)">通過</button><button class="no" onclick="rv('${x.id}',0)">退回</button></div></div>`).join('')}
    ${buys.map(x=>`<div class="it"><div class="ic">${av(x.kid,34)}</div><div class="t"><b>${esc(x.kid)}</b> ${x.type==='兌換'?'要兌換':'買了'}「${esc(x.name)}」<div class="mu">${x.time.slice(5)}・${n(-x.coins)} 金幣${x.type==='兌換'?`・存進存摺 ${n(x.ntd)} 元`:''}</div></div>
      <div class="acts"><button class="ok" onclick="rv('${x.id}',1)">${x.type==='兌換'?'存入':'兌現'}</button><button class="no" onclick="rv('${x.id}',0)">退回</button></div></div>`).join('')}</div>
+  ${(inb.mkt||[]).length?`<div class="card"><div class="row"><h3>🏝️ 市集訂單：要交貨</h3><span class="pill">${inb.mkt.length}</span></div>${inb.mkt.map(o=>`<div class="it"><div class="ic">${av(o.buyer,34)}</div><div class="t"><b>${esc(o.buyer)}</b> 跟${esc(o.seller)}買了「${esc(o.name)}」${o.qty>1?'×'+o.qty:''}<div class="mu">${o.cur==='台幣'?'💵 '+o.total+' 元':'🪙 '+o.total}・交給小孩後按「已交貨」</div></div><div class="acts"><button class="ok" onclick="mkHome('mktShip','${o.id}')">已交貨</button><button class="no" onclick="mkHome('mktCancel','${o.id}')">取消</button></div></div>`).join('')}</div>`:''}
+  <div class="card" onclick="mktOpen()" style="cursor:pointer"><div class="row"><h3>🏝️ 小島市集</h3><span class="mu">›</span></div><div class="mu">海星、海膽和小孩們的攤位都在這裡。上架商品、看所有交易紀錄。</div></div>
   <div id="calCard">${calCardHtml()}</div>
   <div class="card" onclick="studioOpen()" style="cursor:pointer"><div class="row"><h3>🎨 寵物工作室</h3><span class="mu">›</span></div><div class="mu">大家自己設計的寵物。小孩送出的設計會出現在收件匣，按「上架」商店就買得到。</div></div>
   <div class="card"><h3>🏝️ 小孩們</h3>${S.kids.map(k=>{const g=inb.kids[k]||{};return `<div class="it" onclick="st.kid='${esc(k)}';st.kidView='game';go('kids')"><div class="ic">${av(k,38)}</div>
@@ -1491,8 +1602,7 @@ async function loadSet(){chips($('#setSeg'),['task','shop','fam'],st.set||'task'
   if(v==='task'||v==='shop'){try{CFG=await call('gameConfig')}catch(e){return toast(errMsg(e),1)}}
   if(v==='task')$('#setBody').innerHTML=`<button class="btn" onclick="taskBox()">＋ 新增任務</button><div class="card">${CFG.tasks.map((t,i)=>`<div class="it" style="${t.status==='下架'?'opacity:.45':''}"><div class="ic">${t.type==='團隊'?'🤝':D5[t.diff-1]}</div>
    <div class="t">${esc(t.name)}<div class="mu">${t.type==='團隊'?'團隊・':''}難度 ${t.diff}・+${t.exp} 經驗・+${n(t.coins)} 金幣${t.cash?`・<b class="plus">+${n(t.cash)} 元</b>`:''}${t.status==='下架'?'・已下架':''}</div></div><button class="sbtn" onclick="taskBox(${i})">編輯</button></div>`).join('')}</div>`;
-  if(v==='shop'){$('#setBody').innerHTML=`<button class="btn" onclick="prodBox()">＋ 新增商品</button><div class="card">${CFG.shop.map((p,i)=>`<div class="it" style="${p.status==='下架'?'opacity:.45':''}"><div class="ic">${p.photo?imgTag(p.photo,'thumb'):(p.type==='兌換'?'💵':'🎁')}</div>
-   <div class="t">${esc(p.name)}<div class="mu">${n(p.price)} 金幣${p.type==='兌換'?`・換 ${n(p.ntd)} 元`:''}${p.status==='下架'?'・已下架':''}</div></div><button class="sbtn" onclick="prodBox(${i})">編輯</button></div>`).join('')}</div>`;loadImgs(CFG.shop.map(p=>p.photo))}
+  if(v==='shop'){$('#setBody').innerHTML=`<div class="card"><h3>🏝️ 商品搬到小島市集了</h3><div class="mu">原本的商品現在是「海星的攤位」，海膽也可以擺自己的攤位。上架、修改、看交易都在市集。<br>還沒兌現的舊訂單照樣在首頁收件匣處理。</div><button class="btn" style="margin-top:10px" onclick="mktOpen()">打開小島市集</button></div>`;return}
   if(v==='fam')loadMembers()}
 let TB={};
 async function taskBox(i){const t=i===undefined?{name:'',exp:5,coins:30,diff:2,type:'個人',status:'上架'}:CFG.tasks[i];TB=Object.assign({},t);
