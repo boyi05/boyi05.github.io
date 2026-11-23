@@ -176,6 +176,7 @@ input.amt{font-size:24px;text-align:right;color:var(--red)}
 .egg.xmas{position:relative;flex-basis:104px;background:linear-gradient(#fff6f0,#eef9f0);border-color:#e2343a;box-shadow:inset 0 0 0 2px #fff,0 0 0 2px #1f9a4a}.eggtag{font-size:10px;font-weight:800;color:#fff;background:#c0262e;border-radius:8px;padding:1px 6px;margin-bottom:1px}.eggcd{font-size:11px;font-weight:800;color:#1f7a3a;background:#e4f6e8;border-radius:8px;padding:2px 6px;margin-top:3px}
 .egg b{font-size:12px;line-height:1.2}.egg .mu{font-size:12px}.egg .go{padding:4px 0;width:100%;font-size:13px;margin-top:3px}
 .skb{margin-top:6px;padding:8px}.skb small{font-weight:600;opacity:.85;font-size:12px}
+.lookb{border:0;border-radius:10px;padding:3px 8px;margin-left:4px;font-size:12px;font-weight:700;background:#fff1c2;color:#7a5a00;vertical-align:middle}
 </style></head><body>
 <header id="hud"></header>
 <main>
@@ -1806,7 +1807,7 @@ function drawPet(){const el=$('#pg-pet');if(!PET){el.innerHTML='<div class="card
   if(PB.key===key&&$('#petStage')){petPanel();pbPoo();return}
   PB.key=key;
   el.innerHTML=`<div class="card" style="text-align:center;background:linear-gradient(#cdeeff,#e9fbff 58%,#bfe8b0 58%);padding-top:4px">
-   <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:19px">${esc(v.name)}</b><span class="mini">${v.typeName}・${v.stageName}${v.shiny?' ✨':''}</span></div>
+   <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:19px">${esc(v.name)}</b><span class="mini">${v.typeName}・${v.stageName}${v.shiny?' ✨':''}${v.isShiny&&v.stage>0?` <button class="lookb" onclick="petLookSw()">${v.shiny?'換普通外觀':'換閃亮外觀 ✨'}</button>`:''}</span></div>
    <div id="petStage" class="pst" onclick="petTap()"><svg class="pgnd" viewBox="0 0 120 120" preserveAspectRatio="xMidYMax meet">${petPoo(v.poops)}</svg>
     <div class="pw" id="petW"><div class="pf${v.stage===2&&((IMGPET[v.species]||{}).frames||{})[2]!=='f2'?' baby':''}" id="petF"><div class="pt" id="petT"><div class="pa" id="petA">${petSvg(v.species,v.stage,petOpt(v),170)}</div></div></div><div class="pbub" id="petBub"></div></div>
     <div id="petFx"></div>${v.stage&&!v.ready?`<button class="psnd" onclick="event.stopPropagation();petSoundToggle(this)">${PSOUND?'🔊':'🔇'}</button>`:''}</div>
@@ -1832,6 +1833,8 @@ function petGuard(v,a){if(v.ready)return v.name+' 已經長大了，去跟牠說
   if((a==='feed'||a==='snack')&&v.full>=95)return v.name+' 吃不下了～';if(a==='play'&&v.mood>=95)return v.name+' 玩累了，讓牠休息一下';if(a==='bath'&&v.clean>=95)return v.name+' 已經很乾淨了';
   if(a==='poop'&&!v.poops)return '現在沒有大便喔';if(a==='doctor'&&!v.sick)return v.name+' 很健康，不用看醫生';if(A[1]>c)return '金幣不夠喔（還差 '+(A[1]-c)+'）';return ''}
 let PQ=Promise.resolve(),PPEND=0;
+/* 閃亮版可以換成普通外觀（例如機甲鯊普通版是黑色），隨時換回來 */
+async function petLookSw(){const v=PET.now;if(!v)return;const r=await run(null,'petLook',{id:v.id,look:v.shiny?'normal':''});if(r&&r.pet){PB.key='';petSet(r.pet);drawPet()}}
 function petSend(a){const pid=PET.now&&PET.now.id;PPEND++;PQ=PQ.then(()=>call('petAct',{act:a,id:pid})).then(r=>{PPEND--;if(!PPEND&&r&&r.pet){petSet(r.pet);if(r.coins!=null&&G.me){G.me.coins=r.coins;drawHud()}if(st.tab==='pet')drawPet()}},
   e=>{PPEND--;toast(errMsg(e),1);if(!PPEND)loadGame()})}
 function petDo(a){const v=PET&&PET.now;if(!v)return;const err=petGuard(v,a);if(err)return toast(err,1);const A=PET.acts[a];
