@@ -1156,13 +1156,16 @@ function calAddD(s,n){const d=calD(s);d.setDate(d.getDate()+n);return calYmd(d)}
 function calDiff(a,b){return Math.round((calD(b)-calD(a))/864e5)}
 function calRel(today,d){const x=calDiff(today,d);return x===0?'今天':x===1?'明天':x===2?'後天':x>0?x+' 天後':''}
 function calMd(s){return (+s.slice(5,7))+'/'+(+s.slice(8,10))}
-function calWhen(e){let w=calMd(e.d)+'（'+CAL_WD[calD(e.d).getDay()]+'）';if(e.d2&&e.d2!==e.d)w+=' 到 '+calMd(e.d2);return w+(e.all?'':' '+e.t)}
+const CAL_SLOT={am:['08:00','12:00','🌅 上午'],pm:['13:00','17:00','☀️ 下午'],eve:['18:00','21:00','🌙 晚上']};
+function calSlotOf(e){if(e.all)return 'all';for(const k in CAL_SLOT)if(e.t===CAL_SLOT[k][0]&&e.t2===CAL_SLOT[k][1])return k;return 'time'}
+function calTimeTxt(e){if(e.all)return '';const k=calSlotOf(e);return k!=='time'?CAL_SLOT[k][2]:e.t+(e.t2&&e.t2!==e.t?'–'+e.t2:'')}
+function calWhen(e){let w=calMd(e.d)+'（'+CAL_WD[calD(e.d).getDay()]+'）';if(e.d2&&e.d2!==e.d)w+=' 到 '+calMd(e.d2);return w+(e.all?'':' '+calTimeTxt(e))+(e.rec?' ・🔁 每週':'')}
 /* 去掉名稱前面的「名字、名字：」 */
 function calTitle(e){const t=e.title,i=t.search(/[：:]/);if(i>0){const ns=t.slice(0,i).split('、'),ok=['爸媽'].concat(e.who||[]);if(ns.every(n=>ok.indexOf(n.trim())>=0))return t.slice(i+1).trim()||t}return t}
 function calSort(L){return L.sort((a,b)=>a.d<b.d?-1:a.d>b.d?1:(a.all?'':a.t)<(b.all?'':b.t)?-1:1)}
 function calChips(e,kids){return (e.who&&e.who.length?e.who:['全家']).map(n=>`<span class="cwho" style="background:${calKc(n,kids)}">${esc(n)}</span>`).join('')}
 function calItem(e,o){o=o||{};const r=o.today&&e.d2>=o.today?(e.d<=o.today?'今天':calRel(o.today,e.d)):'';
-  return `<div class="cit"><div class="cic">${calIc(e.title)}</div><div class="ct"><b>${esc(calTitle(e))}</b> ${calChips(e,o.kids)}<div class="mu">${calWhen(e)}${r?' ・<b class="crel">'+r+'</b>':''}${e.loc?' ・📍'+esc(e.loc):''}</div></div>${o.del&&!e.rec?`<button class="cdel" onclick="calEdit('${e.id}')">✏️</button><button class="cdel" onclick="calDelete('${e.id}')">🗑️</button>`:''}</div>`}
+  return `<div class="cit"><div class="cic">${calIc(e.title)}</div><div class="ct"><b>${esc(calTitle(e))}</b> ${calChips(e,o.kids)}<div class="mu">${calWhen(e)}${r?' ・<b class="crel">'+r+'</b>':''}${e.loc?' ・📍'+esc(e.loc):''}</div></div>${o.del?`${e.rec?'':`<button class="cdel" onclick="calEdit('${e.id}')">✏️</button>`}<button class="cdel" onclick="calDelete('${e.id}','${e.d}')">🗑️</button>`:''}</div>`}
 // 之後的行程倒數小卡（有日期）
 function calCount(list,today,kids){return list.length?`<div class="ccw">${list.map(e=>`<div class="ccount">${calIc(e.title)} <b>${esc(calTitle(e))}</b> ${e.pa||e.who&&e.who.length?calChips(e,kids):''}<div class="mu">${calWhen(e)}・還有 <b class="crel">${calDiff(today,e.d)}</b> 天</div></div>`).join('')}</div>`:''}
 function calOn(list,d){return list.filter(e=>e.d<=d&&(e.d2||e.d)>=d)}
@@ -1173,19 +1176,28 @@ function calMonth(y,m,list,sel,today,kids){const first=new Date(y,m,1,12).getDay
     h+=`<div class="cday${s===today?' tdy':''}${s===sel?' sel':''}" onclick="calPick('${s}')"><span>${d}</span><div class="cdots">${ev.slice(0,4).map(e=>`<i style="background:${calKc(e.who&&e.who.length===1?e.who[0]:'全家',kids)}"></i>`).join('')}</div></div>`}
   return h+'</div>'}
 // 新增行程的表單（kid：小孩版，只能選自己或全家）
-function calFormHtml(date,kids,kid,ev){const ed=ev||null,dys=ed&&ed.all?calDiff(ed.d,ed.d2)+1:1,ppl=CAL_PAR.concat(kids||[]),ew=ed?(ed.who&&ed.who.length?ed.who:ppl):kid?[kid]:ppl,all=!ed||ed.all;
+function calFormHtml(date,kids,kid,ev){const ed=ev||null,dys=ed&&ed.all?calDiff(ed.d,ed.d2)+1:1,ppl=CAL_PAR.concat(kids||[]),ew=ed?(ed.who&&ed.who.length?ed.who:ppl):kid?[kid]:ppl,sl=ed?calSlotOf(ed):'all';
+  const tm=ed&&sl==='time'?ed.t:'09:00',te=ed&&sl==='time'&&ed.t2?ed.t2:'',sb=(k,t)=>`<button type="button" class="cfs${sl===k?' on':''}" data-s="${k}" onpointerdown="calBlur()" onclick="calSlot('${k}')">${t}</button>`;
   return `<h3>${ed?'✏️ 修改行程':'📅 新增行程'}</h3>
   <label class="cfl">日期</label><input id="cfDate" type="date" value="${date}">
-  <label class="cfl chk"><input id="cfAll" type="checkbox"${all?' checked':''} onchange="$('#cfTimeRow').classList.toggle('hidden',this.checked);$('#cfDaysRow').classList.toggle('hidden',!this.checked)"> 全天</label>
-  <div id="cfTimeRow"${all?' class="hidden"':''}><label class="cfl">時間</label><input id="cfTime" type="time" value="${ed&&!ed.all?ed.t:'09:00'}"></div>
-  <div id="cfDaysRow"${all?'':' class="hidden"'}><label class="cfl">共幾天</label><select id="cfDays">${[1,2,3,4,5,6,7,8,9,10,11,12,13,14].map(i=>`<option value="${i}"${i===dys?' selected':''}>${i} 天</option>`).join('')}</select></div>
+  <label class="cfl">時段</label><div class="cfwho">${sb('all','全天')}${sb('am','🌅 上午')}${sb('pm','☀️ 下午')}${sb('eve','🌙 晚上')}${sb('time','🕐 幾點')}</div>
+  <div id="cfTimeRow"${sl==='time'?'':' class="hidden"'}><div class="cftm"><input id="cfTime" type="time" value="${tm}"><span>到</span><input id="cfEnd" type="time" value="${te}"></div><div class="cfhint">「到幾點」可以不填，不填就算 1 小時</div></div>
+  <div id="cfDaysRow"${sl==='all'?'':' class="hidden"'}><label class="cfl">共幾天</label><select id="cfDays" onchange="calRepOk()">${[1,2,3,4,5,6,7,8,9,10,11,12,13,14].map(i=>`<option value="${i}"${i===dys?' selected':''}>${i} 天</option>`).join('')}</select></div>
+  ${ed?'':`<div id="cfRepRow"${dys>1?' class="hidden"':''}><label class="cfl">重複</label><div class="cfwho"><button type="button" class="cfr on" data-r="" onpointerdown="calBlur()" onclick="calRep('')">不重複</button><button type="button" class="cfr" data-r="week" onpointerdown="calBlur()" onclick="calRep('week')">🔁 每週</button></div>
+   <div id="cfUntilRow" class="hidden"><div class="cftm"><span>每週重複到</span><input id="cfUntil" type="date" value="${calAddD(date,91)}"></div><div class="cfhint">例如才藝課，選到學期結束那天</div></div></div>`}
   <label class="cfl">要做什麼</label><input id="cfTitle" maxlength="30" value="${ed?esc(calTitle(ed)):''}" placeholder="例如：數學考試、鋼琴課、宛芝生日">
   <label class="cfl">是誰的（可以選好幾個）<button type="button" class="cfallb" onpointerdown="calBlur()" onclick="calWhoAll()">全家</button></label><div class="cfwho">${ppl.map(n=>`<button type="button" class="cfp${ew.indexOf(n)>=0?' on':''}" data-n="${esc(n)}" style="--c:${calKc(n,kids)}" onpointerdown="calBlur()" onclick="this.classList.toggle('on')">${esc(n)}</button>`).join('')}</div>`}
+function calSlot(k){document.querySelectorAll('.cfs').forEach(b=>b.classList.toggle('on',b.dataset.s===k));$('#cfTimeRow').classList.toggle('hidden',k!=='time');$('#cfDaysRow').classList.toggle('hidden',k!=='all');calRepOk()}
+function calRep(r){document.querySelectorAll('.cfr').forEach(b=>b.classList.toggle('on',b.dataset.r===r));const u=$('#cfUntilRow');if(u)u.classList.toggle('hidden',!r)}
+/* 連續好幾天的全天行程不能每週重複 */
+function calRepOk(){const R=$('#cfRepRow');if(!R)return;const on=(document.querySelector('.cfs.on')||{}).dataset,multi=on&&on.s==='all'&&+$('#cfDays').value>1;R.classList.toggle('hidden',multi);if(multi)calRep('')}
 /* 點名字前先收起鍵盤、日期選單（iPhone 上第一下常被拿去收鍵盤） */
 function calBlur(){const a=document.activeElement;if(a&&a!==document.body&&/INPUT|SELECT|TEXTAREA/.test(a.tagName))a.blur()}
 function calWhoAll(){const b=[...document.querySelectorAll('.cfp')],on=!b.every(x=>x.classList.contains('on'));b.forEach(x=>x.classList.toggle('on',on))}
-function calFormVal(){const all=$('#cfAll').checked,b=[...document.querySelectorAll('.cfp')],w=b.filter(x=>x.classList.contains('on')).map(x=>x.dataset.n);
-  return {date:$('#cfDate').value,time:all?'':$('#cfTime').value,days:all?+$('#cfDays').value:1,title:$('#cfTitle').value.trim(),who:w.length===b.length?[]:w}}
+function calFormVal(){const sl=(document.querySelector('.cfs.on')||{dataset:{s:'all'}}).dataset.s,all=sl==='all',b=[...document.querySelectorAll('.cfp')],w=b.filter(x=>x.classList.contains('on')).map(x=>x.dataset.n);
+  const rp=document.querySelector('.cfr.on'),rep=rp&&rp.dataset.r&&!$('#cfRepRow').classList.contains('hidden')?rp.dataset.r:'';
+  return {date:$('#cfDate').value,slot:sl==='time'||all?'':sl,time:sl==='time'?$('#cfTime').value:'',end:sl==='time'?$('#cfEnd').value:'',days:all?+$('#cfDays').value:1,
+   repeat:rep,until:rep?$('#cfUntil').value:'',title:$('#cfTitle').value.trim(),who:w.length===b.length?[]:w}}
 document.head.insertAdjacentHTML('beforeend',`<style>
 .cfallb{margin-left:8px;border:0;border-radius:10px;padding:6px 12px;background:#ffe7a8;font-weight:800;font-size:14px;touch-action:manipulation}
 .cit{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:2px dashed #f0e2cc}.cit:last-child{border-bottom:0}
@@ -1197,7 +1209,11 @@ document.head.insertAdjacentHTML('beforeend',`<style>
 .cday.tdy{background:#ffe7b8}.cday.sel{outline:3px solid #ff9f43}.cdots{display:flex;justify-content:center;gap:2px;margin-top:3px;min-height:6px}.cdots i{width:6px;height:6px;border-radius:50%}
 .cnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.cnav b{font-size:18px}.cnav button{border:0;background:#fff3dc;border-radius:10px;padding:6px 12px;font-size:16px;cursor:pointer}
 .cfl{display:block;font-size:13px;color:#8a7a5a;margin:10px 0 4px;text-align:left}#mBody input[type=date],#mBody input[type=time],#mBody #cfTitle,#mBody select{width:100%;box-sizing:border-box;font-size:16px;padding:8px;border:2px solid #eadfc8;border-radius:10px}
-.cfwho{display:flex;flex-wrap:wrap;gap:6px;text-align:left}.cfp{min-height:44px;padding:8px 10px;border-radius:22px;border:2px solid var(--c);background:#fff;color:var(--c);font-size:15px;font-weight:800;touch-action:manipulation;-webkit-tap-highlight-color:transparent}.cfp.on{background:var(--c);color:#fff}.cfp.on::before{content:'✓ '}
+.cfwho{display:flex;flex-wrap:wrap;gap:6px;text-align:left}.cfp{min-height:44px;padding:8px 10px;border-radius:22px;border:2px solid var(--c);background:#fff;color:var(--c);font-size:15px;font-weight:800;touch-action:manipulation;-webkit-tap-highlight-color:transparent}.cfp.on{background:var(--c);color:#fff}
+.cfs,.cfr{min-height:42px;padding:7px 11px;border-radius:21px;border:2px solid #d8cdb8;background:#fff;color:#6b5a40;font-size:15px;font-weight:800;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.cfs.on,.cfr.on{background:#f2a93b;border-color:#f2a93b;color:#fff}
+.cftm{display:flex;align-items:center;gap:8px;margin-top:8px}.cftm input{flex:1;min-width:0}.cftm span{font-weight:800;color:#8a7a5a;flex:none}
+.cfhint{font-size:12px;color:#9a8a6a;text-align:left;margin-top:4px}.cfp.on::before{content:'✓ '}
 #mBody input[type=checkbox],#mBody input[type=radio]{width:20px!important;height:20px;min-height:0;margin:0 6px 0 0;padding:0;vertical-align:middle;appearance:auto;-webkit-appearance:auto;border:0;background:none;box-shadow:none;display:inline-block;flex:none}
 .cfl.chk{display:flex;align-items:center;color:#4a3b2a;font-size:15px}
 .ccw{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.ccount{background:#fff3dc;border-radius:12px;padding:6px 10px;font-size:14px;line-height:1.4}.ccount .mu{font-size:12px}
