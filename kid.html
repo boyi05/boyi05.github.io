@@ -663,6 +663,10 @@ const ART_CSS=`
 .petal{animation:petal 4s ease-in-out infinite}@keyframes petal{0%{transform:translate(0,-6px) rotate(0);opacity:0}20%{opacity:1}100%{transform:translate(8px,30px) rotate(180deg);opacity:0}}
 .stink{animation:stink 1.8s ease-in-out infinite}@keyframes stink{0%{transform:translateY(2px);opacity:0}50%{opacity:.9}100%{transform:translateY(-5px);opacity:0}}
 .twk{transform-box:fill-box;transform-origin:center;animation:twk 1.8s ease-in-out infinite}@keyframes twk{0%,100%{transform:scale(.5);opacity:.4}50%{transform:scale(1.1);opacity:1}}
+/* 閃亮版圖片寵物：身上掃過的亮光、彩虹光暈、往上飄的亮粉 */
+.shsw{animation:shsw 3.2s ease-in-out infinite}@keyframes shsw{0%{transform:translateX(-40px)}55%,100%{transform:translateX(170px)}}
+.shhalo{transform-box:fill-box;transform-origin:center;animation:shhalo 2.6s ease-in-out infinite}@keyframes shhalo{0%,100%{opacity:.45;transform:scale(.94)}50%{opacity:.9;transform:scale(1.04)}}
+.glit{animation:glit 2.4s ease-out infinite;opacity:0}@keyframes glit{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-34px);opacity:0}}
 .spin{transform-box:fill-box;transform-origin:center;animation:spin 14s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .spinS{transform-box:fill-box;transform-origin:center;animation:spinS 3s ease-in-out infinite}@keyframes spinS{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
 .shine{animation:shine 3.4s ease-in-out infinite}@keyframes shine{0%,55%{transform:translateX(0) rotate(25deg)}100%{transform:translateX(62px) rotate(25deg)}}
@@ -1098,7 +1102,7 @@ const SHAPE2={corgi:1,dino:1,narwhal:1};
 
 // ---------- 圖片寵物（用 AI 繪圖工具畫好的圖，放在網站 pets/ 資料夾） ----------
 const PETIMG_HOST='https:/'+'/boyi05.github.io/pets/';
-const IMGPET={sheep:{dir:PETIMG_HOST+'sheep/',v:2,frames:{2:'f2',3:'f',4:'f4',5:'f5'},front:{2:1,3:1,4:1,5:1},fv:2}};
+const IMGPET={sheep:{dir:PETIMG_HOST+'sheep/',v:3,frames:{2:'f2',3:'f',4:'f4',5:'f5'},front:{2:1,3:1,4:1,5:1},fv:3}};
 Object.assign(PETPAL,{sheep:[{m:'#f6e6c8',l:'#fffaf0',d:'#a07850',a:'#ffd86a',o:'#6a4a32',e:'#6a4a32',g:'#ffe9a0'},{m:'#f8dde4',l:'#fff4f6',d:'#c08a96',a:'#ffc4d2',o:'#6a4450',e:'#6a4450',g:'#ffd4de'}]});
 PEMO.sheep='☁️';PCOL.sheep=['#f6e6c8','#fffaf0','#a07850','#f8dde4','#c08a96','#fff4f6'];
 function imgPet(sp,stage,o,u){const P=IMGPET[sp],C=PETPAL[sp][o.shiny?1:0],sh=!!o.shiny,mood=o.mood==null?80:o.mood;
@@ -1106,18 +1110,23 @@ function imgPet(sp,stage,o,u){const P=IMGPET[sp],C=PETPAL[sp][o.shiny?1:0],sh=!!
  let defs=rad(u+'g',.5,.5,.5,[[0,'#000',.28],[1,'#000',0]])+lin(u+'cr',0,0,0,1,[[0,'#fff3a8'],[.5,'#ffc91f'],[1,'#d98a00']]),aura='',fx='';
  if(stage>=4)aura+=`<ellipse cx="60" cy="104" rx="${S*.46}" ry="8" fill="none" stroke="${C.a}" stroke-width="2" opacity=".55"/>`;
  if(stage>=5&&!o.photo){defs+=rad(u+'au',.5,.5,.5,[[0,C.g,.6],[.6,C.g,.2],[1,C.g,0]]);aura=petAura(u,C)+aura}
- if(sh)fx+=[[-46,-62,6,0],[46,-54,7,.5],[-44,-14,5,1],[48,-18,5,1.5],[0,-92,6,.8]].map(([dx,dy,r,d])=>spk(60+dx,106+dy,r,'#fff3b0',d)).join('');
+ if(sh){const SC=['#fff3b0','#ffd0ec','#c8f0ff','#fff','#e0d0ff'];
+  fx+=[[-46,-62,6,0],[46,-54,7,.5],[-44,-14,5,1],[48,-18,5,1.5],[0,-92,6,.8],[-30,-86,4,.3],[34,-82,4.5,1.2],[-52,-38,3.5,.7],[54,-36,4,1.9],[-18,-50,3,1.4],[22,-30,3.2,.2]].map(([dx,dy,r,d],i)=>spk(60+dx,106+dy,r,SC[i%5],d)).join('');
+  fx+=[[-30,0],[-12,.6],[8,1.2],[26,.3],[40,1.6],[-40,1.9],[0,.9]].map(([dx,d],i)=>`<circle class="glit" style="animation-delay:${d}s" cx="${60+dx}" cy="${100-(i%3)*10}" r="${1.4+(i%3)*.5}" fill="${SC[(i+1)%5]}" stroke="#fff" stroke-width=".4"/>`).join('');
+  defs+=rad(u+'hl',.5,.5,.5,[[0,'#fff7c0',.85],[.45,'#ffc4ec',.5],[.75,'#b8ecff',.25],[1,'#b8ecff',0]])+lin(u+'sw',0,0,1,0,[[0,'#fff',0],[.5,'#fff',.85],[1,'#fff',0]]);
+  aura=`<ellipse class="shhalo" cx="60" cy="${(y+S*.55).toFixed(1)}" rx="${(S*.55).toFixed(1)}" ry="${(S*.5).toFixed(1)}" fill="url(#${u}hl)"/>`+aura}
  if(o.sick)fx+=`<g transform="translate(${60+S*.18} ${y+S*.18})">${sickBits(C.o,0,0)}</g>`+`<g transform="translate(60 ${y+4})">${[0,1,2].map(i=>`<circle class="dizzy" style="animation-delay:${i*.4}s" cx="${(i-1)*9}" cy="0" r="2.6" fill="#ffd23f" stroke="${C.o}" stroke-width=".8"/>`).join('')}</g>`;
  else if(stage&&mood<30)fx+=`<g transform="translate(${60-S*.3} ${y+S*.12})"><path d="M-12 0 C-14 -8 -4 -12 0 -6 C4 -12 14 -8 12 0Z" fill="#b8c4d8" stroke="#6a7a90" stroke-width="1"/><path class="drip" d="M-6 4 v5 M0 4 v7 M6 4 v5" stroke="#6aa8e8" stroke-width="1.6" stroke-linecap="round"/></g>`;
  const href=P.dir+stage+(sh?'s':'')+'.webp?v='+P.v;
  const img=`<image class="petimg" href="${href}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${S.toFixed(1)}" height="${S.toFixed(1)}" preserveAspectRatio="xMidYMax meet"/>`;
  const cls=stage===0?(o.wobble||o.crack?'wob':''):'bob';
- return `<defs>${defs}</defs>${aura}<ellipse cx="60" cy="108" rx="${S*.34}" ry="5.5" fill="url(#${u}g)"/>${petPoo(o.poops)}<g class="${cls}" style="transform-origin:60px 108px">${img}</g>${fx}`}
+ const shine=sh&&stage?`<mask id="${u}mk" maskUnits="userSpaceOnUse" x="0" y="0" width="120" height="120" style="mask-type:alpha">${img}</mask><g mask="url(#${u}mk)"><g class="shsw"><rect x="-30" y="-10" width="22" height="140" fill="url(#${u}sw)" transform="skewX(-18)"/></g></g>`:'';
+ return `<defs>${defs}</defs>${aura}<ellipse cx="60" cy="108" rx="${S*.34}" ry="5.5" fill="url(#${u}g)"/>${petPoo(o.poops)}<g class="${cls}" style="transform-origin:60px 108px">${img}${shine}</g>${fx}`}
 MEMO_ART.sheep=u=>`<path d="M6 16 C-14 16 -18 -6 -4 -14 C10 -22 22 -8 14 2 C8 10 -4 6 -2 -2 C0 -8 8 -6 7 -1" fill="none" stroke="#6a4a32" stroke-width="9.5" stroke-linecap="round"/><path d="M6 16 C-14 16 -18 -6 -4 -14 C10 -22 22 -8 14 2 C8 10 -4 6 -2 -2 C0 -8 8 -6 7 -1" fill="none" stroke="url(#${u}it)" stroke-width="6.5" stroke-linecap="round"/><path d="M-10 4 C-12 -6 -4 -12 4 -12" stroke="#fff" stroke-width="1.6" fill="none" opacity=".6" stroke-linecap="round"/>`;
 MEMO_GRAD.sheep=[['#f2d8b0'],['#a07850']];
 
 /* 蜜糖垂耳犬（2026/11/17，使用者用 AI 畫的水彩圖） */
-IMGPET.honeydog={dir:PETIMG_HOST+'honeydog/',v:2,frames:{2:'f2',3:'f',4:'f4',5:'f5'},front:{2:1,3:1,4:1,5:1},fv:1};
+IMGPET.honeydog={dir:PETIMG_HOST+'honeydog/',v:3,frames:{2:'f2',3:'f',4:'f4',5:'f5'},front:{2:1,3:1,4:1,5:1},fv:3};
 Object.assign(PETPAL,{honeydog:[{m:'#e8c89a',l:'#fbf0dc',d:'#a8703c',a:'#ffc94a',o:'#6a4022',e:'#3a2416',g:'#ffd98a'},{m:'#f2d4dc',l:'#fdf2f4',d:'#b88290',a:'#ffc4d2',o:'#5a3a44',e:'#3a2228',g:'#ffd4de'}]});
 PEMO.honeydog='🍯';PCOL.honeydog=['#e8c89a','#fbf0dc','#a8703c','#f2d4dc','#b88290','#fdf2f4'];
 MEMO_ART.honeydog=u=>`<path d="M-18 -8 Q0 -14 18 -8 L4 16 Q0 20 -4 16Z" fill="#e0443c" stroke="#7a1e18" stroke-width="2" stroke-linejoin="round"/><path d="M-18 -8 Q0 -14 18 -8 Q0 -4 -18 -8Z" fill="#c4302a" stroke="#7a1e18" stroke-width="1.6"/><circle cx="0" cy="-9" r="4.6" fill="#e0443c" stroke="#7a1e18" stroke-width="1.6"/><path d="M3 -7 L12 4 M-3 -7 L-11 3" stroke="#7a1e18" stroke-width="1.6" stroke-linecap="round"/><path d="M-8 -2 Q-2 0 2 8" stroke="#fff" stroke-width="1.4" fill="none" opacity=".55" stroke-linecap="round"/>`;
@@ -2196,7 +2205,7 @@ const PXSEQ={};
 function pbPose(){const v=PET&&PET.now;return !!(v&&v.stage&&PPOSE[v.species])}
 function petOpt(v,pose){return {shiny:v.shiny,sick:v.sick,mood:v.mood,poops:0,crack:v.stage===0&&v.hatchIn<3,wobble:v.stage===0,pose:pose||''}}
 function pbImg(n){if(pbPose()){const a=$('#petA'),p=n==='stand'?'':n;if(a&&PB.pose!==p){PB.pose=p;a.innerHTML=petSvg(PET.now.species,PET.now.stage,petOpt(PET.now,p),170)}return}
-  const P=pbFr(),im=$('#petA .petimg');if(!P||!im)return;if(n!=='front')PB.cur=n;if(PB.turn&&n!=='front')return;im.setAttribute('href',P.dir+P.frames[PET.now.stage]+'/'+n+(PET.now.shiny?'s':'')+'.webp?v='+P.fv)}
+  const P=pbFr(),ims=$$('#petA .petimg');if(!P||!ims.length)return;if(n!=='front')PB.cur=n;if(PB.turn&&n!=='front')return;ims.forEach(im=>im.setAttribute('href',P.dir+P.frames[PET.now.stage]+'/'+n+(PET.now.shiny?'s':'')+'.webp?v='+P.fv))}   /* 閃亮版的亮光遮罩也用同一張圖，一起換 */
 let pbWI;function pbCls(c){const a=$('#petA');if(!a)return;const F=pbFr()||pbPose();a.className='pa '+c+(F?' fr':'');clearInterval(pbWI);if(!F)return;
   const Q=pbPose()&&PXSEQ[PET.now.species],q=Q&&Q[c];if(q){const fr=q[0];let k=0;pbImg(fr[0]||'stand');pbWI=setInterval(()=>{k++;if(q[2]&&k>=fr.length)return clearInterval(pbWI);pbImg(fr[k%fr.length]||'stand')},q[1]);return}
   if(c==='walk'||c==='run'){let k=0;pbImg('walk1');pbWI=setInterval(()=>pbImg((k++%2)?'walk1':'walk2'),c==='run'?150:230)}else pbImg(c==='squish'?(pbFront()?'front2':pbPose()?'happy':'blink'):PFR[c]||'stand')}
