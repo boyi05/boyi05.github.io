@@ -218,6 +218,23 @@ input.amt{font-size:24px;text-align:right;color:var(--red)}
 .csres{margin-top:10px;font-weight:800;font-size:17px}.csres.ok{color:#2f9a5a}.csres.ng{color:#d0453b}
 .csres small{display:block;font-weight:700;font-size:14px;color:#7a6a58;margin-top:4px}
 .cssteps{background:#fff6e0;border-radius:12px;padding:8px 10px;margin-top:6px;font-size:15px;color:#5a4a38;text-align:left;line-height:1.6}
+/* 轉帳：金幣（黃）和台幣（綠）用不同顏色、不同單位，避免搞混 */
+.xcur{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.xcur button{border:3px solid #e6dcc8;background:#fff;border-radius:16px;padding:10px 6px;text-align:center;color:var(--ink);opacity:.9}
+.xcur button b{display:block;font-size:20px}.xcur button small{display:block;color:#9a8a70;font-size:13px;margin-top:2px}
+.xcur .g.on{border-color:#e8a600;background:#fff4c7;box-shadow:0 4px 0 #e8a600;opacity:1}.xcur .n.on{border-color:#2f9e55;background:#e3f5e8;box-shadow:0 4px 0 #2f9e55;opacity:1}
+.xbody{margin-top:6px}.xbody.off{opacity:.35;pointer-events:none}
+.xpeer{display:flex;gap:10px;flex-wrap:wrap}.xpeer button{flex:1;min-width:90px;border:3px solid #e6dcc8;background:#fff;border-radius:16px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;font-weight:800;color:var(--ink)}
+.xpeer button.on{border-color:var(--xc);background:var(--xbg)}
+.xamt{display:flex;align-items:center;border:3px solid var(--xc,#e6dcc8);border-radius:14px;background:var(--xbg,#fff);padding:0 12px}
+.xamt span{font-weight:900;font-size:18px;color:var(--xc2,#9a8a70);flex:none}.xamt input{border:0;background:transparent;font-size:26px;font-weight:900;text-align:right;flex:1;min-width:0;color:var(--xc2,#333);padding:8px 8px;box-shadow:none}
+.xq{display:flex;gap:6px;margin-top:6px}.xq button{flex:1;border:2px solid var(--xc,#e6dcc8);background:#fff;border-radius:12px;padding:6px 0;font-weight:800;color:var(--xc2)}
+.xprev{background:var(--xbg,#faf6ee);border:2px dashed var(--xc,#e6dcc8);border-radius:14px;padding:8px 12px;margin-top:10px;line-height:1.8}
+.xprev div{display:flex;justify-content:space-between}.xprev .tot{border-top:2px solid var(--xc);margin-top:4px;padding-top:4px;font-weight:900;font-size:17px}
+.xgo{display:block;width:100%;margin-top:12px;border:0;border-radius:16px;padding:13px;font-size:18px;font-weight:900;color:#fff;background:var(--xc,#bbb);box-shadow:0 4px 0 var(--xc3,#999)}
+.xtheme-g{--xc:#e8a600;--xc2:#8a5a00;--xc3:#b07e00;--xbg:#fff8dc}.xtheme-n{--xc:#2f9e55;--xc2:#1d6b38;--xc3:#1f7a3e;--xbg:#eaf7ee}
+.xtag{display:inline-block;border-radius:9px;padding:1px 7px;font-size:12px;font-weight:900;vertical-align:1px}.xtag.g{background:#ffe28a;color:#7a5200}.xtag.n{background:#c9ecd4;color:#1d6b38}
+.xbig{display:inline-block;border-radius:14px;padding:6px 14px;font-size:20px;font-weight:900;margin:6px 0}
 </style></head><body>
 <header id="hud"></header>
 <main>
@@ -233,6 +250,7 @@ input.amt{font-size:24px;text-align:right;color:var(--red)}
  <section id="pg-rank" class="page"><div class="sign"><h3>🏆 排行榜</h3></div><div class="chips" id="rkSeg"></div><div id="rkBody"></div></section>
  <section id="pg-forum" class="page"><div class="sign"><h3>💬 家庭廣場</h3></div><div id="foBody"></div></section>
  <section id="pg-bank" class="page"></section>
+ <section id="pg-xfer" class="page"></section>
  <section id="pg-cal" class="page"><div class="sign"><h3>📅 行事曆</h3></div><div id="calBody"><div class="card empty">⏳ 讀取中…</div></div></section>
  <section id="pg-rec" class="page"><div class="sign"><h3>🧾 今天買了什麼？</h3></div><div class="card wal balc"><div class="mu">💵 現在可以用的錢（活存）</div><div class="big" id="kBal">…</div></div><div class="card">
   <label>💰 金額</label><input id="kAmt" class="amt" type="number" inputmode="numeric" placeholder="0">
@@ -264,7 +282,7 @@ function addMonths(s,m){const p=s.split('-').map(Number);const last=new Date(p[0
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 const EMO={'飲食':'🍔','日常':'🧻','交通':'🚌','娛樂':'🎮','學費':'📚','醫療':'💊','通訊':'📱','其他':'📦','衣鞋':'👕','水電油':'⛽','學習':'✏️','膽膽':'🦔'};
 const em=c=>EMO[c]||'🔹';
-const TYPE={'獎金':'🎁','花錢':'🛒','存定存':'📦','領定存':'🔓','利息':'✨','市集買入':'🏝️','市集賣出':'💰','市集退款':'↩️'};
+const TYPE={'獎金':'🎁','花錢':'🛒','存定存':'📦','領定存':'🔓','利息':'✨','市集買入':'🏝️','市集賣出':'💰','市集退款':'↩️','轉帳轉出':'📤','轉帳收到':'📥'};
 const PAL={"K": "#16182e", "W": "#f4f4f4", "B": "#a0522d", "R": "#e63946", "S": "#c9d1dc", "O": "#ff8c2b", "P": "#ff9fb8", "G": "#9aa0aa", "Y": "#ffd23f", "T": "#d9a066", "L": "#cdb8ff"};
 const SPR={"城堡": ["#5fb8ff", "................/..K.K.K..K.K.K../..KWKWK..KWKWK../..KWWWK..KWWWK../..KWWWKKKKWWWK../..KWWWWWWWWWWK../..KWWKWWWWKWWK../..KWWKWWWWKWWK../..KWWWWWWWWWWK../..KWWWWKKWWWWK../..KWWWKBBKWWWK../..KWWKBBBBKWWK../..KWWKBBBBKWWK../..KKKKKKKKKKKK../................/................"], "騎士": ["#ff6b5e", ".......RR......./......RRRR....../.......RR......./.....KKKKKK...../....KSSSSSSK..../...KSSSSSSSSK.../...KSSSSSSSSK.../...KKKKKKKKKK.../...KSKKKKKKSK.../...KSSSSSSSSK.../...KSSKSSKSSK.../...KSSKSSKSSK.../...KSSSSSSSSK.../....KSSSSSSK..../.....KKKKKK...../................"], "狐狸": ["#58c45a", "................/..KK........KK../..KOK......KOK../..KOOK....KOOK../..KOOOKKKKOOOK../..KOOOOOOOOOOK../.KOOOOOOOOOOOOK./.KOOKKOOOOKKOOK./.KOOOOOOOOOOOOK./.KWWOOOOOOOOWWK./..KWWWOOOOWWWK../...KWWWKKWWWK.../....KWWWWWWK..../.....KKWWKK...../.......KK......./................"], "兔子": ["#ffd43b", "....KK....KK..../...KWK....KWK.../...KPK....KPK.../...KPK....KPK.../...KPK....KPK.../...KWK....KWK.../..KKWWKKKKWWKK../.KWWWWWWWWWWWWK./.KWWWWWWWWWWWWK./.KWWKKWWWWKKWWK./.KWWWWWWWWWWWWK./.KPPWWWKKWWWPPK./.KWWWWWKKWWWWWK./..KWWWWWWWWWWK../...KKKKKKKKKK.../................"], "熊貓": ["#ff9ecb", "................/..KKK......KKK../.KKKKKKKKKKKKKK./.KKKWWWWWWWWKKK./..KWWWWWWWWWWK../.KWWKKWWWWKKWWK./.KWKKKKWWKKKKWK./.KWKWKKWWKKWKWK./.KWWKKWWWWKKWWK./.KWWWWWKKWWWWWK./.KWWWWWKKWWWWWK./.KWWWWKWWKWWWWK./..KWWWWWWWWWWK../...KKWWWWWWKK.../.....KKKKKK...../................"], "貓咪": ["#5fb8ff", "................/..K..........K../..KK........KK../..KGK......KGK../..KGGKKKKKKGGK../..KGGGGGGGGGGK../.KGGGGGGGGGGGGK./.KGGKKGGGGKKGGK./.KGGKYGGGGKYGGK./.KGGGGGGGGGGGGK./.KGGGGGKKGGGGGK./KKKGGGGGGGGGGKKK/.KGGGKGGGGKGGGK./..KGGGKKKKGGGK../...KKKKKKKKKK.../................"], "寶箱": ["#ff6b5e", "................/................/...KKKKKKKKKK.../..KBBBBBBBBBBK../.KBBBBBBBBBBBBK./.KBBBBBBBBBBBBK./.KKKKKKKKKKKKKK./.KYYYYYKKYYYYYK./.KBBBBKYYKBBBBK./.KBBBBKYYKBBBBK./.KBBBBBKKBBBBBK./.KBBBBBBBBBBBBK./.KYYYYYYYYYYYYK./.KKKKKKKKKKKKKK./................/................"], "錢袋": ["#58c45a", "................/......KKKK....../.....KTTTTK...../......KTTK....../.....KKKKKK...../....KTTTTTTK..../...KTTTTTTTTK.../..KTTTTYYTTTTK../..KTTTYYYYTTTK../.KTTTTYYTTTTTTK./.KTTTTTYYTTTTTK./.KTTTYYYYTTTTTK./.KTTTTYYTTTTTTK./..KTTTTTTTTTTK../...KKKKKKKKKK.../................"], "柴犬": ["#ffd43b", "................/..KK........KK../.KOOK......KOOK./.KOWOK....KOWOK./.KOOOOKKKKOOOOK./.KOOOOOOOOOOOOK./KOOOOOOOOOOOOOOK/KOOKKOOOOOOKKOOK/KOOOOOOOOOOOOOOK/KOWWWWOKKOWWWWOK/.KWWWWWWWWWWWWK./.KWWWWKWWKWWWWK./..KWWWWKKWWWWK../...KKWWWWWWKK.../.....KKKKKK...../................"], "柯基": ["#5fb8ff", ".KK..........KK./.KOK........KOK./.KOOK......KOOK./.KOPOK....KOPOK./.KOOOOKKKKOOOOK./.KOOOOOWWOOOOOK./KOOOOOOWWOOOOOOK/KOOKKOOWWOOKKOOK/KOOOOOWWWWOOOOOK/KOOWWWWKKWWWWOOK/.KWWWWWWWWWWWWK./.KWWWWKWWKWWWWK./..KWWWWKKWWWWK../...KKWWWWWWKK.../.....KKKKKK...../................"], "小白狗": ["#ff8f8f", "................/....KKKKKKKK..../...KWWWWWWWWK.../.KKWWWWWWWWWWKK./KBBKWWWWWWWWKBBK/KBBKWWWWWWWWKBBK/KBBKWKKWWKKWKBBK/KBBKWKKWWKKWKBBK/KBBKWWWWWWWWKBBK/.KKWWPWKKWPWWKK./...KWWWKKWWWK.../...KWWKWWKWWK.../....KWWWWWWK..../.....KKPPKK...../......KPPK....../.......KK......."], "倉鼠": ["#9fe08f", "................/...KKK....KKK.../..KPOOK..KOOPK../..KOOOKKKKOOOK../...KOOOOOOOOK.../..KOOOOOOOOOOK../.KOOKKOOOOKKOOK./.KOOKKOOOOKKOOK./.KWWOOOKKOOOWWK./.KWPPWWWWWWPPWK./.KWWWWWKKWWWWWK./..KWWWWWWWWWWK../..KWKWWWWWWKWK../...KKKKKKKKKK.../................/................"], "小雞": ["#ff9ecb", "................/.......KK......./......KYYK....../....KKKYYKKK..../...KYYYYYYYYK.../..KYYYYYYYYYYK../..KYYKKYYKKYYK../.KYYYKKYYKKYYYK./.KYPYYYOOYYYPYK./.KYYYYOOOOYYYYK./.KYYYYYOOYYYYYK./.KYYYYYYYYYYYYK./..KYYYYYYYYYYK../...KKKKKKKKKK.../.....KO..OK...../....KOO..OOK...."], "雲朵怪": ["#5fb8ff", "................/................/.....KKKK......./....KWWWWK.KK.../..KKWWWWWWKWWK../.KWWWWWWWWWWWWK./KWWWWWWWWWWWWWWK/KWWWKKWWWWKKWWWK/KWWWKKWWWWKKWWWK/KWPPWWWKKWWWPPWK/KWWWWWWWWWWWWWWK/.KWWWWWWWWWWWWK./..KKWWKKKKWWKK../....KK....KK..../................/................"], "小幽靈": ["#ffd43b", "................/.....KKKKKK...../....KLLLLLLK..../...KLLLLLLLLK.../..KLLLLLLLLLLK../..KLLKKLLKKLLK../..KLLKKLLKKLLK../..KLPLLLLLLPLK../..KLLLLKKLLLLK../..KLLLLLLLLLLK../..KLLLLLLLLLLK../..KLLLLLLLLLLK../..KLKLLKKLLKLK../..KK.KK..KK.KK../................/................"], "杯子蛋糕": ["#7fd6ff", ".......RR......./......KRRK....../.....KPPPPK...../....KPPWPPPK..../...KPPPPPPWPK.../..KPWPPPPPPPPK../..KPPPPPWPPPPK../..KKKKKKKKKKKK../...KTBTBTBTBK.../...KTBTBTBTBK.../....KTBTBTBTK.../....KTBTBTBTK.../.....KKKKKKK..../................/................/................"]};
 function sprite(name,size){const d=SPR[name]||SPR['柴犬'];const rows=d[1].split('/');let r='';
@@ -1617,13 +1635,13 @@ const prof=()=>(S.profiles||{})[S.me]||{};
 
 /* ===== 導覽 ===== */
 const TABS=[['home','🏝️','小島'],['task','🧹','任務'],['pet','🐣','寵物'],['play','🎡','遊樂區'],['shop','🏪','市集'],['forum','💬','廣場'],['me','🎒','我的']];
-const ME=[['badge','🏅 徽章'],['cal','📅 行事曆'],['rank','🏆 排行'],['bank','🐷 台幣存摺'],['rec','🧾 記帳本']];
+const ME=[['badge','🏅 徽章'],['cal','📅 行事曆'],['rank','🏆 排行'],['bank','🐷 台幣存摺'],['xfer','💸 轉帳'],['rec','🧾 記帳本']];
 function buildDock(){$('#dock').innerHTML=TABS.map(t=>`<div data-p="${t[0]}" class="${t[0]===st.tab?'on':''}"><b>${t[1]}</b>${t[2]}</div>`).join('');
   $$('#dock>div').forEach(d=>d.onclick=()=>go(d.dataset.p));if(typeof mktDot==='function')mktDot()}
 function go(p){if(p==='me')p=st.me||'badge';const inMe=ME.some(m=>m[0]===p);if(inMe)st.me=p;const dk=inMe?'me':(p==='math'||p==='gm')?'play':p;st.tab=p;
   $$('#dock>div').forEach(d=>d.classList.toggle('on',d.dataset.p===dk));$$('.page').forEach(s=>s.classList.toggle('on',s.id==='pg-'+p));window.scrollTo(0,0);
   $('#meNav').classList.toggle('hidden',!inMe);if(inMe){chips($('#meNav'),ME.map(m=>m[0]),p,go,v=>ME.find(m=>m[0]===v)[1]);$('#meNav').insertAdjacentHTML('beforeend',`<button class="chip" id="sndT" onclick="sndToggle()">${PSOUND?'🔊 音效：開':'🔇 音效：關'}</button>`)}
-  if((p==='home'||p==='task'||p==='shop'||p==='pet'||p==='play')&&Date.now()-G_AT>20000)loadGame();if(p==='pet')drawPet();if(p==='bank')loadBank();if(p==='forum')loadForum();if(p==='badge')drawBadges();if(p==='rank')loadRank();if(p==='rec')refreshBal();if(p==='math')drawMath();if(p==='play')drawPlay();if(p==='cal')drawCal(1);if(p==='shop')drawShop()}
+  if((p==='home'||p==='task'||p==='shop'||p==='pet'||p==='play')&&Date.now()-G_AT>20000)loadGame();if(p==='pet')drawPet();if(p==='bank')loadBank();if(p==='xfer')loadXfer();if(p==='forum')loadForum();if(p==='badge')drawBadges();if(p==='rank')loadRank();if(p==='rec')refreshBal();if(p==='math')drawMath();if(p==='play')drawPlay();if(p==='cal')drawCal(1);if(p==='shop')drawShop()}
 function drawHud(){const p=prof(),g=G.me||{};$('#hud').innerHTML=`<div class="who" onclick="editProfile()">${avatar(p,40)}<div><b>${esc(p.nick||me())}</b><small>${g.lv?'Lv.'+g.lv+' '+titleOf(g.lv):''}</small></div></div><div class="coin">🪙 ${n(g.coins)}</div>`;loadImgs([p.photo])}
 
 /* ===== 遊戲資料 ===== */
@@ -2369,6 +2387,42 @@ async function setIcon(k){if(await run(null,'setProfile',{icon:k})!==null){S.pro
 async function upPhoto(){let d;try{d=await pickPhoto(256)}catch(e){return toast(errMsg(e),1)}toast('上傳中…');
   if(await run(null,'setProfile',{photo:d})!==null){try{S=Object.assign(S,await call('getInit'))}catch(e){}afterProfile()}}
 function afterProfile(){$('#modal').classList.add('hidden');drawHud();if(st.tab==='home')drawHome()}
+
+/* ===== 轉帳 ===== */
+const XU={'金幣':{c:'g',ic:'🪙',u:'金幣',pre:'🪙',suf:'金幣',name:'🪙 金幣'},'台幣':{c:'n',ic:'💵',u:'元',pre:'NT$',suf:'元',name:'💵 台幣'}};
+const XF={cur:'',to:'',amt:'',note:''};
+const xAmt=(cur,v)=>cur==='金幣'?`${n(v)} 🪙`:`${n(v)} 元`;
+const xFee=a=>Math.max(1,Math.round(a*((S.xf&&S.xf.fee)||0.01)));
+async function loadXfer(){$('#pg-xfer').innerHTML='<div class="card empty">⏳ 讀取中…</div>';
+  try{S.xf=await call('getXfer',me())}catch(e){return toast(errMsg(e),1)}Object.assign(XF,{cur:'',to:'',amt:'',note:''});drawXfer()}
+function drawXfer(){const x=S.xf,c=XF.cur,U=XU[c]||{},pr=S.profiles||{};
+  $('#pg-xfer').innerHTML=`<div class="sign"><h3>💸 轉帳給兄弟姊妹</h3></div>
+  <div class="card ${c?'xtheme-'+U.c:''}"><label>① 要轉哪一種錢？</label>
+   <div class="xcur"><button class="g${c==='金幣'?' on':''}" onclick="xCur('金幣')"><b>🪙 金幣</b><small>我有 ${n(x.coins)} 🪙</small></button><button class="n${c==='台幣'?' on':''}" onclick="xCur('台幣')"><b>💵 台幣</b><small>存摺 ${n(x.ntd)} 元</small></button></div>
+   <div class="xbody${c?'':' off'}">
+    <label>② 轉給誰？</label><div class="xpeer">${x.peers.map(p=>`<button class="${XF.to===p?'on':''}" onclick="XF.to='${esc(p)}';drawXfer()">${avatar(pr[p],44)}${esc((pr[p]||{}).nick||p)}</button>`).join('')||'<div class="mu">沒有可以轉的人</div>'}</div>
+    <label>③ 轉多少${c?'（'+U.u+'）':''}？</label><div class="xamt"><span>${U.pre||''}</span><input id="xA" type="number" inputmode="numeric" placeholder="0" value="${XF.amt}" oninput="XF.amt=this.value;xPrev()"><span>${U.suf||''}</span></div>
+    <div class="xq">${[10,50,100,500].map(v=>`<button onclick="XF.amt='${v}';drawXfer()">${v}</button>`).join('')}</div>
+    <div id="xP"></div>
+    <label>④ 留言（可以不寫）</label><input id="xN" maxlength="20" placeholder="例如：生日快樂、還你的" value="${esc(XF.note)}" oninput="XF.note=this.value">
+    <button class="xgo" id="xGo" onclick="xSend()">💸 轉帳</button>
+   </div></div>
+  <div class="card"><h3>📜 轉帳紀錄</h3>${x.list.map(h=>{const o=h.type==='轉帳轉出',u=XU[h.cur];return `<div class="it"><div>${o?'📤':'📥'} <span class="xtag ${u.c}">${u.name}</span> ${o?'轉給 '+esc(h.who):esc(h.who)+' 轉來'}<div class="mu">${h.time}${h.note?'・「'+esc(h.note)+'」':''}${o&&h.fee?'・含手續費 '+xAmt(h.cur,h.fee):''}</div></div><b class="${o?'minus':'plus'}">${o?'−':'+'}${xAmt(h.cur,h.amt)}</b></div>`}).join('')||'<div class="empty">還沒有轉帳紀錄</div>'}</div>
+  <div class="card mu" style="font-size:13px;line-height:1.7">💡 轉帳會收 1% 手續費（最少 1），由轉出的人另外付。轉出去就馬上到對方那裡，不能取消，按之前要看清楚是 <span class="xtag g">🪙 金幣</span> 還是 <span class="xtag n">💵 台幣</span> 喔！</div>`;
+  xPrev();loadImgs(x.peers.map(p=>(pr[p]||{}).photo).filter(Boolean))}
+function xCur(c){if(XF.cur!==c){XF.cur=c;XF.amt=''}drawXfer()}
+function xPrev(){const c=XF.cur,a=Math.round(+XF.amt||0),el=$('#xP'),b=$('#xGo');if(!el)return;
+  if(!c||!a){el.innerHTML='';b.textContent='💸 轉帳';return}
+  const f=xFee(a),have=c==='金幣'?S.xf.coins:S.xf.ntd,left=have-a-f,who=XF.to?esc(XF.to):'對方';
+  el.innerHTML=`<div class="xprev"><div><span>${who} 收到</span><b>${xAmt(c,a)}</b></div><div><span>手續費 1%</span><span>+${xAmt(c,f)}</span></div><div class="tot"><span>你總共付</span><span>${xAmt(c,a+f)}</span></div><div><span>轉完剩下</span><b class="${left<0?'minus':''}">${left<0?'不夠！還差 '+xAmt(c,-left):xAmt(c,left)}</b></div></div>`;
+  b.textContent=`💸 轉 ${xAmt(c,a)}${c==='金幣'?' 金幣':''} 給 ${who}`}
+async function xSend(){const c=XF.cur,a=Math.round(+XF.amt||0),U=XU[c];
+  if(!c)return toast('先選要轉金幣還是台幣',1);if(!XF.to)return toast('要轉給誰？',1);if(!(a>=1))return toast('請寫要轉多少',1);
+  const f=xFee(a),have=c==='金幣'?S.xf.coins:S.xf.ntd;if(have<a+f)return toast((c==='金幣'?'金幣':'存摺的錢')+'不夠喔',1);
+  if(!await ask(`<h3>確定要轉帳嗎？</h3><div class="xbig xtheme-${U.c}" style="background:var(--xbg);color:var(--xc2);border:3px solid var(--xc)">${U.name}${c==='台幣'?'（真的錢）':''}</div>
+   <div style="font-size:17px;line-height:1.8">轉給 <b>${esc(XF.to)}</b>：<b>${xAmt(c,a)}</b><br>手續費：${xAmt(c,f)}<br>你總共會少 <b class="minus">${xAmt(c,a+f)}</b></div>${XF.note?`<div class="mu">留言：「${esc(XF.note)}」</div>`:''}<div class="mu" style="margin-top:6px">轉出去就不能取消喔</div>`,'確定轉帳'))return;
+  try{const r=await call('xfer',{to:XF.to,cur:c,amt:a,note:XF.note});toast(r.msg);psfx&&psfx('coin')}catch(e){return toast(errMsg(e),1)}
+  G_AT=0;loadGame();loadXfer()}
 
 /* ===== 存摺 ===== */
 async function loadBank(){$('#pg-bank').innerHTML='<div class="card empty">⏳ 讀取中…</div>';
