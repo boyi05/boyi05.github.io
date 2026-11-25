@@ -2100,7 +2100,7 @@ async function adopt(k){const T=PET.types[k];if(petLeft(T))return toast(T.name+'
 const pcl=x=>Math.max(0,Math.min(100,Math.round(x)));
 function petGuard(v,a){if(v.ready)return v.name+' 已經長大了，去跟牠說再見吧';if(v.stage===0)return '還是蛋喔！摸摸牠，等牠孵化';const A=PET.acts[a],c=(G.me||{}).coins||0;
   if((a==='feed'||a==='snack')&&v.full>=95)return v.name+' 吃不下了～';if(a==='play'&&v.mood>=95)return v.name+' 玩累了，讓牠休息一下';if(a==='bath'&&v.clean>=95)return v.name+' 已經很乾淨了';
-  if(a==='poop'&&!v.poops)return '現在沒有大便喔';if(a==='doctor'&&!v.sick)return v.name+' 很健康，不用看醫生';if(A[1]>c)return '金幣不夠喔（還差 '+(A[1]-c)+'）';return ''}
+  if(a==='poop'&&!v.poops)return '現在沒有大便喔';if(a==='doctor'&&!v.sick)return v.name+' 很健康，不用看醫生';if(A[1]>0&&A[1]>c)return '金幣不夠喔（還差 '+(A[1]-c)+'）';return ''}
 let PQ=Promise.resolve(),PPEND=0;
 /* 閃亮版可以換成普通外觀（例如機甲鯊普通版是黑色），隨時換回來 */
 async function petLookSw(){const v=PET.now;if(!v)return;const r=await run(null,'petLook',{id:v.id,look:v.shiny?'normal':''});if(r&&r.pet){PB.key='';petSet(r.pet);drawPet()}}
