@@ -69,6 +69,9 @@ input.amt{font-size:24px;font-weight:700;text-align:right}
 #dock{position:fixed;left:0;right:0;bottom:0;display:flex;background:#fff;border-top:1px solid var(--line);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:6}
 #dock>div{flex:1;min-width:0;white-space:nowrap;letter-spacing:-.3px;text-align:center;font-size:11px;color:#9aa3b2;position:relative;cursor:pointer}#dock b{display:block;font-size:20px;filter:grayscale(1);opacity:.55;font-weight:400}
 #dock .on{color:var(--blue)}#dock .on b{filter:none;opacity:1}
+.pnav{flex-wrap:nowrap;overflow-x:auto;padding:12px 12px 0}.pnav .chip{flex:0 0 auto;white-space:nowrap}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tile{border:1px solid var(--line);background:#fff;border-radius:16px;padding:16px 10px;text-align:center;font:inherit;color:var(--ink)}.tile div{font-size:32px}.tile b{display:block;font-size:16px;margin:4px 0 2px}.tile small{color:#888;font-size:12px}
+.stk .up{color:#e8484f}.stk .dn{color:#17a673}.stk .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}.stk .g3 small{display:block;color:#888;font-size:12px}.stk .g3 b{font-size:16px}
 .badge{position:absolute;top:-2px;left:55%;background:var(--red);color:#fff;border-radius:99px;font-size:10px;font-style:normal;padding:0 5px}
 #toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(30px);opacity:0;background:var(--ink);color:#fff;border-radius:12px;padding:10px 16px;font-size:14px;z-index:30;max-width:90vw;transition:all .2s}
 #toast.show{opacity:1;transform:translateX(-50%)}#toast.err{background:var(--red)}
@@ -79,6 +82,7 @@ input.amt{font-size:24px;font-weight:700;text-align:right}
 .hidden{display:none!important}
 </style></head><body>
 <div class="wrap">
+<div id="pNav" class="chips pnav hidden"></div>
 <section id="pg-home" class="page on"><div class="top" id="homeTop"></div><div class="pad pull" id="homeBody"><div class="card empty">讀取中…</div></div></section>
 <section id="pg-rec" class="page"><div class="ptitle">記帳</div><div class="pad">
  <div class="seg" id="recSeg"></div>
@@ -93,7 +97,7 @@ input.amt{font-size:24px;font-weight:700;text-align:right}
   <div class="two"><div><label>日期</label><input id="kDate" type="date"></div><div><label>備註</label><input id="kNote" placeholder="例如：考試 100 分"></div></div>
   <button class="btn" id="kBtn" onclick="sendKid(this)">送出</button><div class="mu">這裡是真的錢（台幣）。要發遊戲金幣，請到「郗芝炘團隊」→ 小島。</div></div></div>
 </div></section>
-<section id="pg-kids" class="page"><div class="ptitle">郗芝炘團隊</div><div class="pad"><div class="chips" id="kidSel"></div><div class="seg" id="kidSeg"></div><div id="kidBody"></div></div></section>
+<section id="pg-kids" class="page"><div class="ptitle">🧒 孩子</div><div class="pad"><div class="chips" id="kidSel"></div><div class="seg" id="kidSeg"></div><div id="kidBody"></div></div></section>
 <section id="pg-forum" class="page"><div class="ptitle">家庭廣場</div><div class="pad" id="foBody"></div></section>
 <section id="pg-stat" class="page"><div class="ptitle">統計</div><div class="pad"><div class="card">
  <label>看誰的帳</label><div class="chips" id="sBook"></div><div id="sPayBox"><label>誰付的</label><div class="chips" id="sPayer"></div></div><label>期間</label><div class="chips" id="sQuick"></div>
@@ -101,7 +105,8 @@ input.amt{font-size:24px;font-weight:700;text-align:right}
  <div class="toggle" id="sFixedBox"><span>不算每月固定支出</span><button type="button" class="sw" onclick="st.noFixed=!st.noFixed;this.classList.toggle('on',st.noFixed);loadStats()"></button></div>
  <button class="btn" onclick="st.range='';drawQuick();loadStats()">查詢</button></div><div id="statBody"></div></div></section>
 <section id="pg-cal" class="page"><div class="ptitle">📅 行事曆</div><div class="pad" id="calBody"></div></section>
-<section id="pg-set" class="page"><div class="ptitle">設定</div><div class="pad"><div class="seg" id="setSeg"></div><div id="setBody"></div></div></section>
+<section id="pg-isle" class="page"><div class="ptitle">🏝️ 小島管理</div><div class="pad" id="isleBody"></div></section>
+<section id="pg-set" class="page"><div class="ptitle" id="setTitle">設定</div><div class="pad"><div class="seg" id="setSeg"></div><div id="setBody"></div></div></section>
 </div>
 <nav id="dock"></nav>
 <div id="toast"></div>
@@ -130,7 +135,7 @@ window.__bootFail=function(m){staleBadge(1,'⚠️ '+m+'，先顯示上次的資
 /* 先顯示上次的資料時，畫面打開後自己去拿最新的，存回手機，再交給各頁的 __bootFresh */
 function bootRefresh(){callRaw('boot').then(b=>{try{localStorage.setItem('bootc',JSON.stringify({k:BOOT.token,t:Date.now(),b:b}))}catch(e){}if(window.__bootFresh)window.__bootFresh(b)})
   .catch(e=>window.__bootFail(/fetch|Load failed|NetworkError/i.test(errMsg(e))?'網路好像斷了':errMsg(e)))}
-const LC={getCal:1,getForum:1,getRanks:1,getMarket:1,getPassbook:1,getXfer:1};
+const LC={getStock:1,getStockHist:1,getCal:1,getForum:1,getRanks:1,getMarket:1,getPassbook:1,getXfer:1};
 function lcKey(fn,arg){return 'lc_'+(S&&S.me||'')+'_'+fn+'_'+JSON.stringify(arg===undefined?'':arg)}
 function lcGet(fn,arg){try{const v=localStorage.getItem(lcKey(fn,arg));return v?JSON.parse(v):null}catch(e){return null}}
 function lcSet(fn,arg,v){if(LC[fn])try{localStorage.setItem(lcKey(fn,arg),JSON.stringify(v))}catch(e){}}
@@ -223,7 +228,7 @@ async function loadForum(){if(!FO){FO=lcGet('getForum');if(FO)drawForum();else $
   PINS=FO.posts.filter(p=>p.pin).slice(0,3);drawForum();foSeen()}
 function foLatest(){let t='';(FO?FO.posts:[]).forEach(p=>{if(p.time>t)t=p.time;p.replies.forEach(r=>{if(r.time>t)t=r.time})});return t||((BOOT.forum||{}).latest)||''}
 function foSeen(){try{localStorage.setItem('fo_seen_'+S.me,foLatest())}catch(e){}foBadge(false)}
-function foBadge(on){const d=document.querySelector('#dock [data-p="forum"]');if(!d)return;d.style.position='relative';let b=d.querySelector('.fbadge');if(on&&!b){b=document.createElement('span');b.className='fbadge';d.appendChild(b)}if(!on&&b)b.remove()}
+function foBadge(on){if(typeof setDot==='function'&&typeof GRP!=='undefined')return setDot('forum',on?'•':0);const d=document.querySelector('#dock [data-p="forum"]')||document.querySelector('#dock [data-p="isle"]');if(!d)return;d.style.position='relative';let b=d.querySelector('.fbadge');if(on&&!b){b=document.createElement('span');b.className='fbadge';d.appendChild(b)}if(!on&&b)b.remove()}
 function foCheck(){const l=((BOOT.forum||{}).latest)||'';let seen='';try{seen=localStorage.getItem('fo_seen_'+S.me)||''}catch(e){}foBadge(!!l&&l>seen)}
 function drawForum(){const ps=FO.posts.filter(p=>!foFilter||p.type===foFilter);
   $('#foBody').innerHTML=`<div class="chips" id="foF"></div><button class="${fBig()}" onclick="postBox()">✏️ 我要發文</button>
@@ -1436,9 +1441,17 @@ const kidLab=k=>av(k,22)+' '+esc(k);
 const D5=['🍃','🐌','🌧️','🌪️','🌋'];
 
 /* ===== 導覽 ===== */
-const TABS=[['home','🏠','海星家'],['rec','✏️','記帳'],['kids','🧒','郗芝炘團隊'],['forum','💬','廣場'],['stat','📊','統計'],['set','⚙️','設定']];
+const TABS=[['home','🏠','海星家'],['rec','✏️','記帳'],['kids','🧒','孩子'],['isle','🏝️','小島管理'],['set','⚙️','設定']];
+/* 分類：記帳（記一筆／統計圖表）、小島管理（任務、市集、寵物工作室、廣場、行事曆）。task 頁借用設定頁的畫面 */
+const PGRP={rec:[['rec','✏️ 記一筆'],['stat','📊 統計圖表']],isle:[['isle','🏝️ 全部'],['task','🧹 任務設定'],['forum','💬 廣場'],['cal','📅 行事曆']]};
+const PSUB={stat:'rec',task:'isle',forum:'isle',cal:'isle'},PPAGE={task:'set'};
+function isleGo(k){if(k==='mkt')mktOpen();else if(k==='stu')studioOpen();else go(k)}
+function drawIsle(){const T=[['task','🧹','任務設定','新增、修改、上下架任務'],['mkt','🏪','小島市集','攤位、訂單、要交貨的東西'],['stu','🎨','寵物工作室','審核小孩設計的寵物'],['forum','💬','廣場','家人聊天、公告'],['cal','📅','行事曆','全家行程']];
+  $('#isleBody').innerHTML=`<div class="tiles">${T.map(t=>`<button class="tile" onclick="isleGo('${t[0]}')"><div>${t[1]}</div><b>${t[2]}</b><small>${t[3]}</small></button>`).join('')}</div>`}
 function buildDock(){$('#dock').innerHTML=TABS.map(t=>`<div data-p="${t[0]}" class="${t[0]===st.tab?'on':''}"><b>${t[1]}</b>${t[2]}<i class="badge hidden" id="bd-${t[0]}"></i></div>`).join('');$$('#dock>div').forEach(d=>d.onclick=()=>go(d.dataset.p))}
-function go(p){st.tab=p;$$('#dock>div').forEach(d=>d.classList.toggle('on',d.dataset.p===p));$$('.page').forEach(s=>s.classList.toggle('on',s.id==='pg-'+p));window.scrollTo(0,0);
+function go(p){st.tab=p;const g=PSUB[p]||p,pg=PPAGE[p]||p;$$('#dock>div').forEach(d=>d.classList.toggle('on',d.dataset.p===g));$$('.page').forEach(s=>s.classList.toggle('on',s.id==='pg-'+pg));window.scrollTo(0,0);
+  const L=PGRP[g];$('#pNav').classList.toggle('hidden',!L);if(L)$('#pNav').innerHTML=L.map(x=>`<button class="chip${x[0]===p?' on':''}" onclick="go('${x[0]}')">${x[1]}</button>`).join('');
+  if(p==='isle')drawIsle();if(p==='task'){st.set='task'}else if(p==='set'&&(!st.set||st.set==='task'||st.set==='shop'))st.set='fam';$('#setSeg').classList.toggle('hidden',p==='task');$('#setTitle').textContent=p==='task'?'🧹 任務設定':'設定';if(p==='task')loadSet();
   if(p==='home'&&Date.now()-H_AT>20000)loadHome();if(p==='forum')loadForum();if(p==='rec'){if(st.rec==='r')loadRecur();else loadRecent()}if(p==='kids')loadKid();if(p==='stat')loadStats();if(p==='set')loadSet();if(p==='cal')drawCal(1)}
 
 /* ===== 總覽＋審核收件匣 ===== */
@@ -1590,8 +1603,9 @@ function drawKE(){chips($('#ke_c'),S.cats,KE.cat,v=>{KE.cat=v;drawKE()},c=>'<b>'
 /* ===== 小孩：存摺＋小島遊戲 ===== */
 async function loadKid(){if(!st.kid)st.kid=S.kids[0];
   chips($('#kidSel'),S.kids,st.kid,v=>{st.kid=v;loadKid()},kidLab);
-  chips($('#kidSeg'),['bank','game','badge','rank'],st.kidView,v=>{st.kidView=v;loadKid()},v=>({bank:'💵 台幣存摺',game:'🏝️ 小島',badge:'🏅 徽章寵物',rank:'🏆 排行榜'})[v]);
-  $('#kidSel').classList.toggle('hidden',st.kidView==='rank');
+  chips($('#kidSeg'),['bank','stock','game','badge','rank'],st.kidView,v=>{st.kidView=v;loadKid()},v=>({bank:'💵 存摺',stock:'📈 證券',game:'🏝️ 獎懲紀錄',badge:'🏅 徽章寵物',rank:'🏆 排行'})[v]);
+  $('#kidSel').classList.toggle('hidden',st.kidView==='rank'||st.kidView==='stock');
+  if(st.kidView==='stock')return loadKidStock();
   if(st.kidView==='rank'){$('#kidBody').innerHTML='<div class="chips" id="rkSeg"></div><div style="height:8px"></div><div id="rkBody"></div>';return loadRank()}
   $('#kidBody').innerHTML='<div class="card empty">讀取中…</div>';
   if(st.kidView==='game')return loadKidGame();
@@ -1609,7 +1623,7 @@ async function bankCfg(){if(!await ask(`<h3>⚙️ 定存設定</h3><label>年�
   <label>提前解約利息打幾折（0.8 = 八折，0 = 沒有利息）</label><input id="bc_d" type="number" step="0.1" inputmode="decimal" value="${S.discount}">
   <label>最低存款金額（元）</label><input id="bc_m" type="number" inputmode="numeric" value="${S.minDep}"><div class="mu">只影響之後新存的定存，已經存的不會變</div>`,'儲存'))return;
   const d={rate:$('#bc_r').value,discount:$('#bc_d').value,min:$('#bc_m').value};
-  if(await run(null,'saveBankCfg',d)!==null){S.rate=+d.rate/100;S.discount=+d.discount;S.minDep=Math.round(+d.min);loadKid()}}
+  if(await run(null,'saveBankCfg',d)!==null){S.rate=+d.rate/100;S.discount=+d.discount;S.minDep=Math.round(+d.min);if(st.tab==='set')loadSet();else loadKid()}}
 function drawMon(){chips($('#dMon'),[1,3,6,12],st.depMonths,v=>{st.depMonths=v;drawMon()},v=>v+' 個月');depPrev()}
 function depPrev(){const a=+($('#dAmt')||{}).value||0;$('#dPrev').innerHTML=`到期日 ${addMonths(S.today,st.depMonths)}${a>0?`・到期利息 +${n(Math.round(a*S.rate*st.depMonths/12))} 元`:''}`}
 async function deposit(btn){const a=$('#dAmt').value;if(!(a>0))return toast('請輸入金額',1);if(await run(btn,'createDeposit',{kid:st.kid,amount:a,months:st.depMonths})!==null)loadKid()}
@@ -1647,9 +1661,32 @@ async function loadStats(){chips($('#sBook'),['__parent'].concat(S.kids),st.book
 function showCat(i){const c=st.stats.cats[i],items=st.stats.items.filter(x=>x.cat===c.cat);
   $('#sDetail').innerHTML=`<div class="card"><h3>${em(c.cat)} ${esc(c.cat)}（${items.length} 筆）</h3>${items.map(x=>`<div class="it"><div class="t">${esc(x.note)||'（沒有備註）'}<div class="mu">${x.date}${x.book==='parent'?'・'+payLab(x):''}${x.src&&x.src!=='手動'?'・'+esc(x.src):''}</div></div><b>${n(x.amount)}</b>${x.book==='parent'?editBtn(x):delBtn({book:x.book,type:'花錢',row:x.row,date:x.date,amount:x.amount,label:x.note||x.cat})}</div>`).join('')}</div>`;$('#sDetail').scrollIntoView({behavior:'smooth'})}
 
+
+/* ===== 📈 海底證券：爸媽看持股、輸入配息、改手續費折數 ===== */
+const ud2=v=>v>0?'up':v<0?'dn':'',sg2=v=>(v>0?'+':'')+n(v),md2=s=>s?s.slice(5).replace('-','/'):'';
+async function loadKidStock(){let r;try{r=await call('stockOverview')}catch(e){$('#kidBody').innerHTML=`<div class="card empty">${esc(errMsg(e))}</div>`;return}
+  $('#kidBody').innerHTML=`<div class="card stk"><h3>📈 海底證券</h3><div class="mu">${r.session?'開盤中（小孩暫停交易）':md2(r.date)+' 收盤價'}・手續費 ${Math.round(r.disc*100)/10} 折</div>
+   <div class="g3">${r.syms.map(s=>`<div><small>${esc(s.name)}</small><b>${s.close}</b></div>`).join('')}</div></div>
+  ${r.kids.map(k=>{const T=k.total;return `<div class="card stk"><div class="row"><h3>${kidLab(k.name)}</h3><b class="${ud2(T.unreal)}">${T.cost?sg2(T.unreal)+'（'+(T.pct>0?'+':'')+T.pct+'%）':''}</b></div>
+   ${k.list.length?`<div class="g3"><div><small>總市值</small><b>${n(T.mv)}</b></div><div><small>總成本</small><b>${n(T.cost)}</b></div><div><small>已領股利</small><b>${n(T.div)}</b></div></div>
+   ${k.list.map(p=>`<div class="it"><div class="t"><b>${p.sym} ${esc(p.name)}</b><div class="mu">${p.shares} 股・均價 ${p.avg}・現價 ${p.close}・市值 ${n(p.mv)}${p.realized?'・已實現 '+sg2(p.realized):''}${p.div?'・股利 '+n(p.div):''}</div></div><b class="${ud2(p.unreal)}">${p.shares?sg2(p.unreal):''}</b></div>`).join('')}
+   ${k.pend?`<div class="mu" style="margin-top:6px">⏳ ${k.pend} 筆待交割</div>`:''}`:'<div class="mu">還沒買過股票</div>'}</div>`}).join('')}
+  <div class="mu" style="padding:0 4px">未實現損益已扣掉現在賣出要付的手續費和交易稅。配息、手續費折數在「設定 → 證券」。</div>`;loadImgs(r.kids.map(k=>PF(k.name).photo))}
+async function stkSet(){let r;try{r=await call('stockOverview')}catch(e){$('#setBody').innerHTML=`<div class="card empty">${esc(errMsg(e))}</div>`;return}const sy=r.sync;
+  $('#setBody').innerHTML=`<div class="card"><h3>🔄 證交所資料</h3><div class="mu">每天下午 3 點多自動到證交所抓 K 線、配息、配股、分割。${sy?'上次：'+esc(sy.at)+(sy.r.hist||sy.r.divErr||sy.r.histWarn?'・⚠️ '+esc(sy.r.hist||sy.r.divErr||sy.r.histWarn):'・正常')+(sy.r.left?'・K 線還有 '+sy.r.left+' 個月沒補完':''):'還沒同步過'}</div><button class="btn" onclick="stkSync(this)">現在同步</button></div>
+  <div class="card"><h3>💰 配息、配股（自動）</h3><div class="mu">證交所公告除息日和金額後會自動出現在這裡。發放日證交所沒有公布，先用「除息日後 25 天」估計，想照實際日期可以按「改」。發放日當天，系統把「除息日前買進」的股數 × 每股配息存進小孩存摺；配股會直接加股數。</div>
+   ${r.divs.map(d=>`<div class="it"><div class="t">${esc(d.name)}・${md2(d.ex)} 除息${d.per?'・每股 '+d.per+' 元':''}${d.stock?'・每千股配 '+Math.round(d.stock*1000)+' 股':''}<div class="mu">${md2(d.pay)} 發放・${d.status?esc(d.status)+(d.note?'：'+esc(d.note):''):esc(d.note||'等待發放')}</div></div>${d.status?'':`<button class="sbtn" onclick="stkPay(${d.row},'${d.pay}')">改</button>`}</div>`).join('')||'<div class="empty">還沒有配息資料</div>'}</div>
+  <div class="card"><h3>🧾 手續費折數</h3><div class="mu">手續費 = 成交金額 × 0.1425% × 折數，無條件捨去，最低 1 元。現在是 <b>${Math.round(r.disc*100)/10} 折</b>（一般網路下單常見 2.8 折）。賣出另收證交稅：ETF 0.1%、個股 0.3%。</div>
+   <label>折數（2.8 折填 0.28，不打折填 1）</label><input id="dv_d" type="number" step="0.01" inputmode="decimal" value="${r.disc}"><button class="btn" onclick="stkDisc(this)">儲存</button></div>`}
+async function stkSync(b){b.textContent='同步中…（可能要一分鐘）';if(await run(b,'stockAdmin',{sync:1})!==null)stkSet();else b.textContent='現在同步'}
+async function stkPay(row,pay){if(!await ask(`<h3>修改發放日</h3><input id="dv_p" type="date" value="${pay}">`,'儲存'))return;if(await run(null,'stockAdmin',{row,pay:$('#dv_p').value})!==null)stkSet()}
+async function stkDisc(b){if(await run(b,'stockAdmin',{disc:$('#dv_d').value})!==null)stkSet()}
+
 /* ===== 設定 ===== */
-async function loadSet(){chips($('#setSeg'),['task','shop','fam'],st.set||'task',v=>{st.set=v;loadSet()},v=>({task:'任務',shop:'商品',fam:'家人'})[v]);
-  const v=st.set||'task';$('#setBody').innerHTML='<div class="card empty">讀取中…</div>';
+async function loadSet(){chips($('#setSeg'),['fam','bank','stock'],st.set||'fam',v=>{st.set=v;loadSet()},v=>({fam:'👨‍👩‍👧 家人／QR code',bank:'🐷 定存利率',stock:'📈 證券'})[v]);
+  const v=st.set||'fam';
+  if(v==='bank'){$('#setBody').innerHTML=`<div class="card"><h3>🐷 定存設定</h3><div class="mu">年利率 ${(S.rate*100).toFixed(1)}%・提前領出利息打 ${Math.round(S.discount*100)/10} 折・最少 ${n(S.minDep)} 元</div><button class="btn" onclick="bankCfg()">修改</button></div>`;return}
+  if(v==='stock')return stkSet();$('#setBody').innerHTML='<div class="card empty">讀取中…</div>';
   if(v==='task'||v==='shop'){try{CFG=await call('gameConfig')}catch(e){return toast(errMsg(e),1)}}
   if(v==='task')$('#setBody').innerHTML=`<button class="btn" onclick="taskBox()">＋ 新增任務</button><div class="card">${CFG.tasks.map((t,i)=>`<div class="it" style="${t.status==='下架'?'opacity:.45':''}"><div class="ic">${t.type==='團隊'?'🤝':D5[t.diff-1]}</div>
    <div class="t">${esc(t.name)}<div class="mu">${t.type==='團隊'?'團隊・':''}難度 ${t.diff}・+${t.exp} 經驗・+${n(t.coins)} 金幣${t.cash?`・<b class="plus">+${n(t.cash)} 元</b>`:''}${t.status==='下架'?'・已下架':''}</div></div><button class="sbtn" onclick="taskBox(${i})">編輯</button></div>`).join('')}</div>`;

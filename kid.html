@@ -97,6 +97,36 @@ input.amt{font-size:24px;text-align:right;color:var(--red)}
 #dock{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));display:flex;background:var(--wood);border:4px solid var(--wood2);border-radius:22px;padding:5px;box-shadow:0 5px 0 var(--wood2);z-index:6;max-width:560px;margin:0 auto}
 #dock div{position:relative;flex:1;text-align:center;font-size:11px;padding:3px 0;border-radius:14px;color:#fff3e0;cursor:pointer}#dock b{display:block;font-size:22px}
 #dock .on{background:#fff3d6;color:var(--ink)}
+.subnav{margin-bottom:10px;flex-wrap:nowrap;overflow-x:auto}.subnav .chip{white-space:nowrap}.subnav .back2{background:var(--wood);color:#fff3e0}
+.hub .ptile{position:relative;cursor:pointer}.hub .ptile .mkdot{top:6px;right:8px;font-size:13px}
+.msum{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}.msum>div{background:var(--cream);border-radius:16px;padding:10px 6px;text-align:center;box-shadow:0 4px 0 rgba(0,0,0,.08);cursor:pointer}
+.msum small{display:block;font-size:12px;color:#8a7a66}.msum b{display:block;font-size:20px}.msum i{font-style:normal;font-size:11px;color:#8a7a66}
+.brk{background:#0e1623;color:#e8edf5;border-radius:24px;overflow:hidden;margin-bottom:12px;font-family:-apple-system,'PingFang TC',sans-serif;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.bhd{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 8px}.bhd b{font-size:19px}.bhd small{color:#9aa7ba}
+.btab{display:flex;gap:4px;padding:0 10px 10px;border-bottom:1px solid #1e2a3b}.btab button{flex:1;border:0;background:none;color:#9aa7ba;font:inherit;font-size:15px;font-weight:700;padding:8px 0;border-radius:10px}.btab .on{background:#1e2c40;color:#fff}
+.bpad{padding:14px}.bname{font-size:20px;font-weight:800}.bname small{font-size:13px;color:#9aa7ba;font-weight:400}
+.bst{display:inline-block;margin:6px 0;padding:3px 10px;border-radius:99px;font-size:13px;font-weight:700}.bst.ok{background:#12352a;color:#3be0a0}.bst.no{background:#3a2a12;color:#ffb44d}
+.bpx{display:flex;align-items:center;gap:10px}.bpx>b{font-size:46px;font-weight:800;letter-spacing:-1px}.bpx span{font-size:16px;font-weight:700;line-height:1.2;color:#9aa7ba}.bpx span.up,.bpx span.dn{font-size:18px}
+.brk .up{color:#ff4d5a}.brk .dn{color:#1fc48a}.bmu{color:#8d9ab0;font-size:13px}
+.bch{margin:12px 0}.bch svg{width:100%;height:110px;display:block}
+.bqgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+.bnote{margin-top:12px;font-size:13px;color:#9aa7ba;line-height:1.5}
+.b2{display:flex;gap:10px;margin-top:14px}.bb{flex:1;border:0;border-radius:14px;padding:14px;font:inherit;font-size:18px;font-weight:800;color:#fff}.bb.buy{background:#e8484f}.bb.sell{background:#17a673}.bb:disabled{opacity:.35}.bb.wide{width:100%;margin-top:14px}
+.b2.seg{margin:0 0 12px}.b2.seg button{flex:1;border:0;border-radius:12px;padding:11px;font:inherit;font-weight:800;font-size:16px;background:#1e2c40;color:#9aa7ba}.b2.seg .buy{background:#e8484f;color:#fff}.b2.seg .sell{background:#17a673;color:#fff}
+.bbox{background:#172234;border-radius:16px;padding:12px 14px;margin-bottom:12px}.brow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 0;font-size:15px}.brow span{color:#aab6c8}.brow.tot{border-top:1px dashed #33435c;margin-top:4px;padding-top:9px;font-size:17px}.brow.tot span{color:#fff;font-weight:800}
+.bqty{display:flex;align-items:center;background:#0e1623;border-radius:14px;padding:6px}.bqty button{width:52px;height:46px;border:0;border-radius:10px;background:#2a3b55;color:#fff;font-size:24px;font-weight:800}.bqty b{flex:1;text-align:center;font-size:28px}
+.b4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}.b4 button{border:1px solid #33435c;background:none;color:#cfd8e6;border-radius:10px;padding:8px 0;font:inherit;font-size:14px}
+.bbig{font-size:32px;font-weight:800;margin:2px 0 6px}.b3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0}.b3 small{display:block;color:#8d9ab0;font-size:12px}.b3 b{font-size:18px}
+.bh{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #1e2a3b}.bh>div{flex:1}.bh small{display:block;color:#8d9ab0;font-size:12px;margin-top:2px}.bh .pd{color:#ffb44d}
+.srow{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #1a2638;cursor:pointer}.srow .nm{flex:1;min-width:0}.srow .nm b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.srow .nm{white-space:nowrap}.srow .px{text-align:right}.srow .px b{display:block;font-size:17px}.srow .px span{font-size:12px}
+.stag{font-size:11px;padding:2px 6px;border-radius:6px;background:#1e2c40;color:#9fb3cc;margin-left:4px;font-weight:600}.stag.own{background:#3a2a12;color:#ffc94d}.spk{width:64px;height:28px;flex:0 0 64px}
+.kbk{font-size:19px;cursor:pointer;margin-bottom:6px}.kbk small{color:#8d9ab0;font-size:13px;margin-left:8px}
+.kseg{display:flex;gap:6px;margin:10px 0 6px}.kseg button{border:0;padding:5px 12px;border-radius:8px;background:#172234;color:#9aa7ba;font:inherit;font-size:13px;font-weight:700}.kseg .on{background:#2a3b55;color:#fff}
+.klg{display:flex;gap:10px;font-size:12px;font-weight:700;margin:4px 0;flex-wrap:wrap}.kch{touch-action:pan-y;user-select:none;padding:0 4px}
+.ssel{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px}.ssel button{border:1px solid #33435c;background:#131d2c;color:#cfd8e6;border-radius:10px;padding:7px 4px;font:inherit;text-align:center}.ssel button b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ssel button small{font-size:11px;color:#8d9ab0}.ssel .on{border-color:#5aa9ff;background:#1e2c40}
+.tg.sp{background:#1e2c50;color:#8fb8ff}
+.tg{font-style:normal;font-size:12px;font-weight:800;padding:3px 6px;border-radius:6px}.tg.by{background:#4a1d24;color:#ff6b74}.tg.sl{background:#123a2c;color:#3be0a0}.tg.dv{background:#4a3a12;color:#ffc94d}
+
 #toast{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%) scale(0);background:#fff;border:4px solid #f0c040;border-radius:20px;padding:14px 18px;font-size:17px;text-align:center;box-shadow:0 6px 0 #f0c040;z-index:30;max-width:86vw;transition:transform .2s}
 #toast.show{transform:translate(-50%,-50%) scale(1)}#toast.err{border-color:var(--red);box-shadow:0 6px 0 var(--red)}
 .modal{position:fixed;inset:0;background:rgba(40,60,50,.55);display:flex;align-items:center;justify-content:center;z-index:20;padding:18px}
@@ -241,7 +271,10 @@ input.amt{font-size:24px;text-align:right;color:var(--red)}
  <section id="pg-home" class="page on"><div class="card empty">⏳ 小島讀取中…</div></section>
  <section id="pg-task" class="page"></section>
  <section id="pg-shop" class="page"></section>
- <div id="meNav" class="chips hidden" style="margin-bottom:10px"></div>
+ <div id="meNav" class="chips hidden subnav"></div>
+ <section id="pg-hub" class="page"></section>
+ <section id="pg-stock" class="page"></section>
+ <section id="pg-set" class="page"></section>
  <section id="pg-pet" class="page"></section>
  <section id="pg-math" class="page"></section>
  <section id="pg-play" class="page"></section>
@@ -287,7 +320,7 @@ window.__bootFail=function(m){staleBadge(1,'⚠️ '+m+'，先顯示上次的資
 /* 先顯示上次的資料時，畫面打開後自己去拿最新的，存回手機，再交給各頁的 __bootFresh */
 function bootRefresh(){callRaw('boot').then(b=>{try{localStorage.setItem('bootc',JSON.stringify({k:BOOT.token,t:Date.now(),b:b}))}catch(e){}if(window.__bootFresh)window.__bootFresh(b)})
   .catch(e=>window.__bootFail(/fetch|Load failed|NetworkError/i.test(errMsg(e))?'網路好像斷了':errMsg(e)))}
-const LC={getCal:1,getForum:1,getRanks:1,getMarket:1,getPassbook:1,getXfer:1};
+const LC={getStock:1,getStockHist:1,getCal:1,getForum:1,getRanks:1,getMarket:1,getPassbook:1,getXfer:1};
 function lcKey(fn,arg){return 'lc_'+(S&&S.me||'')+'_'+fn+'_'+JSON.stringify(arg===undefined?'':arg)}
 function lcGet(fn,arg){try{const v=localStorage.getItem(lcKey(fn,arg));return v?JSON.parse(v):null}catch(e){return null}}
 function lcSet(fn,arg,v){if(LC[fn])try{localStorage.setItem(lcKey(fn,arg),JSON.stringify(v))}catch(e){}}
@@ -380,7 +413,7 @@ async function loadForum(){if(!FO){FO=lcGet('getForum');if(FO)drawForum();else $
   PINS=FO.posts.filter(p=>p.pin).slice(0,3);drawForum();foSeen()}
 function foLatest(){let t='';(FO?FO.posts:[]).forEach(p=>{if(p.time>t)t=p.time;p.replies.forEach(r=>{if(r.time>t)t=r.time})});return t||((BOOT.forum||{}).latest)||''}
 function foSeen(){try{localStorage.setItem('fo_seen_'+S.me,foLatest())}catch(e){}foBadge(false)}
-function foBadge(on){const d=document.querySelector('#dock [data-p="forum"]');if(!d)return;d.style.position='relative';let b=d.querySelector('.fbadge');if(on&&!b){b=document.createElement('span');b.className='fbadge';d.appendChild(b)}if(!on&&b)b.remove()}
+function foBadge(on){if(typeof setDot==='function'&&typeof GRP!=='undefined')return setDot('forum',on?'•':0);const d=document.querySelector('#dock [data-p="forum"]')||document.querySelector('#dock [data-p="isle"]');if(!d)return;d.style.position='relative';let b=d.querySelector('.fbadge');if(on&&!b){b=document.createElement('span');b.className='fbadge';d.appendChild(b)}if(!on&&b)b.remove()}
 function foCheck(){const l=((BOOT.forum||{}).latest)||'';let seen='';try{seen=localStorage.getItem('fo_seen_'+S.me)||''}catch(e){}foBadge(!!l&&l>seen)}
 function drawForum(){const ps=FO.posts.filter(p=>!foFilter||p.type===foFilter);
   $('#foBody').innerHTML=`<div class="chips" id="foF"></div><button class="${fBig()}" onclick="postBox()">✏️ 我要發文</button>
@@ -1667,16 +1700,123 @@ const me=()=>S.me;
 const prof=()=>(S.profiles||{})[S.me]||{};
 
 /* ===== 導覽 ===== */
-const TABS=[['home','🏝️','小島'],['task','🧹','任務'],['pet','🐣','寵物'],['play','🎡','遊樂區'],['shop','🏪','市集'],['forum','💬','廣場'],['me','🎒','我的']];
-const ME=[['badge','🏅 徽章'],['cal','📅 行事曆'],['rank','🏆 排行'],['bank','🐷 台幣存摺'],['xfer','💸 轉帳'],['rec','🧾 記帳本']];
-function buildDock(){$('#dock').innerHTML=TABS.map(t=>`<div data-p="${t[0]}" class="${t[0]===st.tab?'on':''}"><b>${t[1]}</b>${t[2]}</div>`).join('');
-  $$('#dock>div').forEach(d=>d.onclick=()=>go(d.dataset.p));if(typeof mktDot==='function')mktDot()}
-function go(p){if(p==='me')p=st.me||'badge';const inMe=ME.some(m=>m[0]===p);if(inMe)st.me=p;const dk=inMe?'me':(p==='math'||p==='gm')?'play':p;st.tab=p;
-  $$('#dock>div').forEach(d=>d.classList.toggle('on',d.dataset.p===dk));$$('.page').forEach(s=>s.classList.toggle('on',s.id==='pg-'+p));window.scrollTo(0,0);
-  $('#meNav').classList.toggle('hidden',!inMe);if(inMe){chips($('#meNav'),ME.map(m=>m[0]),p,go,v=>ME.find(m=>m[0]===v)[1]);$('#meNav').insertAdjacentHTML('beforeend',`<button class="chip" id="sndT" onclick="sndToggle()">${PSOUND?'🔊 音效：開':'🔇 音效：關'}</button>`)}
-  if((p==='home'||p==='task'||p==='shop'||p==='pet'||p==='play')&&Date.now()-G_AT>20000)loadGame();if(p==='pet')drawPet();if(p==='bank')loadBank();if(p==='xfer')loadXfer();if(p==='forum')loadForum();if(p==='badge')drawBadges();if(p==='rank')loadRank();if(p==='rec')refreshBal();if(p==='math')drawMath();if(p==='play')drawPlay();if(p==='cal')drawCal(1);if(p==='shop')drawShop()}
+const TABS=[['home','🏝️','小島'],['earn','⭐','賺金幣'],['pet','🐣','寵物'],['money','💰','我的錢'],['fam','💬','家人']];
+/* 分類：每個分類一個大按鈕頁（hub），裡面的功能頁上面有一排小按鈕可以互相切換 */
+const GRP={
+ earn:{t:'⭐ 賺金幣',sub:[['task','🧹','任務','做家事、解決小島麻煩','#f2b33d'],['play','🎡','遊樂區','玩遊戲賺金幣','#58b368'],['badge','🏅','徽章','看看收集了幾個','#c08be0'],['rank','🏆','排行榜','跟大家比一比','#ef8d5b']]},
+ money:{t:'💰 我的錢',sub:[['bank','🐷','台幣存摺','活存、定存、利息','#f08aa6'],['stock','📈','海底證券','買賣真的 0050','#e8484f'],['xfer','💸','轉帳','轉金幣或台幣給家人','#4aa3df'],['shop','🏪','小島市集','買賣自己做的東西','#f2b33d'],['rec','🧾','記帳本','記下花了什麼','#8d7bd6']]},
+ fam:{t:'💬 家人',sub:[['forum','💬','廣場','跟家人聊天、分享','#4aa3df'],['cal','📅','行事曆','家裡的行程','#58b368'],['set','⚙️','我的設定','頭像、暱稱、音效','#9a8670']]}};
+const SUBG={math:'earn',gm:'earn'};Object.keys(GRP).forEach(g=>GRP[g].sub.forEach(x=>SUBG[x[0]]=g));
+const DOTS={};
+function setDot(k,v){DOTS[k]=v||0;$$('.ptile[data-k="'+k+'"] .mkdot').forEach(e=>e.remove());if(v)$$('.ptile[data-k="'+k+'"]').forEach(e=>e.insertAdjacentHTML('beforeend',`<i class="mkdot">${v}</i>`));
+  Object.keys(GRP).forEach(g=>{const d=document.querySelector('#dock>div[data-p='+g+']');if(!d)return;let i=d.querySelector('.mkdot');const c=GRP[g].sub.reduce((a,x)=>a+(typeof DOTS[x[0]]==='number'?DOTS[x[0]]:DOTS[x[0]]?1:0),0);
+   if(!c){if(i)i.remove();return}if(!i){i=document.createElement('i');i.className='mkdot';d.appendChild(i)}i.textContent=GRP[g].sub.some(x=>typeof DOTS[x[0]]==='number'&&DOTS[x[0]])?c:'•'})}
+function buildDock(){$('#dock').innerHTML=TABS.map(t=>`<div data-p="${t[0]}" class="${t[0]===st.tab||SUBG[st.tab]===t[0]?'on':''}"><b>${t[1]}</b>${t[2]}</div>`).join('');
+  $$('#dock>div').forEach(d=>d.onclick=()=>go(d.dataset.p));if(typeof mktDot==='function')mktDot();Object.keys(DOTS).forEach(k=>setDot(k,DOTS[k]))}
+function drawHub(g){const G0=GRP[g];let h=`<div class="sign"><h3>${G0.t}</h3></div>`;
+  if(g==='money')h+=moneySum();
+  h+=`<div class="pgrid hub">${G0.sub.map(x=>`<button class="ptile" data-k="${x[0]}" style="--c:${x[4]}" onclick="go('${x[0]}')"><div class="pi">${x[1]}</div><b>${x[2]}</b><small>${x[3]}</small>${DOTS[x[0]]?`<i class="mkdot">${DOTS[x[0]]}</i>`:''}</button>`).join('')}</div>`;
+  $('#pg-hub').innerHTML=h;if(g==='money')stkPeek()}
+function moneySum(){const g=G.me||{},k=STKD&&STKD.pos&&STKD.pos.total;return `<div class="msum"><div onclick="go('bank')"><small>🐷 存摺</small><b>${n((g.ntd||0)+(g.dep||0))}</b><i>元</i></div><div onclick="go('stock')"><small>📈 股票市值</small><b id="msStk">${k?n(k.mv):'…'}</b><i>元</i></div><div><small>🪙 金幣</small><b class="gold">${n(g.coins)}</b><i>枚</i></div></div>`}
+function go(p){if(p==='me')p='set';const grp=GRP[p]?p:SUBG[p]||'';const dk=grp||p;st.tab=p;
+  $$('#dock>div').forEach(d=>d.classList.toggle('on',d.dataset.p===dk));$$('.page').forEach(s=>s.classList.toggle('on',s.id==='pg-'+(GRP[p]?'hub':p)));window.scrollTo(0,0);
+  const sub=grp&&!GRP[p]&&p!=='math'&&p!=='gm';$('#meNav').classList.toggle('hidden',!sub);
+  if(sub){const L=GRP[grp].sub;$('#meNav').innerHTML=`<button class="chip back2" onclick="go('${grp}')">‹ ${GRP[grp].t.split(' ')[1]}</button>`+L.map(x=>`<button class="chip${x[0]===p?' on':''}" onclick="go('${x[0]}')">${x[1]} ${x[2]}</button>`).join('')}
+  if(GRP[p])drawHub(p);
+  if((p==='home'||p==='task'||p==='shop'||p==='pet'||p==='play'||p==='money'||p==='earn')&&Date.now()-G_AT>20000)loadGame();if(p==='pet')drawPet();if(p==='bank')loadBank();if(p==='xfer')loadXfer();if(p==='forum')loadForum();if(p==='badge')drawBadges();if(p==='rank')loadRank();if(p==='rec')refreshBal();if(p==='math')drawMath();if(p==='play')drawPlay();if(p==='cal')drawCal(1);if(p==='shop')drawShop();if(p==='stock')loadStock();if(p==='set')drawSet()}
+function drawSet(){const p=prof();$('#pg-set').innerHTML=`<div class="sign"><h3>⚙️ 我的設定</h3></div><div class="card prof"><div class="row">${avatar(p,64)}<div style="flex:1"><div class="nick">${esc(p.nick||me())}</div><div class="mu">頭像、暱稱、角色</div></div><button class="go" onclick="editProfile()">✏️ 修改</button></div></div>
+  <div class="card"><div class="it"><div>音效<div class="mu">按鈕、寵物、遊戲的聲音</div></div><button class="go" id="sndT" onclick="sndToggle()">${PSOUND?'🔊 音效：開':'🔇 音效：關'}</button></div></div>`;loadImgs([p.photo])}
 function drawHud(){const p=prof(),g=G.me||{};$('#hud').innerHTML=`<div class="who" onclick="editProfile()">${avatar(p,40)}<div><b>${esc(p.nick||me())}</b><small>${g.lv?'Lv.'+g.lv+' '+titleOf(g.lv):''}</small></div></div><div class="coin">🪙 ${n(g.coins)}</div>`;loadImgs([p.photo])}
 
+
+/* ===== 📈 海底證券（真實台股 6 支，盤後用收盤價成交，T+2 交割，K 線＋均線） ===== */
+let STKD=null;const SK={tab:'q',sym:'',side:'buy',qty:1,osym:'0050',kt:'d',off:0},KH={};
+function stkPend(){setDot('stock',STKD&&STKD.pos?STKD.pos.pend.length:0)}
+function stkMv(){const e=$('#msStk');if(e&&STKD)e.textContent=n(STKD.pos.total.mv)}
+async function stkPeek(){if(!STKD)STKD=lcGet('getStock');if(STKD){stkPend();stkMv()}try{STKD=await call('getStock');stkPend();stkMv()}catch(e){}}
+async function loadStock(){if(!STKD)STKD=lcGet('getStock');if(STKD)stkDraw();else $('#pg-stock').innerHTML='<div class="brk"><div class="bpad bmu">⏳ 連線到海底證券…</div></div>';
+  try{STKD=await call('getStock')}catch(e){if(!STKD)$('#pg-stock').innerHTML=`<div class="brk"><div class="bpad">⚠️ ${esc(errMsg(e))}</div></div>`;return toast(errMsg(e),1)}stkPend();if(st.tab==='stock')stkDraw()}
+const ud=v=>v>0?'up':v<0?'dn':'';const sg=v=>(v>0?'+':'')+n(v);const md=s=>s?s.slice(5).replace('-','/'):'';
+const f2=v=>(+v||0).toFixed(v>=1000?0:2);const SYM=s=>STKD.syms.find(x=>x.sym===s);
+function stkTab(t){SK.tab=t;if(t!=='q')SK.sym='';stkDraw()}
+function stkDraw(){if(!STKD)return;const x=STKD,T=[['q','行情'],['o','下單'],['p','庫存'],['h','對帳單']];
+  $('#pg-stock').innerHTML=`<div class="brk"><div class="bhd"><b>📈 海底證券</b><small>${esc(prof().nick||me())}的帳戶</small></div>
+  <div class="btab">${T.map(t=>`<button class="${SK.tab===t[0]?'on':''}" onclick="stkTab('${t[0]}')">${t[1]}</button>`).join('')}</div>
+  ${SK.tab==='q'?(SK.sym?stkK(x):stkL(x)):SK.tab==='o'?stkO(x):SK.tab==='p'?stkP(x):stkH(x)}</div>`;if(SK.tab==='q'&&SK.sym)stkKLoad()}
+function stkStatus(x){const d=x.syms[0].date;return `<div class="bst ${x.canTrade?'ok':'no'}">${x.canTrade?'● 盤後交易中 ・ 以 '+md(d)+' 收盤價成交':'● 開盤中暫停交易（9:00～14:30）'}</div>`}
+function spark(a){if(!a||a.length<2)return '<span class="spk"></span>';const lo=Math.min(...a),hi=Math.max(...a),up=a[a.length-1]>=a[0];return `<svg class="spk" viewBox="0 0 64 28"><polyline fill="none" stroke="${up?'#ff4d5a':'#1fc48a'}" stroke-width="1.6" points="${a.map((y,i)=>(i*64/(a.length-1)).toFixed(1)+','+(26-(hi===lo?.5:(y-lo)/(hi-lo))*24).toFixed(1)).join(' ')}"/></svg>`}
+function stkL(x){return `<div class="bpad" style="padding-bottom:4px">${stkStatus(x)}</div>${x.syms.map(s=>{const c=ud(s.chg),h=x.pos.list.find(p=>p.sym===s.sym);return `<div class="srow" onclick="SK.sym='${s.sym}';SK.off=0;stkDraw()"><div class="nm"><b>${esc(s.name)}</b><span class="bmu">${s.sym}</span><span class="stag">${esc(s.tag)}</span>${h&&h.shares?`<span class="stag own">持有 ${h.shares}</span>`:''}</div>${spark(s.spark)}<div class="px"><b class="${c}">${f2(s.close)}</b><span class="${c}">${s.chg>0?'▲':s.chg<0?'▼':''} ${Math.abs(s.chg).toFixed(2)} ${s.pct>0?'+':''}${(+s.pct).toFixed(2)}%</span></div></div>`}).join('')}
+  ${x.divs.length?`<div class="bnote" style="padding:0 14px">💰 配息預告：${x.divs.map(d=>esc(SYM(d.sym).name)+' '+md(d.ex)+' 除息'+(d.per?'，每股 '+d.per+' 元':'')+(d.stock?'，配股 '+Math.round(d.stock*1000)+' 股／千股':'')+'（約 '+md(d.pay)+' 發放）').join('；')}</div>`:''}
+  <div class="bnote" style="padding:0 14px 14px">點一支看 K 線圖。${x.canTrade?'':esc(x.why)}</div>`}
+/* K 線：日K／週K／月K，MA5／20／60，成交量；手指左右拖可以看更早的 */
+async function stkKLoad(){const s=SK.sym;if(!KH[s]){KH[s]=lcGet('getStockHist',s);if(KH[s])stkKPaint()}try{KH[s]=await call('getStockHist',s)}catch(e){if(!KH[s]){const el=$('#kCh');if(el)el.innerHTML=`<div class="bmu" style="padding:40px 0;text-align:center">${esc(errMsg(e))}</div>`}return}if(SK.sym===s)stkKPaint()}
+function kAgg(bars,t){if(t==='d')return bars;const g={},o=[];bars.forEach(b=>{let k;if(t==='m')k=b[0].slice(0,7);else{const d=new Date(b[0]+'T12:00:00'),w=(d.getDay()+6)%7;d.setDate(d.getDate()-w);k=d.toISOString().slice(0,10)}
+  if(!g[k]){g[k]=[b[0],b[1],b[2],b[3],b[4],b[5]];o.push(g[k])}else{const a=g[k];a[2]=Math.max(a[2],b[2]);a[3]=Math.min(a[3],b[3]);a[4]=b[4];a[5]+=b[5];a[0]=b[0]}});return o}
+function kMA(a,n){return a.map((b,i)=>i<n-1?null:a.slice(i-n+1,i+1).reduce((s,x)=>s+x[4],0)/n)}
+function stkKPaint(){const el=$('#kCh'),H=KH[SK.sym];if(!el||!H)return;const A=kAgg(H.bars,SK.kt);
+  if(A.length<2){el.innerHTML='<div class="bmu" style="padding:40px 0;text-align:center">📊 K 線資料還在準備中，明天就會有</div>';$('#kLg').innerHTML='';return}
+  const N=SK.kt==='d'?50:SK.kt==='w'?40:A.length,M=[[5,'#ffb44d'],[20,'#5aa9ff'],[60,'#c08bff']].map(m=>[m[0],m[1],kMA(A,m[0])]);
+  SK.off=Math.max(0,Math.min(SK.off,A.length-N));const e=A.length-SK.off,s0=Math.max(0,e-N),S=A.slice(s0,e);
+  const W=el.clientWidth||340,Hh=250,tp=12,ch=165,vt=190,vh=46,bw=W/Math.max(S.length,20);
+  const vis=[...S.map(d=>d[2]),...S.map(d=>d[3])];M.forEach(m=>m[2].slice(s0,e).forEach(v=>v!=null&&vis.push(v)));
+  const lo=Math.min(...vis),hi=Math.max(...vis),Y=v=>tp+(hi-v)/(hi-lo||1)*ch,vm=Math.max(...S.map(d=>d[5]),1);
+  let g='';for(let i=0;i<4;i++){const y=tp+i*ch/3;g+=`<line x1="0" x2="${W}" y1="${y}" y2="${y}" stroke="#1a2638"/><text x="${W-3}" y="${y-3}" fill="#5f6f88" font-size="10" text-anchor="end">${f2(hi-(hi-lo)*i/3)}</text>`}
+  S.forEach((d,i)=>{const x=i*bw+bw/2,c=d[4]>=d[1]?'#ff4d5a':'#1fc48a',bh=Math.max(1,Math.abs(Y(d[1])-Y(d[4])));g+=`<line x1="${x}" x2="${x}" y1="${Y(d[2])}" y2="${Y(d[3])}" stroke="${c}"/><rect x="${x-bw*.36}" y="${Y(Math.max(d[1],d[4]))}" width="${bw*.72}" height="${bh}" fill="${c}"/>`;
+   if(d[5])g+=`<rect x="${x-bw*.36}" y="${vt+vh-d[5]/vm*vh}" width="${bw*.72}" height="${d[5]/vm*vh}" fill="${c}" opacity=".55"/>`});
+  M.forEach(m=>{const pts=S.map((d,i)=>{const v=m[2][s0+i];return v==null?'':(i*bw+bw/2).toFixed(1)+','+Y(v).toFixed(1)}).filter(Boolean).join(' ');if(pts)g+=`<polyline fill="none" stroke="${m[1]}" stroke-width="1.5" points="${pts}"/>`});
+  g+=`<text x="3" y="${vt-3}" fill="#5f6f88" font-size="10">成交量（張）</text><text x="3" y="${Hh-2}" fill="#5f6f88" font-size="10">${S[0][0].slice(2).replace(/-/g,'/')}</text><text x="${W-3}" y="${Hh-2}" fill="#5f6f88" font-size="10" text-anchor="end">${S[S.length-1][0].slice(2).replace(/-/g,'/')}</text>`;
+  el.innerHTML=`<svg width="${W}" height="${Hh}">${g}</svg>`;
+  $('#kLg').innerHTML=M.map(m=>{const v=m[2][e-1];return `<span style="color:${m[1]}">MA${m[0]} ${v==null?'－':f2(v)}</span>`}).join('')+(SK.off?`<span class="bmu" onclick="SK.off=0;stkKPaint()">↦ 回到最新</span>`:'');
+  if(!el.dataset.drag){el.dataset.drag=1;let sx=null,so=0;el.addEventListener('pointerdown',ev=>{sx=ev.clientX;so=SK.off;el.setPointerCapture(ev.pointerId)});
+   el.addEventListener('pointermove',ev=>{if(sx==null)return;const A2=kAgg(KH[SK.sym].bars,SK.kt),N2=SK.kt==='d'?50:SK.kt==='w'?40:A2.length,b2=(el.clientWidth||340)/Math.max(Math.min(N2,A2.length),20),d=Math.round((ev.clientX-sx)/b2);if(SK.off!==so+d){SK.off=so+d;stkKPaint()}});
+   el.addEventListener('pointerup',()=>sx=null);el.addEventListener('pointercancel',()=>sx=null)}}
+function stkK(x){const s=SYM(SK.sym),c=ud(s.chg),h=x.pos.list.find(p=>p.sym===s.sym);
+  return `<div class="bpad" style="padding-bottom:0"><div class="kbk" onclick="SK.sym='';stkDraw()">‹ <b>${esc(s.name)}</b><small>${s.sym} ・ ${esc(s.tag)}</small></div>
+  <div class="bpx"><b class="${c}">${f2(s.close)}</b>${x.canTrade?`<span class="${c}">${s.chg>0?'▲':s.chg<0?'▼':''} ${Math.abs(s.chg).toFixed(2)}<br>${s.pct>0?'+':''}${(+s.pct).toFixed(2)}%</span>`:'<span>昨天<br>收盤價</span>'}</div>
+  <div class="bmu">${x.canTrade?md(s.date)+' 收盤':'現在盤中價 '+f2(s.live)+'（僅供參考）'}${s.stale?' ・ 報價暫時抓不到，先用證交所收盤價':''}</div>
+  <div class="kseg">${[['d','日K'],['w','週K'],['m','月K']].map(k=>`<button class="${SK.kt===k[0]?'on':''}" onclick="SK.kt='${k[0]}';SK.off=0;stkKPaint();$$('.kseg button').forEach(b=>b.classList.toggle('on',b.textContent==='${k[1]}'))">${k[1]}</button>`).join('')}</div>
+  <div class="klg" id="kLg"></div></div><div id="kCh" class="kch"><div class="bmu" style="padding:40px 0;text-align:center">⏳ 讀取 K 線…</div></div>
+  <div class="bpad" style="padding-top:6px"><div class="bqgrid"><div class="brow"><span>開盤</span><b>${f2(s.open)||'-'}</b></div><div class="brow"><span>最高</span><b class="up">${f2(s.high)||'-'}</b></div><div class="brow"><span>昨收</span><b>${f2(s.prev)}</b></div><div class="brow"><span>最低</span><b class="dn">${f2(s.low)||'-'}</b></div></div>
+  ${h&&h.shares?`<div class="bbox" style="margin-top:10px"><div class="brow"><span>我有 ${h.shares} 股 ・ 均價 ${h.avg}</span><b class="${ud(h.unreal)}">${sg(h.unreal)}（${h.pct>0?'+':''}${h.pct}%）</b></div></div>`:''}
+  <div class="b2"><button class="bb buy" onclick="stkGo('buy','${s.sym}')" ${x.canTrade?'':'disabled'}>買進</button><button class="bb sell" onclick="stkGo('sell','${s.sym}')" ${x.canTrade&&h&&h.shares?'':'disabled'}>賣出</button></div>
+  <div class="bnote">💡 紅 K＝收盤比開盤高（漲）、綠 K＝收盤比開盤低（跌）。上下的細線是那段時間的最高、最低價。均線＝最近 5／20／60 根 K 棒收盤價的平均：日 K 的 MA20 大約是一個月。手指在圖上左右拖可以看更早的。</div></div>`}
+function stkGo(side,sym){SK.side=side;SK.osym=sym||SK.osym;SK.qty=1;SK.tab='o';SK.sym='';stkDraw()}
+function stkCalc(){const x=STKD,s=SYM(SK.osym),px=s.close,amt=Math.round(px*SK.qty*100)/100,fee=Math.max(1,Math.floor(amt*0.001425*x.disc)),tax=SK.side==='sell'?Math.floor(amt*s.tax):0;
+  return {px,amt,fee,tax,net:SK.side==='buy'?Math.ceil(amt)+fee:Math.floor(amt)-fee-tax}}
+function stkHave(){const h=STKD.pos.list.find(p=>p.sym===SK.osym);return h?h.shares:0}
+function stkMax(){const x=STKD,px=SYM(SK.osym).close;if(SK.side==='sell')return stkHave();let q=Math.floor(x.cash.avail/px);while(q>0){const a=px*q;if(Math.ceil(a)+Math.max(1,Math.floor(a*0.001425*x.disc))<=x.cash.avail)break;q--}return Math.min(999,Math.max(0,q))}
+function stkQty(v){SK.qty=Math.max(1,Math.min(999,v));stkDraw()}
+function stkO(x){const b=SK.side==='buy',s=SYM(SK.osym),c=stkCalc(),av=x.cash.avail,mx=stkMax(),hv=stkHave();
+  return `<div class="bpad"><div class="b2 seg"><button class="${b?'buy':''}" onclick="SK.side='buy';stkDraw()">買進</button><button class="${b?'':'sell'}" onclick="SK.side='sell';SK.qty=Math.min(SK.qty,Math.max(1,stkHave()));stkDraw()">賣出</button></div>
+  <div class="ssel">${x.syms.map(y=>`<button class="${y.sym===SK.osym?'on':''}" onclick="SK.osym='${y.sym}';SK.qty=1;stkDraw()"><b>${esc(y.name)}</b><small>${y.sym} ・ ${f2(y.close)}</small></button>`).join('')}</div>
+  <div class="bbox"><div class="brow"><span>商品</span><b>${s.sym} ${esc(s.name)}</b></div><div class="brow"><span>價格</span><b class="${b?'up':'dn'}">${f2(c.px)}（${md(s.date)||'昨天'} 收盤價）</b></div>
+   <div class="bmu" style="margin:10px 0 6px">股數（零股，1 股起）${b?'':` ・ 你有 ${hv} 股`}</div>
+   <div class="bqty"><button onclick="stkQty(SK.qty-1)">－</button><b>${SK.qty} 股</b><button onclick="stkQty(SK.qty+1)">＋</button></div>
+   <div class="b4">${[1,5,10].map(q=>`<button onclick="stkQty(${q})">${q} 股</button>`).join('')}<button onclick="stkQty(${mx||1})">${b?'能買最多':'全部'}</button></div></div>
+  <div class="bbox"><div class="brow"><span>成交金額</span><b>${n(c.amt.toFixed(2))}</b></div><div class="brow"><span>手續費（0.1425% × ${Math.round(x.disc*100)/10} 折，最低 1 元）</span><b>${c.fee}</b></div>
+   ${b?'':`<div class="brow"><span>證交稅（${s.kind==='ETF'?'ETF 0.1%':'個股 0.3%'}）</span><b>${c.tax}</b></div>`}
+   <div class="brow tot"><span>${b?'應付金額':'應收金額'}</span><b class="${b?'up':'dn'}">${n(c.net)} 元</b></div>
+   <div class="brow"><span>存摺可用</span><b>${n(av)} → ${n(b?av-c.net:av)}</b></div>${b?'':`<div class="brow"><span></span><small>賣出的錢 ${md(x.sdate)} 才會進存摺</small></div>`}</div>
+  <button class="bb ${b?'buy':'sell'} wide" onclick="stkSend(this)" ${!x.canTrade||(b&&c.net>av)||(!b&&SK.qty>hv)?'disabled':''}>${!x.canTrade?'開盤中不能下單':b&&c.net>av?'存摺可用的錢不夠':!b&&SK.qty>hv?'股數不夠':'確認'+(b?'買進':'賣出')+' '+SK.qty+' 股'}</button>
+  <div class="bnote">💡 ${md(x.tdate)} 成交，T+2：${md(x.sdate)} 才會從存摺${b?'扣款，在那之前這筆錢先「圈存」不能花':'入帳'}。買進不用交易稅，賣出才要（ETF 0.1%、個股 0.3%）。</div></div>`}
+async function stkSend(btn){const c=stkCalc(),b=SK.side==='buy',s=SYM(SK.osym);
+  if(!await ask(`<h3>${b?'📈 確認買進':'📉 確認賣出'}</h3><b>${s.sym} ${esc(s.name)}</b><br>${SK.qty} 股 × ${f2(c.px)} 元<br>${b?'應付':'應收'} <b class="${b?'minus':'plus'}">${n(c.net)} 元</b><div class="mu">${md(STKD.sdate)} 交割${b?'扣款':'入帳'}</div>`,'確認'+(b?'買進':'賣出')))return;
+  const r=await run(btn,'stockOrder',{sym:SK.osym,side:SK.side,qty:SK.qty});if(!r)return;sfx('coin');SK.tab='p';STKD=await call('getStock').catch(()=>STKD);stkPend();stkDraw()}
+function stkP(x){const T=x.pos.total,own=x.pos.list.filter(p=>p.shares>0);
+  return `<div class="bpad"><div class="bbox"><div class="bmu">總市值</div><div class="bbig">${n(T.mv)} 元</div>
+   <div class="brow"><span>總成本</span><b>${n(T.cost)}</b></div><div class="brow"><span>未實現損益</span><b class="${ud(T.unreal)}">${sg(T.unreal)}（${T.pct>0?'+':''}${T.pct}%）</b></div>
+   <div class="brow"><span>已領股利</span><b>${n(T.div)}</b></div><div class="brow"><span>已實現損益</span><b class="${ud(T.realized)}">${sg(T.realized)}</b></div></div>
+  ${own.map(p=>{const c=ud(p.unreal),s=SYM(p.sym);return `<div class="bbox" onclick="SK.tab='q';SK.sym='${p.sym}';stkDraw()"><div class="brow"><b style="font-size:16px">${p.sym} ${esc(p.name)}</b><b class="${c}">${p.pct>0?'+':''}${p.pct}%</b></div>
+   <div class="b3"><div><small>股數</small><b>${p.shares}</b></div><div><small>平均成本</small><b>${p.avg}</b></div><div><small>現價</small><b class="${ud(s.chg)}">${f2(p.close)}</b></div>
+   <div><small>市值</small><b>${n(p.mv)}</b></div><div><small>付出成本</small><b>${n(p.cost)}</b></div><div><small>未實現損益</small><b class="${c}">${sg(p.unreal)}</b></div></div></div>`}).join('')||`<div class="bbox bmu" style="text-align:center;padding:24px">還沒有股票，去「行情」挑一支吧！</div>`}
+  ${own.length?'<div class="bmu" style="margin-bottom:10px">未實現損益已先扣掉「如果現在賣掉」要付的手續費和交易稅，跟真的券商 App 一樣。平均成本有含買進手續費。</div>':''}
+  ${x.pos.pend.length?`<div class="bbox"><div class="bmu">⏳ 待交割</div>${x.pos.pend.map(t=>`<div class="brow"><span>${esc(SYM(t.sym).name)} ${t.side} ${t.qty} 股 ・ ${md(t.sdate)}</span><b class="${t.side==='買進'?'up':'dn'}">${t.side==='買進'?'-':'+'}${n(t.net)}</b></div>`).join('')}<div class="brow"><span>存摺圈存中</span><b>${n(x.cash.hold)}</b></div></div>`:''}</div>`}
+function stkH(x){const L=x.pos.hist;if(!L.length)return '<div class="bpad bmu" style="text-align:center;padding:30px">還沒有交易紀錄</div>';const nm=s=>{const y=SYM(s);return y?y.name:s};
+  return `<div class="bpad">${L.map(t=>t.k==='div'?`<div class="bh"><i class="tg dv">股利</i><div><b>${esc(t.note.split('（')[0])}</b><small>${md(t.time)} 入帳</small></div><b class="up">+${n(t.net)}</b></div>`
+   :t.k==='sdiv'?`<div class="bh"><i class="tg dv">配股</i><div><b>${esc(nm(t.sym))} ・ 配 ${t.qty} 股</b><small>${md(t.tdate)} 入帳 ・ 免費拿到的股票</small></div><b class="up">+${t.qty} 股</b></div>`
+   :t.k==='split'?`<div class="bh"><i class="tg sp">分割</i><div><b>${esc(nm(t.sym))} ・ 1 股變 ${t.ratio} 股</b><small>${md(t.time)} ・ 股數變多、價格變低，總價值不變</small></div><b></b></div>`
+   :`<div class="bh"><i class="tg ${t.side==='買進'?'by':'sl'}">${t.side}</i><div><b>${esc(nm(t.sym))} ・ ${t.qty} 股 @${t.price}</b><small>${t.time.slice(5).replace('-','/')} ・ 手續費 ${t.fee}${t.side==='賣出'?' ・ 交易稅 '+t.tax:''}${t.status==='待交割'?' ・ <span class="pd">'+md(t.sdate)+' 交割</span>':''}${t.pnl!=null?' ・ 損益 '+sg(t.pnl):''}</small></div><b>${t.side==='買進'?'-':'+'}${n(t.net)}</b></div>`).join('')}
+  <div class="bmu" style="margin-top:8px">交割後每一筆也會出現在台幣存摺裡。</div></div>`}
 /* ===== 遊戲資料 ===== */
 let G_AT=0;
 async function loadGame(){try{G=await call('getGame')}catch(e){return toast(errMsg(e),1)}showGame()}
@@ -1751,7 +1891,7 @@ async function doTask(id){const t=G.tasks.find(x=>x.id===id);
 /* ===== 商店 ===== */
 /* 市集：畫在「市集」分頁（Common.html 的 mktOpen），只有打開分頁時才讀資料 */
 function drawShop(){mktDot();if(st.tab==='shop')mktOpen('#pg-shop',1)}
-function mktDot(){const m=G&&G.mkt,c=m?m.sell+m.recv:0,d=document.querySelector('#dock>div[data-p=shop]');if(!d)return;let i=d.querySelector('.mkdot');if(!c){if(i)i.remove();return}if(!i){i=document.createElement('i');i.className='mkdot';d.appendChild(i)}i.textContent=c}
+function mktDot(){const m=G&&G.mkt;setDot('shop',m?m.sell+m.recv:0)}
 function mktChanged(){loadGame()}
 // 點商品小圖看大圖
 function shopPic(id){const p=G.shop.find(x=>x.id===id);if(!p)return;ask(`<h3>${esc(p.name)}</h3>${imgTag(p.photo,'sbig')}`,null,'關閉');loadImgs([p.photo])}
@@ -2419,7 +2559,7 @@ async function saveNick(){const v=$('#nickIn').value.trim();if(!v)return toast('
 async function setIcon(k){if(await run(null,'setProfile',{icon:k})!==null){S.profiles[S.me].icon=k;S.profiles[S.me].photo='';afterProfile()}}
 async function upPhoto(){let d;try{d=await pickPhoto(256)}catch(e){return toast(errMsg(e),1)}toast('上傳中…');
   if(await run(null,'setProfile',{photo:d})!==null){try{S=Object.assign(S,await call('getInit'))}catch(e){}afterProfile()}}
-function afterProfile(){$('#modal').classList.add('hidden');drawHud();if(st.tab==='home')drawHome()}
+function afterProfile(){$('#modal').classList.add('hidden');drawHud();if(st.tab==='home')drawHome();if(st.tab==='set')drawSet()}
 
 /* ===== 轉帳 ===== */
 const XU={'金幣':{c:'g',ic:'🪙',u:'金幣',pre:'🪙',suf:'金幣',name:'🪙 金幣'},'台幣':{c:'n',ic:'💵',u:'元',pre:'NT$',suf:'元',name:'💵 台幣'}};
