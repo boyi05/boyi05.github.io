@@ -69,6 +69,8 @@ input.amt{font-size:24px;font-weight:700;text-align:right}
 #dock{position:fixed;left:0;right:0;bottom:0;display:flex;background:#fff;border-top:1px solid var(--line);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:6}
 #dock>div{flex:1;min-width:0;white-space:nowrap;letter-spacing:-.3px;text-align:center;font-size:11px;color:#9aa3b2;position:relative;cursor:pointer}#dock b{display:block;font-size:20px;filter:grayscale(1);opacity:.55;font-weight:400}
 #dock .on{color:var(--blue)}#dock .on b{filter:none;opacity:1}
+#kidSeg{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}#kidSeg>*{flex:0 0 auto;white-space:nowrap}#kidBody .chips .chip{flex:0 0 auto}
+.prb{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:14px}.prb span{width:110px}.prb div{flex:1;height:10px;background:#eee;border-radius:6px}.prb i{display:block;height:100%;border-radius:6px}.prb b{width:60px;text-align:right}.rmd .chip{min-width:52px}
 .pnav{flex-wrap:nowrap;overflow-x:auto;padding:12px 12px 0}.pnav .chip{flex:0 0 auto;white-space:nowrap}
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tile{border:1px solid var(--line);background:#fff;border-radius:16px;padding:16px 10px;text-align:center;font:inherit;color:var(--ink)}.tile div{font-size:32px}.tile b{display:block;font-size:16px;margin:4px 0 2px}.tile small{color:#888;font-size:12px}
 .stk .up{color:#e8484f}.stk .dn{color:#17a673}.stk .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}.stk .g3 small{display:block;color:#888;font-size:12px}.stk .g3 b{font-size:16px}
@@ -1603,14 +1605,16 @@ function drawKE(){chips($('#ke_c'),S.cats,KE.cat,v=>{KE.cat=v;drawKE()},c=>'<b>'
 /* ===== 小孩：存摺＋小島遊戲 ===== */
 async function loadKid(){if(!st.kid)st.kid=S.kids[0];
   chips($('#kidSel'),S.kids,st.kid,v=>{st.kid=v;loadKid()},kidLab);
-  chips($('#kidSeg'),['bank','stock','game','badge','rank'],st.kidView,v=>{st.kidView=v;loadKid()},v=>({bank:'💵 存摺',stock:'📈 證券',game:'🏝️ 獎懲紀錄',badge:'🏅 徽章寵物',rank:'🏆 排行'})[v]);
+  chips($('#kidSeg'),['bank','report','stock','game','badge','rank'],st.kidView,v=>{st.kidView=v;loadKid()},v=>({bank:'💵 存摺',report:'📊 週報月報',stock:'📈 證券',game:'🏝️ 獎懲紀錄',badge:'🏅 徽章寵物',rank:'🏆 排行'})[v]);
   $('#kidSel').classList.toggle('hidden',st.kidView==='rank'||st.kidView==='stock');
   if(st.kidView==='stock')return loadKidStock();
+  if(st.kidView==='report')return loadKidReport();
   if(st.kidView==='rank'){$('#kidBody').innerHTML='<div class="chips" id="rkSeg"></div><div style="height:8px"></div><div id="rkBody"></div>';return loadRank()}
   $('#kidBody').innerHTML='<div class="card empty">讀取中…</div>';
   if(st.kidView==='game')return loadKidGame();
   if(st.kidView==='badge')return loadKidBadge();
-  let r;try{r=await call('getPassbook',st.kid)}catch(e){return toast(errMsg(e),1)}
+  const k0=st.kid;let r;try{r=await call('getPassbook',st.kid)}catch(e){return toast(errMsg(e),1)}
+  if(st.kidView!=='bank'||st.kid!==k0)return;   // 讀的時候已經切到別的分頁
   $('#kidBody').innerHTML=`<div class="card hero2"><div class="mu">活存餘額</div><div class="bal2">NT$ ${n(r.balance)}</div><div class="mu">定存中 ${n(r.depositTotal)} 元</div></div>
   <div class="card"><div class="row"><h3>存定存</h3><button class="sbtn" onclick="bankCfg()">⚙️ 定存設定</button></div><div class="mu">年利率 ${(S.rate*100).toFixed(1)}%・提前領出利息打 ${Math.round(S.discount*100)/10} 折・最少 ${n(S.minDep)} 元<br>小孩也可以在自己的存摺頁自己存、自己解約</div>
    <label>金額</label><input id="dAmt" type="number" inputmode="numeric" placeholder="0" oninput="depPrev()"><label>期間</label><div class="chips" id="dMon"></div>
@@ -1672,6 +1676,20 @@ async function loadKidStock(){let r;try{r=await call('stockOverview')}catch(e){$
    ${k.list.map(p=>`<div class="it"><div class="t"><b>${p.sym} ${esc(p.name)}</b><div class="mu">${p.shares} 股・均價 ${p.avg}・現價 ${p.close}・市值 ${n(p.mv)}${p.realized?'・已實現 '+sg2(p.realized):''}${p.div?'・股利 '+n(p.div):''}</div></div><b class="${ud2(p.unreal)}">${p.shares?sg2(p.unreal):''}</b></div>`).join('')}
    ${k.pend?`<div class="mu" style="margin-top:6px">⏳ ${k.pend} 筆待交割</div>`:''}`:'<div class="mu">還沒買過股票</div>'}</div>`}).join('')}
   <div class="mu" style="padding:0 4px">未實現損益已扣掉現在賣出要付的手續費和交易稅。配息、手續費折數在「設定 → 證券」。</div>`;loadImgs(r.kids.map(k=>PF(k.name).photo))}
+/* ===== 📊 孩子的週報／月報（跟孩子看到的一樣） ===== */
+const PR={kind:'week',off:1};
+async function loadKidReport(){const kid=st.kid;$('#kidBody').innerHTML=`<div class="chips" style="margin-bottom:6px"><button class="chip ${PR.kind==='week'?'on':''}" onclick="PR.kind='week';PR.off=1;loadKidReport()">📅 週報</button><button class="chip ${PR.kind==='month'?'on':''}" onclick="PR.kind='month';PR.off=1;loadKidReport()">🗓️ 月報</button></div><div class="chips" style="margin-bottom:8px">
+  ${(PR.kind==='week'?[0,1,2,3]:[0,1,2]).map(o=>`<button class="chip ${PR.off===o?'on':''}" onclick="PR.off=${o};loadKidReport()">${PR.kind==='week'?(o===0?'這週':o===1?'上週':o+' 週前'):(o===0?'這個月':o===1?'上個月':o+' 個月前')}</button>`).join('')}</div><div id="prB" class="card empty">⏳ 整理中…</div>`;
+  const tok=PR.tok=Math.random();let r;try{r=await call('getReport',{kind:PR.kind,off:PR.off,kid})}catch(e){if($('#prB'))$('#prB').textContent=errMsg(e);return}if(st.kid!==kid||PR.tok!==tok||!$('#prB'))return;   // 切換太快：只畫最後一次
+  const bars=(L,c)=>{const mx=Math.max(...L.map(x=>x[1]),1);return L.map(x=>`<div class="prb"><span>${esc(x[0])}</span><div><i style="width:${Math.max(2,Math.round(x[1]/mx*100))}%;background:${c}"></i></div><b>${n(x[1])}</b></div>`).join('')};
+  $('#prB').outerHTML=`<div class="card"><div class="mu">${md2(r.from)}～${md2(r.to)}${r.partial?'（還沒結束）':''}</div><div class="g3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px"><div><small class="mu">存款變化</small><br><b class="${r.saved>=0?'plus':'minus'}">${r.saved>=0?'+':''}${n(r.saved)}</b></div><div><small class="mu">賺到</small><br><b>${n(r.incSum)}</b></div><div><small class="mu">花掉</small><br><b>${n(r.expSum)}</b></div></div>
+   <div class="mu" style="margin-top:4px">存款 ${n(r.start)} → ${n(r.finish)} 元・上一期 ${r.prevSaved>=0?'+':''}${n(r.prevSaved)}・金幣 +${n(r.coinsIn)}／花 ${n(r.coinsOut)}</div></div>
+  <div class="card"><h3>💰 收入</h3>${r.inc.length?bars(r.inc,'#e8484f'):'<div class="mu">沒有</div>'}</div>
+  <div class="card"><h3>🛒 支出</h3>${r.exp.length?bars(r.exp,'#17a673'):'<div class="mu">沒有</div>'}${r.big?`<div class="mu">最大一筆：${md2(r.big.d)} ${esc(r.big.note||r.big.cat)} ${n(r.big.amt)} 元</div>`:''}</div>
+  <div class="card"><h3>🧹 任務・📈 股票</h3><div class="mu">完成任務 ${r.tasks} 次${r.top?'・最常做：'+esc(r.top[0])+'（'+r.top[1]+'）':''}${r.daily?'・每天的事做到 '+r.daily[0]+'/'+r.daily[1]+' 天':''}</div>
+   ${r.miss.length?`<div class="mu" style="color:#e8484f">沒做到：${r.miss.map(m=>esc(m[0])+' '+m[1]+' 天').join('、')}</div>`:''}
+   ${r.stk?`<div class="mu">股票市值 ${n(r.stk.start)} → ${n(r.stk.end)}・損益 ${r.stk.pnl>=0?'+':''}${n(r.stk.pnl)}（${r.stk.pct}%）${r.stk.dca.length?'・定期定額：'+r.stk.dca.map(esc).join('、'):''}</div>`:''}
+   ${r.goal?`<div class="mu">🎯 ${esc(r.goal.name)}：${r.goal.p0}% → ${r.goal.p1}%</div>`:''}</div>`}
 async function stkSet(){let r;try{r=await call('stockOverview')}catch(e){$('#setBody').innerHTML=`<div class="card empty">${esc(errMsg(e))}</div>`;return}const sy=r.sync;
   $('#setBody').innerHTML=`<div class="card"><h3>🔄 證交所資料</h3><div class="mu">每天下午 3 點多自動到證交所抓 K 線、配息、配股、分割。${sy?'上次：'+esc(sy.at)+(sy.r.hist||sy.r.divErr||sy.r.histWarn?'・⚠️ '+esc(sy.r.hist||sy.r.divErr||sy.r.histWarn):'・正常')+(sy.r.left?'・K 線還有 '+sy.r.left+' 個月沒補完':''):'還沒同步過'}</div><button class="btn" onclick="stkSync(this)">現在同步</button></div>
   <div class="card"><h3>💰 配息、配股（自動）</h3><div class="mu">證交所公告除息日和金額後會自動出現在這裡。發放日證交所沒有公布，先用「除息日後 25 天」估計，想照實際日期可以按「改」。發放日當天，系統把「除息日前買進」的股數 × 每股配息存進小孩存摺；配股會直接加股數。</div>
@@ -1689,7 +1707,7 @@ async function loadSet(){chips($('#setSeg'),['fam','bank','stock'],st.set||'fam'
   if(v==='stock')return stkSet();$('#setBody').innerHTML='<div class="card empty">讀取中…</div>';
   if(v==='task'||v==='shop'){try{CFG=await call('gameConfig')}catch(e){return toast(errMsg(e),1)}}
   if(v==='task')$('#setBody').innerHTML=`<button class="btn" onclick="taskBox()">＋ 新增任務</button><div class="card">${CFG.tasks.map((t,i)=>`<div class="it" style="${t.status==='下架'?'opacity:.45':''}"><div class="ic">${t.type==='團隊'?'🤝':D5[t.diff-1]}</div>
-   <div class="t">${esc(t.name)}<div class="mu">${t.type==='團隊'?'團隊・':''}難度 ${t.diff}・+${t.exp} 經驗・+${n(t.coins)} 金幣${t.cash?`・<b class="plus">+${n(t.cash)} 元</b>`:''}${t.status==='下架'?'・已下架':''}</div></div><button class="sbtn" onclick="taskBox(${i})">編輯</button></div>`).join('')}</div>`;
+   <div class="t">${esc(t.name)}<div class="mu">${t.remind?'⏰ '+esc(t.remind)+'・':''}${t.type==='團隊'?'團隊・':''}難度 ${t.diff}・+${t.exp} 經驗・+${n(t.coins)} 金幣${t.cash?`・<b class="plus">+${n(t.cash)} 元</b>`:''}${t.status==='下架'?'・已下架':''}</div></div><button class="sbtn" onclick="taskBox(${i})">編輯</button></div>`).join('')}</div>`;
   if(v==='shop'){$('#setBody').innerHTML=`<div class="card"><h3>🏝️ 商品搬到小島市集了</h3><div class="mu">原本的商品現在是「海星的攤位」，海膽也可以擺自己的攤位。上架、修改、看交易都在市集。<br>還沒兌現的舊訂單照樣在首頁收件匣處理。</div><button class="btn" style="margin-top:10px" onclick="mktOpen()">打開小島市集</button></div>`;return}
   if(v==='fam')loadMembers()}
 let TB={};
@@ -1699,8 +1717,13 @@ async function taskBox(i){const t=i===undefined?{name:'',exp:5,coins:30,diff:2,t
    <label>現金獎勵（元，選填；通過時直接存進存摺）</label><input id="tb_m" type="number" inputmode="numeric" value="${t.cash||''}" placeholder="0">
    <label>難度</label><div class="chips">${[1,2,3,4,5].map(d=>`<button type="button" class="chip ${t.diff===d?'on':''}" onclick="TB.diff=${d};this.parentNode.querySelectorAll('.chip').forEach(b=>b.classList.remove('on'));this.classList.add('on')">${D5[d-1]}<br>${d}</button>`).join('')}</div>
    <label>類型</label><div class="chips">${['個人','團隊'].map(x=>`<button type="button" class="chip ${t.type===x?'on':''}" onclick="TB.type='${x}';this.parentNode.querySelectorAll('.chip').forEach(b=>b.classList.remove('on'));this.classList.add('on')">${x}</button>`).join('')}</div>
+   <label>⏰ 提醒孩子（會出現在孩子首頁「今天要做的事」，下午 4 點後還沒做會跳提醒）</label><div class="chips rmd">${['不提醒','每天','上學日','週一','週二','週三','週四','週五','週六','週日'].map(x=>`<button type="button" class="chip ${rmdHas(t.remind,x)?'on':''}" onclick="rmdTap(this,'${x}')">${x==='上學日'?'上學日<br><small>週一～五</small>':x}</button>`).join('')}</div>
    <label>狀態</label><div class="chips">${['上架','下架'].map(x=>`<button type="button" class="chip ${t.status===x?'on':''}" onclick="TB.status='${x}';this.parentNode.querySelectorAll('.chip').forEach(b=>b.classList.remove('on'));this.classList.add('on')">${x}</button>`).join('')}</div>${t.id?`<button type="button" class="btn red" onclick="$('#modal').classList.add('hidden');delTask('${t.id}')">🗑️ 刪除這個任務</button>`:''}`,'儲存'))return;
-  TB.name=$('#tb_n').value;TB.exp=$('#tb_e').value;TB.coins=$('#tb_c').value;TB.cash=$('#tb_m').value;if(await run(null,'saveTask',TB)!==null)loadSet()}
+  TB.name=$('#tb_n').value;TB.exp=$('#tb_e').value;TB.coins=$('#tb_c').value;TB.cash=$('#tb_m').value;TB.remind=TB.remind||'';if(await run(null,'saveTask',TB)!==null)loadSet()}
+// 提醒：不提醒／每天／上學日 只能選一個；週一～週日可以複選
+function rmdHas(r,x){r=r||'';return x==='不提醒'?!r:r===x||(x[0]==='週'&&r.split('、').includes(x))}
+function rmdTap(b,x){let r=TB.remind||'';if(x==='不提醒'||x==='每天'||x==='上學日')r=x==='不提醒'?'':x;else{let L=r.split('、').filter(y=>y[0]==='週');L=L.includes(x)?L.filter(y=>y!==x):L.concat([x]);r=L.join('、')}
+  TB.remind=r;b.parentNode.querySelectorAll('.chip').forEach(c=>{const v=c.textContent.replace('週一～五','').trim();c.classList.toggle('on',rmdHas(r,v))})}
 async function delTask(id){const t=CFG.tasks.find(x=>x.id===id);if(!await ask(`<h3>刪除任務「${esc(t.name)}」？</h3>以前做過的紀錄不會不見。<br><span class="mu">只想暫時不讓小孩看到，可以改用「下架」。</span>`,'刪除'))return;if(await run(null,'deleteTask',{id})!==null)loadSet()}
 async function delProd(id){const p=CFG.shop.find(x=>x.id===id);if(!await ask(`<h3>刪除商品「${esc(p.name)}」？</h3>以前買過的紀錄不會不見。<br><span class="mu">只想暫時不賣，可以改用「下架」。</span>`,'刪除'))return;if(await run(null,'deleteProduct',{id})!==null)loadSet()}
 let PB={};
