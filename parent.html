@@ -135,7 +135,7 @@ window.__bootFail=function(m){staleBadge(1,'⚠️ '+m+'，先顯示上次的資
 /* 先顯示上次的資料時，畫面打開後自己去拿最新的，存回手機，再交給各頁的 __bootFresh */
 function bootRefresh(){callRaw('boot').then(b=>{try{localStorage.setItem('bootc',JSON.stringify({k:BOOT.token,t:Date.now(),b:b}))}catch(e){}if(window.__bootFresh)window.__bootFresh(b)})
   .catch(e=>window.__bootFail(/fetch|Load failed|NetworkError/i.test(errMsg(e))?'網路好像斷了':errMsg(e)))}
-const LC={getStock:1,getStockHist:1,getCal:1,getForum:1,getRanks:1,getMarket:1,getPassbook:1,getXfer:1};
+const LC={getStock:1,getStockHist:1,getStockDivs:1,getCal:1,getForum:1,getRanks:1,getMarket:1,getPassbook:1,getXfer:1};
 function lcKey(fn,arg){return 'lc_'+(S&&S.me||'')+'_'+fn+'_'+JSON.stringify(arg===undefined?'':arg)}
 function lcGet(fn,arg){try{const v=localStorage.getItem(lcKey(fn,arg));return v?JSON.parse(v):null}catch(e){return null}}
 function lcSet(fn,arg,v){if(LC[fn])try{localStorage.setItem(lcKey(fn,arg),JSON.stringify(v))}catch(e){}}
