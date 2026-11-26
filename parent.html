@@ -121,7 +121,21 @@ function gcFix(n){if(!n||!n.nodeType)return;if(n.nodeType===3){n=n.parentNode;if
 function gcStart(){gcFix(document.body);new MutationObserver(ms=>ms.forEach(m=>m.type==='characterData'?gcFix(m.target):m.addedNodes.forEach(gcFix))).observe(document.body,{childList:true,subtree:true,characterData:true})}
 if(document.body)gcStart();else document.addEventListener('DOMContentLoaded',gcStart);
 const errMsg=e=>String((e&&e.message)||e).replace(/^(Error|Exception|錯誤)[:：]\s{0,9}/,'');
-function call(fn,arg){return new Promise((ok,no)=>{const r=google.script.run.withSuccessHandler(ok).withFailureHandler(no);arg===undefined?r[fn](BOOT.token):r[fn](BOOT.token,arg)})}
+/* 加快開啟：先用手機裡上次的資料（BOOT.stale）顯示，右上角標「更新中」，最新資料到了再換上（各頁的 __bootFresh） */
+let MUT=0;
+function staleBadge(on,txt){let b=document.getElementById('staleB');if(!on){if(b)b.remove();return}
+  if(!b){b=document.createElement('div');b.id='staleB';b.style.cssText='position:fixed;z-index:60;top:calc(env(safe-area-inset-top) + 6px);left:50%;transform:translateX(-50%);background:rgba(40,40,60,.78);color:#fff;font:700 13px system-ui,sans-serif;padding:4px 12px;border-radius:14px;pointer-events:none';document.body.appendChild(b)}
+  b.textContent=txt||'🔄 更新中…'}
+window.__bootFail=function(m){staleBadge(1,'⚠️ '+m+'，先顯示上次的資料')};
+/* 先顯示上次的資料時，畫面打開後自己去拿最新的，存回手機，再交給各頁的 __bootFresh */
+function bootRefresh(){callRaw('boot').then(b=>{try{localStorage.setItem('bootc',JSON.stringify({k:BOOT.token,t:Date.now(),b:b}))}catch(e){}if(window.__bootFresh)window.__bootFresh(b)})
+  .catch(e=>window.__bootFail(/fetch|Load failed|NetworkError/i.test(errMsg(e))?'網路好像斷了':errMsg(e)))}
+const LC={getCal:1,getForum:1,getRanks:1,getMarket:1,getPassbook:1,getXfer:1};
+function lcKey(fn,arg){return 'lc_'+(S&&S.me||'')+'_'+fn+'_'+JSON.stringify(arg===undefined?'':arg)}
+function lcGet(fn,arg){try{const v=localStorage.getItem(lcKey(fn,arg));return v?JSON.parse(v):null}catch(e){return null}}
+function lcSet(fn,arg,v){if(LC[fn])try{localStorage.setItem(lcKey(fn,arg),JSON.stringify(v))}catch(e){}}
+function call(fn,arg){if(!/^(get|boot|ping|preview|studioList)/.test(fn))MUT++;return callRaw(fn,arg).then(v=>{lcSet(fn,arg,v);return v})}
+function callRaw(fn,arg){return new Promise((ok,no)=>{const r=google.script.run.withSuccessHandler(ok).withFailureHandler(no);arg===undefined?r[fn](BOOT.token):r[fn](BOOT.token,arg)})}
 let tT;function toast(m,err){const t=$('#toast');t.innerHTML=(err?'⚠️ ':'')+esc(m);t.className='';void t.offsetWidth;t.className='show'+(err?' err':'');clearTimeout(tT);tT=setTimeout(()=>t.className='',err?3500:2400)}
 async function run(btn,fn,arg){if(btn)btn.disabled=true;try{const m=await call(fn,arg);if(typeof m==='string')toast(m);else if(m&&m.msg)toast(m.msg);return m}catch(e){toast(errMsg(e),1);return null}finally{if(btn)btn.disabled=false}}
 function ask(html,yes,noLabel,onOpen){return new Promise(ok=>{$('#mBody').innerHTML=html;if(onOpen)onOpen();$('#mYes').textContent=yes||'確定';$('#mNo').textContent=noLabel||'取消';
@@ -204,8 +218,8 @@ const isPar=()=>S.role==='parent';
 const fWho=n=>(FO&&FO.people[n])||(S.profiles||{})[n]||{nick:n};
 const fBig=()=>isPar()?'btn':'go wide';
 function pinsHtml(){if(!PINS.length)return '';const ph=p=>p.photo||(p.photos||[])[0]||'';setTimeout(()=>loadImgs(PINS.map(ph)),0);return `<div class="card pinc" onclick="go('forum')"><h3>📢 公告</h3>${PINS.map((p,i)=>`<div class="it">${PINS.length>1?`<span class="pn">${i+1}</span>`:''}<div class="t" style="flex:1;white-space:pre-wrap;word-break:break-word">${esc(p.text)||'📷 照片'}<div class="mu">${esc((fWho(p.author).nick)||p.author)}・${p.time.slice(5)}</div></div>${ph(p)?`<img data-img="${ph(p)}" src="${imgSrc(ph(p))}" style="width:54px;height:54px;object-fit:cover;border-radius:10px;flex:none">`:''}</div>`).join('')}</div>`}
-async function loadForum(){if(!FO)$('#foBody').innerHTML='<div class="card empty">⏳ 讀取中…</div>';
-  try{FO=await call('getForum')}catch(e){return toast(errMsg(e),1)}
+async function loadForum(){if(!FO){FO=lcGet('getForum');if(FO)drawForum();else $('#foBody').innerHTML='<div class="card empty">⏳ 讀取中…</div>'}
+  try{FO=await call('getForum')}catch(e){if(!FO)return toast(errMsg(e),1);return}
   PINS=FO.posts.filter(p=>p.pin).slice(0,3);drawForum();foSeen()}
 function foLatest(){let t='';(FO?FO.posts:[]).forEach(p=>{if(p.time>t)t=p.time;p.replies.forEach(r=>{if(r.time>t)t=r.time})});return t||((BOOT.forum||{}).latest)||''}
 function foSeen(){try{localStorage.setItem('fo_seen_'+S.me,foLatest())}catch(e){}foBadge(false)}
@@ -1013,7 +1027,9 @@ function badgeCheck(b,me){if(!b)return;let seen={},first=false;try{const v=local
 // 排行榜
 let RK={p:'week'};
 async function loadRank(){chips($('#rkSeg'),['week','month','lastweek','lastmonth','all'],RK.p,v=>{RK.p=v;loadRank()},v=>({week:'本週',month:'本月',lastweek:'上週',lastmonth:'上月',all:'全部'})[v]);
-  $('#rkBody').innerHTML='<div class="card empty">⏳ 讀取中…</div>';let d;try{d=await call('getRanks',{period:RK.p})}catch(e){return toast(errMsg(e),1)}
+  const c=lcGet('getRanks',{period:RK.p}),per=RK.p;if(c)rkDraw(c);else $('#rkBody').innerHTML='<div class="card empty">⏳ 讀取中…</div>';
+  let d;try{d=await call('getRanks',{period:RK.p})}catch(e){if(!c)toast(errMsg(e),1);return}if(RK.p===per)rkDraw(d)}
+function rkDraw(d){
   const md=['🥇','🥈','🥉'];
   $('#rkBody').innerHTML=`<div class="mu" style="margin:0 4px 8px">${d.label}${RK.p==='all'?'':'：'+d.from.slice(5)+' ～ '+d.to.slice(5)}</div>`+d.boards.map(bd=>{const max=Math.max(1,...bd.rows.map(r=>r.value));
     return `<div class="card"><h3>${bd.icon} ${bd.name}</h3>${bd.rows.map((r,i)=>{const p=d.people[r.kid]||{nick:r.kid};return `<div class="rk ${r.kid===S.me?'me':''}"><span class="rm">${r.value?md[i]||'':''}</span>${avatar(p,32)}<div class="rnm">${esc(p.nick)}<div class="rbar"><i style="width:${Math.round(r.value/max*100)}%"></i></div></div><b>${n(r.value)}</b><span class="mu">${bd.unit}</span></div>`}).join('')}</div>`}).join('');
@@ -1314,8 +1330,8 @@ function mkFee(o){return MK.d.parents.indexOf(o.seller)>=0?0:Math.min(o.total,Ma
 async function mktOpen(el,keep){if(!el){let o=$('#mkt');if(!o){o=document.createElement('div');o.id='mkt';o.className='stu';document.body.appendChild(o)}
     o.innerHTML='<div class="stuh"><b>🏝️ 小島市集</b><button class="stux" onclick="mktClose()">✕</button></div><div class="stub" id="mktB"></div>';document.body.style.overflow='hidden';el='#mktB'}
   const box=$(el);if(!MK||MK.el!==el||!keep)MK=Object.assign({tab:MK&&MK.el===el?MK.tab:'browse',who:''},MK&&MK.el===el?{tab:MK.tab,who:MK.who}:{},{el:el,d:MK&&MK.el===el?MK.d:null});
-  if(!MK.d)box.innerHTML='<div class="card mu" style="text-align:center">⏳ 市集開張中…</div>';
-  try{MK.d=await call('getMarket')}catch(e){box.innerHTML='<div class="card">'+esc(errMsg(e))+'</div>';return}mktDraw()}
+  if(!MK.d){MK.d=lcGet('getMarket');if(MK.d)mktDraw();else box.innerHTML='<div class="card mu" style="text-align:center">⏳ 市集開張中…</div>'}
+  const had=!!MK.d;try{MK.d=await call('getMarket')}catch(e){if(!had)box.innerHTML='<div class="card">'+esc(errMsg(e))+'</div>';return}if($(MK.el))mktDraw()}
 function mktClose(){const o=$('#mkt');if(o)o.remove();document.body.style.overflow='';if(typeof mktClosed==='function')mktClosed()}
 function mktCounts(){const D=MK.d,me=D.name,par=D.parent;
   return {sell:D.orders.filter(o=>o.status==='待交貨'&&(o.seller===me||(par&&D.parents.indexOf(o.seller)>=0))).length,
@@ -1700,6 +1716,13 @@ function start(r){S=r;st.payer=r.me;st.pCat=st.kCat=r.cats[0]||'';st.kKid=st.kid
   buildDock();drawRec();setRange('this')}
 if(BOOT.init){start(BOOT.init);loadHome(BOOT.home);foCheck()}
 else call('getInit').then(r=>{start(r);loadHome()}).catch(e=>{toast('載入失敗：'+errMsg(e),1);$('#homeBody').innerHTML='<div class="card empty">⚠️ 載入失敗：'+esc(errMsg(e))+'<br>請截圖給爸爸</div>'});
+if(BOOT.stale)staleBadge(1);
+window.__bootFresh=function(b){if(!b||!b.init)return;const m=MUT;
+  if(b.forum){BOOT.forum=b.forum;PINS=b.forum.pins||[]}
+  Object.assign(S,b.init);
+  if(st.tab==='home'||!st.tab)loadHome(m?undefined:b.home);else H_AT=0;
+  foCheck();staleBadge(0)};
+if(BOOT.stale)bootRefresh();
 
 </script>
 </body></html>
