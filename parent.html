@@ -1457,7 +1457,7 @@ function go(p){st.tab=p;const g=PSUB[p]||p,pg=PPAGE[p]||p;$$('#dock>div').forEac
   if(p==='home'&&Date.now()-H_AT>20000)loadHome();if(p==='forum')loadForum();if(p==='rec'){if(st.rec==='r')loadRecur();else loadRecent()}if(p==='kids')loadKid();if(p==='stat')loadStats();if(p==='set')loadSet();if(p==='cal')drawCal(1)}
 
 /* ===== 總覽＋審核收件匣 ===== */
-let H_AT=0,LAST_MS=null,INB_RAW=null;
+let H_AT=0,LAST_MS=null,INB_RAW=null,INB_OLD=!!BOOT.stale;   // INB_OLD：收件匣還是手機裡上次的舊資料，先不要顯示（避免看到已經審核過的）
 // 按下通過／退回後先把那一筆從畫面拿掉，伺服器在背景處理；處理中的不會被舊資料又顯示回來
 const RV_BUSY=new Set();
 function studioClosed(){if(st.tab==='home')loadHome()}
@@ -1467,6 +1467,7 @@ async function loadHome(pre){
   const [from,to]=rangeOf('this');
   let inb,ms;if(pre&&pre.inbox&&(pre.ms||LAST_MS)){inb=pre.inbox;ms=pre.ms||LAST_MS}else{try{[inb,ms]=await Promise.all([call('getInbox'),call('getStats',{book:'__parent',from,to,noFixed:false})])}catch(e){return toast(errMsg(e),1)}}
   H_AT=Date.now();LAST_MS=ms;if(!pre||!pre.keep)INB_RAW=inb;inb=Object.assign({},inb,{items:inb.items.filter(i=>!RV_BUSY.has(i.id))});INB=inb;S.profiles=Object.assign(S.profiles||{},inb.profiles);
+  const old=INB_OLD&&pre&&pre.old;if(old)inb=Object.assign({},inb,{items:[],mkt:[]});
   const tasks=inb.items.filter(x=>x.status==='待審核'),buys=inb.items.filter(x=>x.status==='待兌現');
   const bd=$('#bd-home');bd.textContent=inb.items.length;bd.classList.toggle('hidden',!inb.items.length);
   $('#homeTop').innerHTML=`<div class="row"><div class="hi">${av(S.me,30)} 你好，${esc(PF(S.me).nick||S.me)}</div><small>${S.today}</small></div>
@@ -1475,7 +1476,7 @@ async function loadHome(pre){
   $('#homeBody').innerHTML=`
   ${pinsHtml()}
   <div class="card"><div class="row"><h3>📥 審核收件匣 ${inb.items.length?`<span class="pill">${inb.items.length}</span>`:''}</h3>${tasks.length>1?'<button class="sbtn" onclick="okAll()">全部通過</button>':''}</div>
-   ${inb.items.length?'':'<div class="empty">沒有要處理的事 ✨</div>'}
+   ${old?'<div class="empty">🔄 正在拿最新的審核清單…</div>':inb.items.length?'':'<div class="empty">沒有要處理的事 ✨</div>'}
    ${tasks.map(x=>x.type==='寵物設計'?`<div class="it"><div class="ic">${av(x.kid,34)}</div><div class="t"><b>${esc(x.kid)}</b> 設計了新寵物 🎨「${esc(x.name)}」<div class="mu">${x.time.slice(5)} 送出・<a href="#" onclick="studioOpen();return false">看設計</a></div></div>
      <div class="acts"><button class="ok" onclick="rv('${x.id}',1)">上架</button><button class="no" onclick="rv('${x.id}',0)">退回</button></div></div>`:x.type==='行事曆'?`<div class="it"><div class="ic">${av(x.kid,34)}</div><div class="t"><b>${esc(x.kid)}</b> 想加行程 📅「${esc(x.name)}」<div class="mu">${esc(x.note)}・${x.time.slice(5)} 送出</div></div>
      <div class="acts"><button class="ok" onclick="rv('${x.id}',1)">加入</button><button class="no" onclick="rv('${x.id}',0)">退回</button></div></div>`:`<div class="it"><div class="ic">${av(x.kid,34)}</div><div class="t"><b>${esc(x.kid)}</b> 完成${x.type==='團隊'?'🤝合作任務':''}「${esc(x.name)}」<div class="mu">${x.time.slice(5)}・+${x.exp} 經驗・+${n(x.coins)} 金幣${x.ntd?`・<b class="plus">+${n(x.ntd)} 元</b>`:''}${x.note?'・'+esc(x.note):''}</div></div>
@@ -1774,15 +1775,17 @@ async function renewQR(i){const m=mems[i];$('#modal').classList.add('hidden');
 /* ===== 啟動 ===== */
 function start(r){S=r;st.payer=r.me;st.pCat=st.kCat=r.cats[0]||'';st.kKid=st.kid=r.kids[0]||'';$('#pDate').value=$('#kDate').value=r.today;
   buildDock();drawRec();setRange('this')}
-if(BOOT.init){start(BOOT.init);loadHome(BOOT.home);foCheck()}
+if(BOOT.init){start(BOOT.init);loadHome(BOOT.stale&&BOOT.home?Object.assign({old:1},BOOT.home):BOOT.home);foCheck()}
 else call('getInit').then(r=>{start(r);loadHome()}).catch(e=>{toast('載入失敗：'+errMsg(e),1);$('#homeBody').innerHTML='<div class="card empty">⚠️ 載入失敗：'+esc(errMsg(e))+'<br>請截圖給爸爸</div>'});
 if(BOOT.stale)staleBadge(1);
 window.__bootFresh=function(b){if(!b||!b.init)return;const m=MUT;
   if(b.forum){BOOT.forum=b.forum;PINS=b.forum.pins||[]}
-  Object.assign(S,b.init);
+  Object.assign(S,b.init);INB_OLD=false;
   if(st.tab==='home'||!st.tab)loadHome(m?undefined:b.home);else H_AT=0;
   foCheck();staleBadge(0)};
-if(BOOT.stale)bootRefresh();
+if(BOOT.stale){bootRefresh();
+  // 收件匣比整包開頁資料快很多，先單獨拿回來換上
+  callRaw('getInbox').then(i=>{if(!INB_OLD)return;INB_OLD=false;if(st.tab==='home'||!st.tab)loadHome({inbox:i})}).catch(()=>{})}
 
 </script>
 </body></html>
