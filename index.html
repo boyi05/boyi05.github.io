@@ -146,29 +146,31 @@ function fail(msg){clearTimeout(tipT);clearInterval(pt);document.getElementById(
   say('哎呀！'+msg,function(){var c=document.getElementById('cur');if(c)c.remove();T.innerHTML+='<br>'+'<small>如果一直這樣，請截圖給爸爸</small><br><button onclick="location.reload()">重新整理</button>'})}
 if(!k){document.getElementById('bar').style.display='none';say('嗨！我是海底的小星星 ⭐\n請用你的專屬連結打開海底有星星喔！')}
 else{
-  // 加快開啟：手機裡有上次的資料就先直接打開畫面（標示「更新中」），同時跟伺服器拿最新的，拿到再換上去
+  // 只讀取一次：畫面和最新資料同時去拿，兩個都到了才進 App（進去後不用再等「更新中」）。
+  // 手機裡有上次的資料只當備用：網路斷了、或伺服器超過 12 秒還沒回來，才先用舊的打開。
   var cached=null;try{var c=JSON.parse(localStorage.getItem('bootc')||'null');if(c&&c.k===k&&c.b&&c.b.role&&Date.now()-c.t<7*864e5)cached=c.b}catch(e){}
   var pages={};function page(r){return pages[r]||(pages[r]=fetch(r+'.html',{cache:'no-cache'}).then(function(x){if(!x.ok)throw new Error('畫面載入失敗');return x.text()}))}
-  var shown=false;
-  function show(b,stale,delay){return page(b.role).then(function(html){if(shown)return;shown=true;
+  var shown=false,t0=Date.now(),pageOk=false;
+  // 進度：畫面下載好 30%，資料回來 100%；等資料時照平常大約要的時間（4 秒）慢慢往 95% 走
+  clearInterval(pt);pt=setInterval(function(){var g=(pageOk?30:0)+(pageOk?65:25)*(1-Math.exp(-(Date.now()-t0)/2500));if(g>prog)setP(Math.min(95,g))},100);
+  function show(b,stale){return page(b.role).then(function(html){if(shown)return;shown=true;
       var data=JSON.stringify(stale?Object.assign({},b,{stale:1}):b).replace(/</g,'\\x3c');
       html=html.replace('<?!= boot ?>',function(){return data});
-      clearTimeout(tipT);goal=100;setP(100);if(!stale)say('歡迎回來，'+(b.name||'')+'！',null);
-      setTimeout(function(){clearInterval(pt);document.open();document.write(html);document.close()},delay)})}
-  // 有快取：直接開畫面，最新資料由畫面自己去拿（document.write 會中斷這裡還沒回來的連線）
-  if(cached){goal=90;show(cached,true,0).catch(function(){fail('網路好像斷了')})}
-  else{goal=70;say(guess==='parent'?'歡迎回來！正在整理海星家的帳本…':'嗨！我是海底的小星星 ⭐\n正在打開你的小島…',tips)}
-  if(guess==='kid'||guess==='parent')page(guess);
-  if(!cached)fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn:'boot',args:[k]}),redirect:'follow'})
+      clearTimeout(tipT);clearInterval(pt);setP(100);
+      setTimeout(function(){document.open();document.write(html);document.close()},stale?0:250)})}
+  say(guess==='parent'?'歡迎回來！正在整理海星家的帳本…':'嗨！我是海底的小星星 ⭐\n正在打開你的小島…',tips);
+  if(guess==='kid'||guess==='parent')page(guess).then(function(){pageOk=true},function(){});
+  if(cached)setTimeout(function(){if(!shown)show(cached,true).catch(function(){})},12000);
+  fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn:'boot',args:[k]}),redirect:'follow'})
   .then(function(r){if(!r.ok)throw new Error('連線失敗（'+r.status+'）');return r.json()})
   .then(function(j){
     if(!j.ok)throw new Error(j.err);
     var b=j.v;try{localStorage.setItem('role',b.role)}catch(e){}
     try{if(b.init)localStorage.setItem('bootc',JSON.stringify({k:k,t:Date.now(),b:b}))}catch(e){}
-    goal=92;
-    return show(b,false,650);
+    return show(b,false);
   })
-  .catch(function(e){var m=/fetch|Load failed|NetworkError/i.test(e.message)?'網路好像斷了':e.message;fail(m)});
+  .catch(function(e){var m=/fetch|Load failed|NetworkError/i.test(e.message)?'網路好像斷了':e.message;
+    if(cached&&!shown)show(cached,true).catch(function(){fail(m)});else if(!shown)fail(m)});
 }
 })();
 </script>
