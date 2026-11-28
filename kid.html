@@ -52,7 +52,18 @@ h3{margin:0 0 8px;font-size:17px}
 .ma{text-align:center;font-size:36px;font-weight:900;height:52px;border-radius:14px;background:#fff;margin:0 24px 12px;line-height:52px;color:var(--blue)}.ma.ok{background:#d9f7dd;color:#2e7d32}.ma.ng{background:#ffe1dc;color:#d0432f;font-size:26px;animation:mshake .3s}
 @keyframes mshake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 .mkeys{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.mkeys button{border:0;border-radius:16px;background:#fff;box-shadow:0 4px 0 #d8c8b0;font-size:28px;font-weight:800;padding:12px 0;color:var(--ink);touch-action:manipulation;font-family:inherit}.mkeys button:active{transform:translateY(3px);box-shadow:0 1px 0 #d8c8b0}
-.zh{padding:10px 14px}.abtab{display:flex;gap:6px;margin:6px 0}.abtab button{flex:1;border:0;border-radius:99px;padding:6px;font:inherit;font-weight:800;background:#eee;color:#666}.abtab button.on{background:var(--wood2);color:#fff}
+.zh{padding:10px 14px}
+.ptile{position:relative}.ptile .crn{font-size:11.5px;font-weight:800;color:#b8860b;margin-top:2px}.ptile .crn.none{color:#bbb;font-weight:400}.ptile .tstar{font-size:12px;font-weight:800;color:#e0a100}
+.ptile.chal{animation:chg 1.6s ease-in-out infinite;border-top-color:#ffcc00}@keyframes chg{0%,100%{box-shadow:0 5px 0 var(--c),0 0 0 0 #ffd84d00}50%{box-shadow:0 5px 0 var(--c),0 0 0 6px #ffd84daa}}
+.chb{position:absolute;top:-8px;right:-4px;background:#ff3b5c;color:#fff;font-style:normal;font-size:12px;font-weight:900;border-radius:10px;padding:2px 8px;transform:rotate(6deg)}
+.chcard{display:flex;align-items:center;gap:10px;cursor:pointer;background:linear-gradient(135deg,#fff6c9,#ffe08a);border:2px solid #ffcc33}.chcard.done{background:var(--cream);border-color:#cde8d6}.chi{font-size:36px}
+.stsum .gbar{height:10px;border-radius:99px;background:#eee;overflow:hidden;margin:6px 0}.stsum .gbar i{display:block;height:100%;background:linear-gradient(90deg,#ffd84d,#ffb300);border-radius:99px}
+.strw{font-style:normal;letter-spacing:1px;font-size:15px;vertical-align:2px}.strw i{font-style:normal;color:#ddd}.strw i.on{color:#ffbf00;text-shadow:0 1px 0 #c98f00}
+.strw.big{font-size:44px;letter-spacing:6px}.strw.big i.on{display:inline-block;animation:spop .5s backwards}@keyframes spop{0%{transform:scale(0) rotate(-90deg)}70%{transform:scale(1.3)}100%{transform:none}}
+.chok{display:inline-block;margin:6px 0;background:#ff3b5c;color:#fff;font-weight:900;border-radius:99px;padding:4px 14px}
+.cmbp{position:fixed;left:50%;top:22%;transform:translateX(-50%);z-index:99;font-size:30px;font-weight:900;color:#ff7a00;text-shadow:0 3px 0 #fff,0 0 12px #fff;pointer-events:none;animation:cmbA 1.1s ease-out forwards;white-space:nowrap}.cmbp.hot{color:#e5484d;font-size:36px}
+@keyframes cmbA{0%{transform:translateX(-50%) scale(.4);opacity:0}20%{transform:translateX(-50%) scale(1.2);opacity:1}80%{opacity:1}100%{transform:translateX(-50%) translateY(-40px) scale(1);opacity:0}}
+.abtab{overflow-x:auto;flex-wrap:nowrap}.abtab button{flex:0 0 auto;padding:6px 12px;white-space:nowrap}.abtab{display:flex;gap:6px;margin:6px 0}.abtab button{flex:1;border:0;border-radius:99px;padding:6px;font:inherit;font-weight:800;background:#eee;color:#666}.abtab button.on{background:var(--wood2);color:#fff}
 .abr{display:flex;align-items:center;gap:8px;padding:6px 4px;border-top:1px dashed #ddd}.abr.me{background:#fff6d6;border-radius:10px}.abm{width:26px;text-align:center;font-size:18px;font-weight:900}.abv{margin-left:auto;font-weight:800;color:var(--wood2)}.abv small{color:var(--mu);font-weight:400}
 .ahud{display:flex;justify-content:space-between;align-items:center;margin:6px 4px 8px;gap:6px}.ahud>*{background:#0004;color:#fff;border:0;border-radius:12px;padding:5px 10px;font:inherit;font-weight:800}
 .acv{display:block;margin:0 auto;border-radius:10px;box-shadow:0 0 0 3px #ffffff66,0 5px 0 #0003;touch-action:none}
@@ -2026,7 +2037,7 @@ let MG=null;const RI=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 function mathMini(){const m=G.math;if(!m)return '';return `<div class="card mcard" onclick="go('math')"><div class="mico">🧮</div><div style="flex:1"><b>心算快手</b><div class="mu">${m.left?`今天還有 <b class="gold">${m.left}</b> 場可以拿金幣`:'今天的金幣拿完了，還可以練習破紀錄'}</div></div><span class="go">開始 ›</span></div>`}
 function drawMath(){MG=null;const m=G.math||{best:{},left:0,daily:3};
   $('#pg-math').innerHTML=`<button class="back" onclick="go('play')">‹ 遊樂區</button><div class="sign"><h3>🧮 心算快手</h3></div><div class="card"><div class="mu">60 秒內答越多題越好！每天前 ${m.daily} 場可以拿金幣和經驗（今天還有 <b class="gold">${m.left}</b> 場）。答對越多、等級越高，金幣越多。</div></div>
-  <div class="mlv">${MLV.map((x,i)=>i<2?'':`<button class="mlb" onclick="mathStart(${i})"><b>Lv${i}</b><span>${x[0]}</span><small>${x[1]}${m.best[i]?`・最佳 ${m.best[i]} 題`:''}</small></button>`).join('')}</div>`}
+  <div class="mlv">${MLV.map((x,i)=>i<2?'':`<button class="mlb" onclick="mathStart(${i})"><b>Lv${i} ${starRow(starOf('math',i))}</b><span>${x[0]}</span><small>${x[1]}${m.best[i]?`・最佳 ${m.best[i]} 題`:''}</small></button>`).join('')}</div>`}
 function mathQ(lv){let a,b,c,q,ans;const h=Math.random()<.5;
   if(lv===1){if(h){a=RI(0,10);b=RI(0,10-a);q=`${a} + ${b}`;ans=a+b}else{a=RI(1,10);b=RI(0,a);q=`${a} − ${b}`;ans=a-b}}
   else if(lv===2){if(h){a=RI(2,15);b=RI(2,20-a);q=`${a} + ${b}`;ans=a+b}else{a=RI(8,20);b=RI(2,a);q=`${a} − ${b}`;ans=a-b}}
@@ -2046,19 +2057,19 @@ function mNext(){MG.cur=mathQ(MG.lv);MG.inp='';$('#mQ').textContent=MG.cur.q+' =
 function mTick(){if(!MG||!MG.end)return;const left=Math.max(0,MG.end-Date.now()),e=$('#mTime');if(!e)return;e.textContent=Math.ceil(left/1000);$('#mBar').style.width=(left/600)+'%';if(left<=0)return mathEnd();requestAnimationFrame(mTick)}
 function mKey(k){if(!MG||!MG.end||MG.busy)return;if(k==='C')MG.inp='';else if(k==='⌫')MG.inp=MG.inp.slice(0,-1);else if(MG.inp.length<4)MG.inp+=k;
   $('#mA').textContent=MG.inp;const ans=String(MG.cur.ans);if(MG.inp.length<ans.length)return;MG.busy=true;
-  if(MG.inp===ans){MG.correct++;MG.combo++;MG.combo>=3?sfx('combo',MG.combo):sfx('ok');$('#mA').className='ma ok';$('#mOk').textContent=MG.correct;$('#mCombo').textContent=MG.combo>=3?`🔥 ${MG.combo} 連對`:'';setTimeout(()=>{if(MG){MG.busy=false;mNext()}},180)}
+  if(MG.inp===ans){MG.correct++;MG.combo++;MG.cbMax=Math.max(MG.cbMax||0,MG.combo);MG.combo>=3?sfx('combo',MG.combo):sfx('ok');if(MG.combo>=5&&MG.combo%5===0)cmbPop(MG.combo);$('#mA').className='ma ok';$('#mOk').textContent=MG.correct;$('#mCombo').textContent=MG.combo>=3?`🔥 ${MG.combo} 連對`:'';setTimeout(()=>{if(MG){MG.busy=false;mNext()}},180)}
   else{MG.wrong++;MG.combo=0;sfx('bad');$('#mNg').textContent=MG.wrong;$('#mCombo').textContent='';$('#mA').className='ma ng';$('#mA').textContent=MG.inp+' → '+ans;setTimeout(()=>{if(MG){MG.busy=false;mNext()}},900)}}
 document.addEventListener('keydown',e=>{if(!MG||!MG.end)return;if(/^[0-9]$/.test(e.key))mKey(e.key);else if(e.key==='Backspace')mKey('⌫')});
 async function mathQuit(){if(MG&&MG.end&&!await ask('<h3>要離開嗎？</h3>這一場不會算成績喔。','離開'))return;MG=null;drawMath()}
 async function mathEnd(){if(!MG||MG.done)return;MG.done=true;MG.end=0;const g=MG;
   $('#pg-math').innerHTML=`<div class="card" style="text-align:center"><div style="font-size:48px">⏰</div><h3>時間到！</h3><div class="mu">送出成績中…</div></div>`;
   let r=null;try{r=await call('submitMath',{lv:g.lv,correct:g.correct,wrong:g.wrong})}catch(e){toast(errMsg(e),1)}
-  if(r&&G.math){G.math.left=r.left;G.math.best[g.lv]=r.best}if(r){const x=GI();x.left.math=r.left;(x.best.math=x.best.math||{})[g.lv]=r.best;x.coinsToday+=r.coins||0}
+  if(r&&G.math){G.math.left=r.left;G.math.best[g.lv]=r.best}if(r){const x=GI();x.left.math=r.left;(x.best.math=x.best.math||{})[g.lv]=r.best;x.coinsToday+=r.coins||0;if(r.starsBest)(x.stars.math=x.stars.math||{})[g.lv]=r.starsBest;if(r.chal)x.chal.done=true}
   if(r&&(r.coins||r.exp))setTimeout(()=>{sfx('win');if(r.coins)setTimeout(()=>sfx('coin'),700)},200);
   const acc=g.correct+g.wrong?Math.round(g.correct/(g.correct+g.wrong)*100):0;
   $('#pg-math').innerHTML=`<div class="card" style="text-align:center;position:relative;overflow:hidden">${r&&r.newBest&&g.correct?confetti():''}<div style="font-size:52px">${g.correct>=20?'🏆':g.correct>=10?'🌟':'💪'}</div><h3>Lv${g.lv} ${MLV[g.lv][0]}</h3>
-   <div class="mbig">${g.correct}<small> 題</small></div><div class="mu">答錯 ${g.wrong} 題・正確率 ${acc}%・分數 ${g.correct*g.lv}</div>
-   ${r?`${r.newBest&&g.correct?'<div class="mnew">🎉 破紀錄了！</div>':`<div class="mu">最佳紀錄 ${r.best} 題</div>`}${r.coins||r.exp?`<div class="mrw">🪙 +${r.coins} 金幣　⭐ +${r.exp} 經驗</div>`:`<div class="mu" style="margin-top:6px">${r.left?'':'今天的金幣已經拿完了，明天再來喔！'}</div>`}`:''}
+   <div class="mbig">${g.correct}<small> 題</small></div><div class="mu">答錯 ${g.wrong} 題・正確率 ${acc}%・分數 ${g.correct*g.lv}</div>${cmbLine('math',g.cbMax)}
+   ${r?`${resExtra(r)}${r.newBest&&g.correct?'<div class="mnew">🎉 破紀錄了！</div>':`<div class="mu">最佳紀錄 ${r.best} 題</div>`}${r.coins||r.exp?`<div class="mrw">🪙 +${r.coins} 金幣　⭐ +${r.exp} 經驗</div>`:`<div class="mu" style="margin-top:6px">${r.left?'':'今天的金幣已經拿完了，明天再來喔！'}</div>`}`:''}
    <button class="go wide" onclick="mathStart(${g.lv})">再玩一次</button><button class="go wide" style="background:#9a8670;box-shadow:0 4px 0 #6f5f4f" onclick="drawMath()">換等級</button><button class="go wide" style="background:#4d8de6;box-shadow:0 4px 0 #2f6ab8" onclick="go('play')">回遊樂區</button></div>`;
   MG=null;if(r&&(r.coins||r.exp))loadGame()}
 // ===== 遊樂區 =====
@@ -2080,34 +2091,51 @@ const GHELP={sudoku:'每一橫排、每一直排、每一個粗框裡，每個�
  word:'看圖片和中文，點字母拼出英文單字，一場 10 個字。按 🔊 可以聽發音。',
  cash:'你是小島商店的老闆！家裡的寵物來買東西，點錢箱裡的錢找給客人。一場 7 位客人，Lv3 起可以打開收銀機計算機。'};
 let GM=null;
-function GI(){const x=G.games||{};x.left=x.left||{};x.best=x.best||{};if(x.daily==null)x.daily=3;x.dailyBy=x.dailyBy||{};if(x.coinCap==null)x.coinCap=0;x.coinsToday=x.coinsToday||0;G.games=x;return x}
+function GI(){const x=G.games||{};x.left=x.left||{};x.best=x.best||{};if(x.daily==null)x.daily=3;x.dailyBy=x.dailyBy||{};if(x.coinCap==null)x.coinCap=0;x.coinsToday=x.coinsToday||0;x.stars=x.stars||{};x.starSum=x.starSum||0;x.starMax=x.starMax||75;x.chal=x.chal||{};G.games=x;return x}
 function shuf(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function fmtT(s){s=Math.round(s);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
 function playMini(){const x=GI(),left=x.coinCap?Math.max(0,x.coinCap-x.coinsToday):-1;return `<div class="card mcard" onclick="go('play')"><div class="mico" style="background:linear-gradient(135deg,#8fd3ff,#b07aff)">🎡</div><div style="flex:1"><b>遊樂區</b><div class="mu">${left<0?`貪吃鰻、方塊、心算、數獨…${x.coinsToday?`今天已拿 <b class="gold">${x.coinsToday}</b> 金幣`:'玩遊戲賺金幣！'}`:left?`心算、數獨、24 點…今天還可以拿 <b class="gold">${left}</b> 金幣`:'今天的金幣拿完了，還可以練習破紀錄'}</div></div><span class="go">去玩 ›</span></div>`}
-function drawPlay(){MG=null;GM=null;const x=GI();
+function drawPlay(){MG=null;GM=null;const x=GI(),ch=x.chal||{},cg=GMS.find(g=>g[0]===ch.g);
+  const tileG=g=>`<button class="ptile${g[0]===ch.g&&!ch.done?' chal':''}" style="--c:${g[4]}" onclick="${g[0]==='math'?"go('math')":`gmLevels('${g[0]}')`}">${g[0]===ch.g&&!ch.done?'<i class="chb">🎯 ×2</i>':''}<div class="pi">${g[1]}</div><b>${g[2]}</b><small>${g[3]}</small>${crown(g[0])}<span class="tstar">${starTxt(g[0])}</span><span class="pl">${x.left[g[0]]==null||x.left[g[0]]?`還有 ${x.left[g[0]]==null?(x.dailyBy[g[0]]||x.daily):x.left[g[0]]} 場有獎勵`:'今天獎勵拿完了'}</span></button>`;
   $('#pg-play').innerHTML=`<div class="sign"><h3>🎡 遊樂區</h3></div>
+  <div class="card stsum"><div class="row"><b>⭐ 收集星星</b><b class="gold">${x.starSum} / ${x.starMax}</b></div><div class="gbar"><i style="width:${Math.min(100,x.starSum/x.starMax*100)}%"></i></div><div class="mu">練功區每個等級最多 3 顆星，看看能不能全部拿滿！</div></div>
+  ${cg?`<div class="card chcard${ch.done?' done':''}" onclick="${ch.g==='math'?"go('math')":`gmLevels('${ch.g}')`}"><div class="chi">${cg[1]}</div><div style="flex:1"><b>🎯 今日挑戰：${cg[2]}</b><div class="mu">${ch.done?'✅ 今天的挑戰完成了！明天會換別的遊戲':'今天第 1 場有獎勵的金幣 <b>×2</b>！'}</div></div>${ch.done?'':'<span class="go">去挑戰 ›</span>'}</div>`:''}
   <div class="card zh"><b>🕹️ 街機區</b><span class="mu">　每天第 1 場有金幣，之後可以一直玩、拚排行榜</span></div>
-  <div class="pgrid">${Object.keys(ARC).map(g=>{const a=ARC[g],l=x.left[g]==null?1:x.left[g];return `<button class="ptile" style="--c:${a[3]}" onclick="arcIntro('${g}')"><div class="pi">${a[0]}</div><b>${a[1]}</b><small>${a[2]}</small><span class="pl">${l?'今天還有 1 場獎勵':'玩排行榜 🏆'}</span></button>`}).join('')}</div>
+  <div class="pgrid">${Object.keys(ARC).map(g=>{const a=ARC[g],l=x.left[g]==null?1:x.left[g];return `<button class="ptile" style="--c:${a[3]}" onclick="arcIntro('${g}')"><div class="pi">${a[0]}</div><b>${a[1]}</b><small>${a[2]}</small>${crown(g)}<span class="pl">${l?'今天還有 1 場獎勵':'玩排行榜 🏆'}</span></button>`}).join('')}</div>
+  <div class="card zh"><b>📚 練功區</b><span class="mu">　每個遊戲每天前幾場有獎勵（英文單字 ${x.dailyBy.word||x.daily} 場，其他 ${x.daily} 場）・今天已拿 <b class="gold">${x.coinsToday}</b> 金幣</span></div>
+  <div class="pgrid">${GMS.map(tileG).join('')}</div>
   <div class="card" id="arcB">${arcBoard()}</div>
-  <div class="card zh"><b>📚 練功區</b><span class="mu">　每個遊戲每天前幾場有獎勵</span></div><div class="card"><div class="mu">每天前幾場有金幣和經驗：英文單字 ${x.dailyBy.word||x.daily} 場，其他遊戲各 ${x.daily} 場${x.coinCap?`，全部加起來一天最多 ${x.coinCap} 金幣`:''}。今天已拿 <b class="gold">${x.coinsToday}</b> 金幣。</div></div>
-  <div class="pgrid">${GMS.map(g=>`<button class="ptile" style="--c:${g[4]}" onclick="${g[0]==='math'?"go('math')":`gmLevels('${g[0]}')`}"><div class="pi">${g[1]}</div><b>${g[2]}</b><small>${g[3]}</small><span class="pl">${x.left[g[0]]==null||x.left[g[0]]?`還有 ${x.left[g[0]]==null?(x.dailyBy[g[0]]||x.daily):x.left[g[0]]} 場有獎勵`:'今天獎勵拿完了'}</span></button>`).join('')}</div>
   <div class="card"><h3>📜 最近遊戲紀錄</h3>${(G.gameRecs||[]).slice(0,15).map(recRow).join('')||'<div class="empty">還沒有遊戲紀錄，選一個來玩吧！</div>'}</div>`}
+// 星星：某個遊戲收集了幾顆／總共幾顆
+function lvRange(g){return g==='math'?[2,3,4,5,6]:GLV[g].map((_,i)=>i+1)}
+function starOf(g,lv){return ((GI().stars||{})[g]||{})[lv]||0}
+function starTxt(g){const L=lvRange(g),n=L.reduce((a,l)=>a+starOf(g,l),0);return `⭐ ${n} / ${L.length*3}`}
+function starRow(n,big){return `<span class="strw${big?' big':''}">${[1,2,3].map(i=>`<i class="${i<=n?'on':''}" style="animation-delay:${big?i*.25:0}s">★</i>`).join('')}</span>`}
+// 本週冠軍
+function champ(g){const L=((G.arcade||{}).list||{})[g]||[];return L[0]||null}
+function crown(g){const c=champ(g);return c?`<span class="crn">👑 ${esc(((S.profiles||{})[c.kid]||{}).nick||c.kid)}</span>`:'<span class="crn none">👑 還沒有冠軍</span>'}
+// 連擊：連續答對 2 題以上跳出 🔥
+function cmb(M,ok){if(!ok){M.cb=0;return}M.cb=(M.cb||0)+1;M.cbMax=Math.max(M.cbMax||0,M.cb);if(M.cb>=2){cmbPop(M.cb);if(M.cb>=3)sfx('combo',M.cb)}}
+function cmbPop(n){const d=document.createElement('div');d.className='cmbp'+(n>=5?' hot':'');d.innerHTML=`連擊 ×${n} ${n>=8?'🔥🔥🔥':n>=5?'🔥🔥':'🔥'}`;document.body.appendChild(d);setTimeout(()=>d.remove(),1100)}
+function cmbLine(g,mx){if(!(mx>=2))return '';let old=0;try{old=+localStorage.getItem('cmb:'+g)||0;if(mx>old)localStorage.setItem('cmb:'+g,mx)}catch(e){}
+  return `<div class="mu" style="margin-top:4px">🔥 最高連擊 ×${mx}${mx>old?(old?'<b class="red">（新紀錄！）</b>':''):`（你的紀錄 ×${old}）`}</div>`}
+function resExtra(r){if(!r)return '';return `${r.stars?`<div style="margin:6px 0">${starRow(r.stars,1)}</div>${r.newStars?'<div class="mnew" style="font-size:16px">✨ 拿到新星星了！</div>':''}`:''}${r.chal?'<div class="chok">🎯 今日挑戰成功！金幣 ×2</div>':''}${r.weekBest&&!r.newBest?'<div class="mnew" style="font-size:16px">🏆 本週新紀錄！排行榜更新了</div>':''}`}
 const backBtn=()=>`<button class="back" onclick="gmQuit()">‹ 遊樂區</button>`;
 async function gmQuit(){if(GM&&GM.live&&!await ask('<h3>要離開嗎？</h3>這一場不會算成績喔。','離開'))return;if(GM)GM.dead=true;GM=null;go('play')}
 function gmLevels(g){if(GM)GM.dead=true;GM=null;const info=GMS.find(x=>x[0]===g),x=GI(),b=x.best[g]||{};
   $('#pg-gm').innerHTML=`${backBtn()}<div class="sign"><h3>${info[1]} ${info[2]}</h3></div><div class="card"><div class="mu">${GHELP[g]} 今天還有 <b class="gold">${x.left[g]==null?(x.dailyBy[g]||x.daily):x.left[g]}</b> 場有獎勵。</div>${g==='p24'?'<button class="go wide" style="margin-top:10px;background:#ffb347;box-shadow:0 4px 0 #c47a1a" onclick="p24Tips()">📖 24 點小技巧（先看這個！）</button>':''}</div>
-  <div class="mlv">${GLV[g].map((l,i)=>`<button class="mlb" onclick="gmStart('${g}',${i+1})"><b>Lv${i+1}</b><span>${l[0]}</span><small>${l[1]}${b[i+1]?'・最佳 '+(g==='sudoku'?fmtT(b[i+1]):b[i+1]+(g==='p24'?' / 5':g==='cash'?' / 7':' / 10')):''}</small></button>`).join('')}</div>`;
+  <div class="mlv">${GLV[g].map((l,i)=>`<button class="mlb" onclick="gmStart('${g}',${i+1})"><b>Lv${i+1} ${starRow(starOf(g,i+1))}</b><span>${l[0]}</span><small>${l[1]}${b[i+1]?'・最佳 '+(g==='sudoku'?fmtT(b[i+1]):b[i+1]+(g==='p24'?' / 5':g==='cash'?' / 7':' / 10')):''}</small></button>`).join('')}</div>`;
   if(st.tab!=='gm')go('gm');window.scrollTo(0,0)}
 function gmStart(g,lv){if(GM)GM.dead=true;({sudoku:sdStart,p24:p24Start,pizza:pzStart,word:wdStart,cash:csStart})[g](lv);window.scrollTo(0,0)}
 async function gmEnd(g,lv,c,w,t,line){if(!GM||GM.done)return;GM.done=true;GM.live=false;
   $('#pg-gm').innerHTML=`<div class="card" style="text-align:center"><div style="font-size:48px">⏳</div><h3>送出成績中…</h3></div>`;
   let r=null;try{r=await call('submitGame',{game:g,lv,correct:c,wrong:w,time:t})}catch(e){toast(errMsg(e),1)}
-  const x=GI();if(r){x.left[g]=r.left;(x.best[g]=x.best[g]||{})[lv]=r.best;x.coinsToday+=r.coins||0}
+  const x=GI(),M0=GM;if(r){x.left[g]=r.left;(x.best[g]=x.best[g]||{})[lv]=r.best;x.coinsToday+=r.coins||0;if(r.starsBest)(x.stars[g]=x.stars[g]||{})[lv]=r.starsBest;if(r.chal)x.chal.done=true}
   const AR=!!ARC[g],info=AR?arcInfo(g):GMS.find(z=>z[0]===g);if(r&&(r.coins||r.exp))setTimeout(()=>{sfx('win');if(r.coins)setTimeout(()=>sfx('coin'),700)},200);
   $('#pg-gm').innerHTML=`<div class="card" style="text-align:center;position:relative;overflow:hidden">${r&&r.newBest&&c?confetti():''}<div style="font-size:52px">${info[1]}</div><h3>${info[2]}${AR?'':' Lv'+lv}</h3>${line}
-   ${r?`${r.newBest&&c?'<div class="mnew">🎉 破紀錄了！</div>':r.weekBest?'<div class="mnew">🏆 本週新紀錄！排行榜更新了</div>':''}${r.coins||r.exp?`<div class="mrw">🪙 +${r.coins} 金幣　⭐ +${r.exp} 經驗</div>`:`<div class="mu" style="margin-top:6px">${AR?(r.left?'再試一次吧！':'今天的獎勵拿過了，可以繼續拚排行榜！'):c?(r.left?'今天的金幣上限到了，經驗也拿完囉':'今天這個遊戲的獎勵拿完了，明天再來喔！'):'再試一次吧！'}</div>`}`:''}
+   ${AR?'':cmbLine(g,M0&&M0.cbMax)}${r?`${resExtra(r)}${r.newBest&&c?'<div class="mnew">🎉 破紀錄了！</div>':''}${r.coins||r.exp?`<div class="mrw">🪙 +${r.coins} 金幣　⭐ +${r.exp} 經驗</div>`:`<div class="mu" style="margin-top:6px">${AR?(r.left?'再試一次吧！':'今天的獎勵拿過了，可以繼續拚排行榜！'):c?(r.left?'今天的金幣上限到了，經驗也拿完囉':'今天這個遊戲的獎勵拿完了，明天再來喔！'):'再試一次吧！'}</div>`}`:''}
    <button class="go wide" onclick="${AR?`arcStart('${g}')`:`gmStart('${g}',${lv})`}">再玩一次</button>${AR?'':`<button class="go wide" style="background:#9a8670;box-shadow:0 4px 0 #6f5f4f" onclick="gmLevels('${g}')">換等級</button>`}<button class="go wide" style="background:#4d8de6;box-shadow:0 4px 0 #2f6ab8" onclick="go('play')">回遊樂區</button></div>`;
-  if(r&&(r.coins||r.exp||r.weekBest))loadGame()}
+  if(r&&(r.coins||r.exp||r.weekBest||r.newStars))loadGame()}
 // ===== 街機區：海底貪吃鰻、方塊堆堆樂（每天第 1 場有金幣，之後玩排行榜） =====
 const ARC={snake:['🐍','海底貪吃鰻','吃星星越長越厲害','#2fae6a','節'],tetris:['🧱','方塊堆堆樂','排滿一行就消掉','#8a5cd8','行']};
 const ARC_HELP={snake:'小鰻魚吃 ⭐ 小星星長 1 節，吃 🌟 金星星長 3 節（金星星一下子就會消失，要快！）。撞到牆或咬到自己就結束，越長跑越快。用下面的方向鍵，或在海底畫面上滑動轉彎。',
@@ -2115,10 +2143,11 @@ const ARC_HELP={snake:'小鰻魚吃 ⭐ 小星星長 1 節，吃 🌟 金星星�
 const ARC_RW={snake:'每長 3 節 = 1 金幣，最多 15 金幣',tetris:'每消 2 行 = 1 金幣，最多 15 金幣'};
 let AB='snake';
 function arcInfo(g){const a=ARC[g];return [g,a[0],a[1],a[2],a[3]]}
-function arcBoard(){const A=G.arcade||{list:{}},L=(A.list||{})[AB]||[],u=ARC[AB][4];
+function boardVal(g,x){return g==='snake'?n(x.c)+' 節':g==='tetris'?n(x.c)+' 行'+(x.t?`<small>・${n(x.t)} 分</small>`:''):g==='math'?`Lv${x.lv}・${x.c} 題`:g==='sudoku'?`Lv${x.lv}・${fmtT(x.t)}`:`Lv${x.lv}・${x.c}/${g==='p24'?5:g==='cash'?7:10}`}
+function arcBoard(){const A=G.arcade||{list:{}},L=(A.list||{})[AB]||[],ALL=Object.keys(ARC).map(g=>[g,ARC[g][0],ARC[g][1]]).concat(GMS.map(g=>[g[0],g[1],g[2]]));
   return `<div class="row"><h3>🏆 本週排行榜</h3><span class="mu">${A.from?A.from.slice(5).replace('-','/')+'～'+A.to.slice(5).replace('-','/'):''}</span></div>
-  <div class="abtab">${Object.keys(ARC).map(g=>`<button class="${g===AB?'on':''}" onclick="AB='${g}';$('#arcB').innerHTML=arcBoard()">${ARC[g][0]} ${ARC[g][1]}</button>`).join('')}</div>
-  ${L.length?L.map((x,i)=>`<div class="abr${x.kid===me()?' me':''}"><span class="abm">${['🥇','🥈','🥉'][i]||(i+1)}</span>${avatar((S.profiles||{})[x.kid],30)}<b>${esc(((S.profiles||{})[x.kid]||{}).nick||x.kid)}</b><span class="abv">${n(x.c)} ${u}${AB==='tetris'&&x.t?`<small>・${n(x.t)} 分</small>`:''}</span></div>`).join(''):'<div class="empty">這週還沒有人玩，第一名就是你！</div>'}`}
+  <div class="abtab">${ALL.map(g=>`<button class="${g[0]===AB?'on':''}" onclick="AB='${g[0]}';$('#arcB').innerHTML=arcBoard()">${g[1]} ${g[2]}</button>`).join('')}</div>${ARC[AB]?'':'<div class="mu" style="margin:2px 0 4px">等級越高、答對越多（數獨越快）排越前面</div>'}
+  ${L.length?L.map((x,i)=>`<div class="abr${x.kid===me()?' me':''}"><span class="abm">${['🥇','🥈','🥉'][i]||(i+1)}</span>${avatar((S.profiles||{})[x.kid],30)}<b>${esc(((S.profiles||{})[x.kid]||{}).nick||x.kid)}</b><span class="abv">${boardVal(AB,x)}</span></div>`).join(''):'<div class="empty">這週還沒有人玩，第一名就是你！</div>'}`}
 function arcIntro(g){if(GM)GM.dead=true;GM=null;const a=ARC[g],x=GI(),b=(x.best[g]||{})[1]||0,wb=(x.week||{})[g]||0,left=x.left[g]==null?1:x.left[g];
   $('#pg-gm').innerHTML=`${backBtn()}<div class="sign"><h3>${a[0]} ${a[1]}</h3></div>
   <div class="card"><div class="mu">${ARC_HELP[g]}</div><div style="margin-top:8px">${left?`🪙 今天第 1 場有獎勵：${ARC_RW[g]}`:'今天的獎勵拿過了，還可以一直玩、拚排行榜！'}</div>
@@ -2283,13 +2312,13 @@ function p24Draw(msg){const M=GM;
 function p24Tap(i){const M=GM;if(!M||M.lock)return;if(M.sel<0||!M.op){M.sel=(M.sel===i?-1:i);return p24Draw()}
   if(i===M.sel)return;const a=M.cards[M.sel],b=M.cards[i],v=frOp(a.v,M.op,b.v);if(!v){M.op='';return p24Draw('不能除以 0 喔')}
   M.hist.push(M.cards.map(c=>({...c})));const nc=M.cards.filter((_,k)=>k!==M.sel&&k!==i);nc.splice(Math.min(i,M.sel),0,{id:Date.now(),v});M.cards=nc;M.sel=-1;M.op='';
-  if(nc.length===1){if(v[0]===24&&v[1]===1){sfx('win');M.c++;M.q++;M.lock=true;p24Draw('🎉 答對了！');setTimeout(()=>{if(GM===M&&!M.dead)p24Next()},900)}else{sfx('bad');p24Draw('算出來是 '+frS(v)+'，不是 24，按「上一步」再試試')}}
+  if(nc.length===1){if(v[0]===24&&v[1]===1){sfx('win');M.c++;cmb(M,1);M.q++;M.lock=true;p24Draw('🎉 答對了！');setTimeout(()=>{if(GM===M&&!M.dead)p24Next()},900)}else{sfx('bad');p24Draw('算出來是 '+frS(v)+'，不是 24，按「上一步」再試試')}}
   else p24Draw()}
 function p24Op(o){const M=GM;if(!M||M.lock)return;if(M.sel<0)return p24Draw('先點一張牌');M.op=o;p24Draw()}
 function p24Undo(){const M=GM;if(!M||M.lock||!M.hist.length)return;M.cards=M.hist.pop();M.sel=-1;M.op='';p24Draw()}
 function p24Reset(){const M=GM;if(!M||M.lock||!M.hist.length)return;M.cards=M.hist[0];M.hist=[];M.sel=-1;M.op='';p24Draw()}
 function gmNextBtn(fn){return `<button class="go wide nextq" onclick="${fn}">下一題 ›</button>`}
-function p24Skip(){const M=GM;if(!M||M.lock)return;M.w++;M.lock=true;p24Draw();M.q++;
+function p24Skip(){const M=GM;if(!M||M.lock)return;M.w++;cmb(M,0);M.lock=true;p24Draw();M.q++;
   $('#p24m').innerHTML=`<div class="ansbox">💡 答案<b>${M.P.sol.replace(/-/g,'−')} = 24</b><small>看懂了再按下一題</small></div>`;$('.p24b').innerHTML=gmNextBtn('p24Go()')}
 function p24Go(){const M=GM;if(M&&!M.dead)p24Next()}
 
@@ -2326,7 +2355,7 @@ function pzNext(){const M=GM;if(M.q>=10)return gmEnd('pizza',M.lv,M.c,M.w,0,`<di
   <div class="pzo">${M.Q.opts.map((o,i)=>`<button onclick="pzPick(this,${i})">${o.includes('/')?frH(...o.split('/')):o}</button>`).join('')}</div></div>`}
 function pzPick(btn,i){const M=GM;if(!M||M.lock)return;M.lock=true;const o=M.Q.opts[i],ok=o===M.Q.ans;
   btn.classList.add(ok?'ok':'ng');if(!ok){[...btn.parentNode.children].forEach((b,j)=>{if(M.Q.opts[j]===M.Q.ans)b.classList.add('ok')})}
-  if(ok)M.c++;else M.w++;sfx(ok?'ok':'bad');M.q++;if(ok)setTimeout(()=>{if(GM===M&&!M.dead)pzNext()},700);else btn.closest('.pzcard').insertAdjacentHTML('beforeend',`<div class="mu" style="margin-top:10px">綠色的是正確答案</div>`+gmNextBtn('pzGo()'))}
+  if(ok)M.c++;else M.w++;sfx(ok?'ok':'bad');cmb(M,ok);M.q++;if(ok)setTimeout(()=>{if(GM===M&&!M.dead)pzNext()},700);else btn.closest('.pzcard').insertAdjacentHTML('beforeend',`<div class="mu" style="margin-top:10px">綠色的是正確答案</div>`+gmNextBtn('pzGo()'))}
 function pzGo(){const M=GM;if(M&&!M.dead)pzNext()}
 
 // ----- 英文單字拼拼看 -----
@@ -2349,7 +2378,7 @@ function wdDraw(state){const M=GM,W=M.W;
   ${state==='ng'?`<div class="wdans">正確是 <b>${W.w}</b></div>`:''}
   <div class="wdt">${M.tiles.map((t,i)=>`<button class="${t.used?'used':''}" onclick="wdTap(${i})">${t.ch}</button>`).join('')}</div></div>`}
 function wdTap(i){const M=GM;if(!M||M.lock||M.tiles[i].used)return;const k=M.slots.indexOf(null);if(k<0)return;M.slots[k]=i;M.tiles[i].used=true;
-  if(M.slots.indexOf(null)<0){M.lock=true;const got=M.slots.map(t=>M.tiles[t].ch).join(''),ok=got===M.W.w;if(ok)M.c++;else M.w++;sfx(ok?'ok':'bad');wdDraw(ok?'ok':'ng');M.q++;say(M.W.w);if(ok)setTimeout(()=>{if(GM===M&&!M.dead)wdNext()},1000);else $('.wdcard').insertAdjacentHTML('beforeend',gmNextBtn('wdGo()'))}
+  if(M.slots.indexOf(null)<0){M.lock=true;const got=M.slots.map(t=>M.tiles[t].ch).join(''),ok=got===M.W.w;if(ok)M.c++;else M.w++;sfx(ok?'ok':'bad');cmb(M,ok);wdDraw(ok?'ok':'ng');M.q++;say(M.W.w);if(ok)setTimeout(()=>{if(GM===M&&!M.dead)wdNext()},1000);else $('.wdcard').insertAdjacentHTML('beforeend',gmNextBtn('wdGo()'))}
   else wdDraw()}
 function wdGo(){const M=GM;if(M&&!M.dead)wdNext()}
 // ----- 小島收銀員 -----
@@ -2427,7 +2456,7 @@ function csBack(i){const M=GM;if(!M||M.lock)return;M.give.splice(i,1);csDraw()}
 function csClr(){const M=GM;if(!M||M.lock)return;M.give=[];csDraw()}
 function csOk(){const M=GM;if(!M||M.lock)return;if(!M.give.length)return toast('先點下面的錢找給客人');M.lock=true;
   const Q=M.Q,sum=M.give.reduce((a,b)=>a+b,0),ok=sum===Q.chg,few=csFew(Q.chg),best=ok&&M.give.length===few.length;M.q++;
-  if(ok)M.c++;else M.w++;sfx(ok?'ok':'bad');
+  if(ok)M.c++;else M.w++;sfx(ok?'ok':'bad');cmb(M,ok);
   const fewH=`<div class="cstray" style="min-height:0">${few.map(v=>moH(v)).join('')}</div>`,stH=`<div class="cssteps">${Q.steps.join('<br>')}</div>`;
   csDraw(ok?`<div class="csres ok">✅ 答對了！謝謝老闆～${best?'<small>而且用了最少張數，太厲害了！</small>':`<small>也可以用更少張：</small>${fewH}`}</div>${gmNextBtn('csGo()')}`
    :`<div class="csres ng">❌ 找錯了，應該找 ${Q.chg} 元<small>算法：</small>${stH}<small>可以這樣找：</small>${fewH}</div>${gmNextBtn('csGo()')}`)}
