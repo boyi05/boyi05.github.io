@@ -55,14 +55,38 @@ h3{margin:0 0 8px;font-size:17px}
 .zh{padding:10px 14px}
 .ptile{position:relative}.ptile .crn{font-size:11.5px;font-weight:800;color:#b8860b;margin-top:2px}.ptile .crn.none{color:#bbb;font-weight:400}.ptile .tstar{font-size:12px;font-weight:800;color:#e0a100}
 .ptile.chal{animation:chg 1.6s ease-in-out infinite;border-top-color:#ffcc00}@keyframes chg{0%,100%{box-shadow:0 5px 0 var(--c),0 0 0 0 #ffd84d00}50%{box-shadow:0 5px 0 var(--c),0 0 0 6px #ffd84daa}}
+.chrib{position:absolute;top:-14px;left:-6px;right:-6px;z-index:2;font-style:normal;font-size:13.5px;font-weight:900;color:#fff;text-shadow:0 1px 0 #a01;background:linear-gradient(90deg,#ff3b5c,#ff9500,#ff3b5c);background-size:200% 100%;border-radius:10px;padding:4px 0;box-shadow:0 3px 0 #a3122f;animation:chrib 1.2s linear infinite,chbob 1s ease-in-out infinite}
+@keyframes chrib{to{background-position:200% 0}}@keyframes chbob{50%{transform:translateY(-3px) rotate(-1deg)}}
+.chsp{position:absolute;font-style:normal;font-size:20px;pointer-events:none;z-index:3;animation:chsp 1.8s ease-in-out infinite}.chsp.s1{left:6px;top:30%}.chsp.s2{right:8px;top:45%;animation-delay:.6s;font-size:16px}.chsp.s3{left:40%;bottom:16%;animation-delay:1.2s;font-size:14px}
+@keyframes chsp{0%,100%{transform:scale(.3) rotate(0);opacity:0}50%{transform:scale(1.3) rotate(25deg);opacity:1}}
+.ptile.chal{margin-top:6px}
+.ptile.chal{border:5px solid transparent;background:linear-gradient(#fff8dc,#fff8dc) padding-box,conic-gradient(from var(--ca,0deg),#ff3b5c,#ffcc00,#4cd964,#34aadc,#b07aff,#ff3b5c) border-box;animation:chpul 1.2s ease-in-out infinite,chrot 2s linear infinite;box-shadow:0 0 18px #ffb300cc}
+@property --ca{syntax:'<angle>';inherits:false;initial-value:0deg}@keyframes chrot{to{--ca:360deg}}
+@keyframes chpul{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+.chcard{position:relative;overflow:hidden;padding:16px 14px}.chcard:not(.done){animation:chpul 1.4s ease-in-out infinite;box-shadow:0 0 0 3px #ffcc33,0 0 22px #ffb300aa}
+.chcard .chi{font-size:54px;animation:chbob 1s ease-in-out infinite}.chcard .cht{font-size:15px;color:#d9480f;letter-spacing:1px}.chcard .chn{font-size:21px;font-weight:900;color:var(--ink)}.chcard.done .chi{font-size:36px;animation:none}.chcard.done .chn{font-size:16px}
+.chsh{position:absolute;top:0;bottom:0;width:60px;left:-80px;background:linear-gradient(100deg,transparent,#ffffffcc,transparent);animation:chsh 2.2s ease-in-out infinite;pointer-events:none}@keyframes chsh{60%,100%{left:110%}}
+.gbp{display:flex;justify-content:space-between;align-items:center;max-width:440px;margin:10px auto 0;padding:0 12px}
+.dpad{position:relative;width:162px;height:162px;flex:none}.dpad button,.dpad .dc{position:absolute;width:56px;height:56px;border:0;background:#3a4150;color:#fff;font-size:24px;box-shadow:0 5px 0 #1f242e;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.dpad .du{left:53px;top:0;border-radius:12px 12px 0 0}.dpad .dd{left:53px;top:106px;border-radius:0 0 12px 12px}.dpad .dl{left:0;top:53px;border-radius:12px 0 0 12px}.dpad .dr{left:106px;top:53px;border-radius:0 12px 12px 0}.dpad .dc{left:53px;top:53px;box-shadow:none}
+.dpad button:active{background:#262b36;transform:translateY(2px)}
+.abtn{position:relative;width:162px;height:150px;flex:none}.abtn button{position:absolute;width:76px;height:76px;border-radius:50%;border:0;color:#fff;font-size:28px;font-weight:900;line-height:1;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.abtn button small{display:block;font-size:11px;margin-top:3px}.abtn .ba{right:0;top:4px;background:#e5484d;box-shadow:0 6px 0 #9c2a2e}.abtn .bb{left:0;bottom:4px;background:#8a5cd8;box-shadow:0 6px 0 #5b3a96}.abtn button:active{transform:translateY(4px);box-shadow:0 2px 0 #0004}
+#arcP{position:fixed;inset:0;z-index:98;background:#0008;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:#fff;font-size:28px}#arcP button{border:0;border-radius:99px;padding:14px 34px;font:inherit;font-size:22px;font-weight:900;background:#5cbf6a;color:#fff;box-shadow:0 5px 0 #2f8a3d}
+
 .chb{position:absolute;top:-8px;right:-4px;background:#ff3b5c;color:#fff;font-style:normal;font-size:12px;font-weight:900;border-radius:10px;padding:2px 8px;transform:rotate(6deg)}
 .chcard{display:flex;align-items:center;gap:10px;cursor:pointer;background:linear-gradient(135deg,#fff6c9,#ffe08a);border:2px solid #ffcc33}.chcard.done{background:var(--cream);border-color:#cde8d6}.chi{font-size:36px}
 .stsum .gbar{height:10px;border-radius:99px;background:#eee;overflow:hidden;margin:6px 0}.stsum .gbar i{display:block;height:100%;background:linear-gradient(90deg,#ffd84d,#ffb300);border-radius:99px}
 .strw{font-style:normal;letter-spacing:1px;font-size:15px;vertical-align:2px}.strw i{font-style:normal;color:#ddd}.strw i.on{color:#ffbf00;text-shadow:0 1px 0 #c98f00}
 .strw.big{font-size:44px;letter-spacing:6px}.strw.big i.on{display:inline-block;animation:spop .5s backwards}@keyframes spop{0%{transform:scale(0) rotate(-90deg)}70%{transform:scale(1.3)}100%{transform:none}}
 .chok{display:inline-block;margin:6px 0;background:#ff3b5c;color:#fff;font-weight:900;border-radius:99px;padding:4px 14px}
-.cmbp{position:fixed;left:50%;top:22%;transform:translateX(-50%);z-index:99;font-size:30px;font-weight:900;color:#ff7a00;text-shadow:0 3px 0 #fff,0 0 12px #fff;pointer-events:none;animation:cmbA 1.1s ease-out forwards;white-space:nowrap}.cmbp.hot{color:#e5484d;font-size:36px}
-@keyframes cmbA{0%{transform:translateX(-50%) scale(.4);opacity:0}20%{transform:translateX(-50%) scale(1.2);opacity:1}80%{opacity:1}100%{transform:translateX(-50%) translateY(-40px) scale(1);opacity:0}}
+.cmbp{position:fixed;left:50%;top:20%;transform:translateX(-50%);z-index:99;display:flex;align-items:center;gap:6px;font-weight:900;color:#ff7a00;-webkit-text-stroke:2px #fff;paint-order:stroke fill;text-shadow:0 4px 0 #b34700,0 0 18px #fff;pointer-events:none;animation:cmbA 1.3s ease-out forwards;white-space:nowrap}
+.cmbp .cmbt{font-size:30px}.cmbp b{font-size:64px;font-style:italic}.cmbp .cmbf{font-size:40px;-webkit-text-stroke:0}.cmbp.hot{color:#ff3b30}.cmbp.hot b{font-size:78px}.cmbp.max{color:#ff2d55}.cmbp.max b{font-size:92px;animation:cmbRb .3s linear infinite}
+.cmbr{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:6px solid #ffd60a;animation:cmbR .6s ease-out forwards;z-index:-1}
+@keyframes cmbR{to{transform:scale(7);opacity:0;border-width:1px}}@keyframes cmbRb{50%{color:#ffcc00}}
+.shk{animation:shk .35s}@keyframes shk{20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+
+@keyframes cmbA{0%{transform:translateX(-50%) scale(.2) rotate(-15deg);opacity:0}18%{transform:translateX(-50%) scale(1.35) rotate(4deg);opacity:1}30%{transform:translateX(-50%) scale(1) rotate(0)}80%{opacity:1}100%{transform:translateX(-50%) translateY(-50px) scale(1.05);opacity:0}}
 .abtab{overflow-x:auto;flex-wrap:nowrap}.abtab button{flex:0 0 auto;padding:6px 12px;white-space:nowrap}.abtab{display:flex;gap:6px;margin:6px 0}.abtab button{flex:1;border:0;border-radius:99px;padding:6px;font:inherit;font-weight:800;background:#eee;color:#666}.abtab button.on{background:var(--wood2);color:#fff}
 .abr{display:flex;align-items:center;gap:8px;padding:6px 4px;border-top:1px dashed #ddd}.abr.me{background:#fff6d6;border-radius:10px}.abm{width:26px;text-align:center;font-size:18px;font-weight:900}.abv{margin-left:auto;font-weight:800;color:var(--wood2)}.abv small{color:var(--mu);font-weight:400}
 .ahud{display:flex;justify-content:space-between;align-items:center;margin:6px 4px 8px;gap:6px}.ahud>*{background:#0004;color:#fff;border:0;border-radius:12px;padding:5px 10px;font:inherit;font-weight:800}
@@ -1747,7 +1771,7 @@ function drawHub(g){const G0=GRP[g];let h=`<div class="sign"><h3>${G0.t}</h3></d
   h+=`<div class="pgrid hub">${G0.sub.map(x=>`<button class="ptile" data-k="${x[0]}" style="--c:${x[4]}" onclick="go('${x[0]}')"><div class="pi">${x[1]}</div><b>${x[2]}</b><small>${x[3]}</small>${DOTS[x[0]]?`<i class="mkdot">${DOTS[x[0]]}</i>`:''}</button>`).join('')}</div>`;
   $('#pg-hub').innerHTML=h;if(g==='money')stkPeek()}
 function moneySum(){const g=G.me||{},k=STKD&&STKD.pos&&STKD.pos.total;return `<div class="msum"><div onclick="go('bank')"><small>🐷 存摺</small><b>${n((g.ntd||0)+(g.dep||0))}</b><i>元</i></div><div onclick="go('stock')"><small>📈 股票市值</small><b id="msStk">${k?n(k.mv):'…'}</b><i>元</i></div><div><small>🪙 金幣</small><b class="gold">${n(g.coins)}</b><i>枚</i></div></div>`}
-function go(p){if(p==='me')p='set';document.body.classList.remove('arcfs');document.body.classList.toggle('stkfs',p==='stock');   // 海底證券：藏起上面的頭像金幣列，畫面大一點
+function go(p){if(p==='me')p='set';document.body.classList.remove('arcfs');if(typeof bgmStop==='function')bgmStop();const ap=document.getElementById('arcP');if(ap)ap.remove();document.body.classList.toggle('stkfs',p==='stock');   // 海底證券：藏起上面的頭像金幣列，畫面大一點
 const grp=GRP[p]?p:SUBG[p]||'';const dk=grp||p;st.tab=p;
   $$('#dock>div').forEach(d=>d.classList.toggle('on',d.dataset.p===dk));$$('.page').forEach(s=>s.classList.toggle('on',s.id==='pg-'+(GRP[p]?'hub':p)));window.scrollTo(0,0);
   const sub=grp&&!GRP[p]&&p!=='math'&&p!=='gm'&&p!=='stock';   // 海底證券自己有上一頁，不用那排按鈕，畫面大一點$('#meNav').classList.toggle('hidden',!sub);
@@ -2057,7 +2081,7 @@ function mNext(){MG.cur=mathQ(MG.lv);MG.inp='';$('#mQ').textContent=MG.cur.q+' =
 function mTick(){if(!MG||!MG.end)return;const left=Math.max(0,MG.end-Date.now()),e=$('#mTime');if(!e)return;e.textContent=Math.ceil(left/1000);$('#mBar').style.width=(left/600)+'%';if(left<=0)return mathEnd();requestAnimationFrame(mTick)}
 function mKey(k){if(!MG||!MG.end||MG.busy)return;if(k==='C')MG.inp='';else if(k==='⌫')MG.inp=MG.inp.slice(0,-1);else if(MG.inp.length<4)MG.inp+=k;
   $('#mA').textContent=MG.inp;const ans=String(MG.cur.ans);if(MG.inp.length<ans.length)return;MG.busy=true;
-  if(MG.inp===ans){MG.correct++;MG.combo++;MG.cbMax=Math.max(MG.cbMax||0,MG.combo);MG.combo>=3?sfx('combo',MG.combo):sfx('ok');if(MG.combo>=5&&MG.combo%5===0)cmbPop(MG.combo);$('#mA').className='ma ok';$('#mOk').textContent=MG.correct;$('#mCombo').textContent=MG.combo>=3?`🔥 ${MG.combo} 連對`:'';setTimeout(()=>{if(MG){MG.busy=false;mNext()}},180)}
+  if(MG.inp===ans){MG.correct++;MG.combo++;MG.cbMax=Math.max(MG.cbMax||0,MG.combo);MG.combo>=3?sfx('combo',MG.combo):sfx('ok');if(MG.combo>=3)cmbPop(MG.combo);$('#mA').className='ma ok';$('#mOk').textContent=MG.correct;$('#mCombo').textContent=MG.combo>=3?`🔥 ${MG.combo} 連對`:'';setTimeout(()=>{if(MG){MG.busy=false;mNext()}},180)}
   else{MG.wrong++;MG.combo=0;sfx('bad');$('#mNg').textContent=MG.wrong;$('#mCombo').textContent='';$('#mA').className='ma ng';$('#mA').textContent=MG.inp+' → '+ans;setTimeout(()=>{if(MG){MG.busy=false;mNext()}},900)}}
 document.addEventListener('keydown',e=>{if(!MG||!MG.end)return;if(/^[0-9]$/.test(e.key))mKey(e.key);else if(e.key==='Backspace')mKey('⌫')});
 async function mathQuit(){if(MG&&MG.end&&!await ask('<h3>要離開嗎？</h3>這一場不會算成績喔。','離開'))return;MG=null;drawMath()}
@@ -2096,10 +2120,10 @@ function shuf(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Ma
 function fmtT(s){s=Math.round(s);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
 function playMini(){const x=GI(),left=x.coinCap?Math.max(0,x.coinCap-x.coinsToday):-1;return `<div class="card mcard" onclick="go('play')"><div class="mico" style="background:linear-gradient(135deg,#8fd3ff,#b07aff)">🎡</div><div style="flex:1"><b>遊樂區</b><div class="mu">${left<0?`貪吃鰻、方塊、心算、數獨…${x.coinsToday?`今天已拿 <b class="gold">${x.coinsToday}</b> 金幣`:'玩遊戲賺金幣！'}`:left?`心算、數獨、24 點…今天還可以拿 <b class="gold">${left}</b> 金幣`:'今天的金幣拿完了，還可以練習破紀錄'}</div></div><span class="go">去玩 ›</span></div>`}
 function drawPlay(){MG=null;GM=null;const x=GI(),ch=x.chal||{},cg=GMS.find(g=>g[0]===ch.g);
-  const tileG=g=>`<button class="ptile${g[0]===ch.g&&!ch.done?' chal':''}" style="--c:${g[4]}" onclick="${g[0]==='math'?"go('math')":`gmLevels('${g[0]}')`}">${g[0]===ch.g&&!ch.done?'<i class="chb">🎯 ×2</i>':''}<div class="pi">${g[1]}</div><b>${g[2]}</b><small>${g[3]}</small>${crown(g[0])}<span class="tstar">${starTxt(g[0])}</span><span class="pl">${x.left[g[0]]==null||x.left[g[0]]?`還有 ${x.left[g[0]]==null?(x.dailyBy[g[0]]||x.daily):x.left[g[0]]} 場有獎勵`:'今天獎勵拿完了'}</span></button>`;
+  const tileG=g=>`<button class="ptile${g[0]===ch.g&&!ch.done?' chal':''}" style="--c:${g[4]}" onclick="${g[0]==='math'?"go('math')":`gmLevels('${g[0]}')`}">${g[0]===ch.g&&!ch.done?'<i class="chrib">🎯 今日挑戰 金幣×2</i><i class="chsp s1">✨</i><i class="chsp s2">⭐</i><i class="chsp s3">✨</i>':''}<div class="pi">${g[1]}</div><b>${g[2]}</b><small>${g[3]}</small>${crown(g[0])}<span class="tstar">${starTxt(g[0])}</span><span class="pl">${x.left[g[0]]==null||x.left[g[0]]?`還有 ${x.left[g[0]]==null?(x.dailyBy[g[0]]||x.daily):x.left[g[0]]} 場有獎勵`:'今天獎勵拿完了'}</span></button>`;
   $('#pg-play').innerHTML=`<div class="sign"><h3>🎡 遊樂區</h3></div>
   <div class="card stsum"><div class="row"><b>⭐ 收集星星</b><b class="gold">${x.starSum} / ${x.starMax}</b></div><div class="gbar"><i style="width:${Math.min(100,x.starSum/x.starMax*100)}%"></i></div><div class="mu">練功區每個等級最多 3 顆星，看看能不能全部拿滿！</div></div>
-  ${cg?`<div class="card chcard${ch.done?' done':''}" onclick="${ch.g==='math'?"go('math')":`gmLevels('${ch.g}')`}"><div class="chi">${cg[1]}</div><div style="flex:1"><b>🎯 今日挑戰：${cg[2]}</b><div class="mu">${ch.done?'✅ 今天的挑戰完成了！明天會換別的遊戲':'今天第 1 場有獎勵的金幣 <b>×2</b>！'}</div></div>${ch.done?'':'<span class="go">去挑戰 ›</span>'}</div>`:''}
+  ${cg?`<div class="card chcard${ch.done?' done':''}" onclick="${ch.g==='math'?"go('math')":`gmLevels('${ch.g}')`}">${ch.done?'':'<i class="chsh"></i><i class="chsp s1">✨</i><i class="chsp s2">⭐</i><i class="chsp s3">✨</i>'}<div class="chi">${cg[1]}</div><div style="flex:1"><b class="cht">🎯 今日挑戰</b><div class="chn">${cg[2]}</div><div class="mu">${ch.done?'✅ 今天的挑戰完成了！明天會換別的遊戲':'今天第 1 場有獎勵的金幣 <b>×2</b>！'}</div></div>${ch.done?'':'<span class="go">去挑戰 ›</span>'}</div>`:''}
   <div class="card zh"><b>🕹️ 街機區</b><span class="mu">　每天第 1 場有金幣，之後可以一直玩、拚排行榜</span></div>
   <div class="pgrid">${Object.keys(ARC).map(g=>{const a=ARC[g],l=x.left[g]==null?1:x.left[g];return `<button class="ptile" style="--c:${a[3]}" onclick="arcIntro('${g}')"><div class="pi">${a[0]}</div><b>${a[1]}</b><small>${a[2]}</small>${crown(g)}<span class="pl">${l?'今天還有 1 場獎勵':'玩排行榜 🏆'}</span></button>`}).join('')}</div>
   <div class="card zh"><b>📚 練功區</b><span class="mu">　每個遊戲每天前幾場有獎勵（英文單字 ${x.dailyBy.word||x.daily} 場，其他 ${x.daily} 場）・今天已拿 <b class="gold">${x.coinsToday}</b> 金幣</span></div>
@@ -2115,8 +2139,9 @@ function starRow(n,big){return `<span class="strw${big?' big':''}">${[1,2,3].map
 function champ(g){const L=((G.arcade||{}).list||{})[g]||[];return L[0]||null}
 function crown(g){const c=champ(g);return c?`<span class="crn">👑 ${esc(((S.profiles||{})[c.kid]||{}).nick||c.kid)}</span>`:'<span class="crn none">👑 還沒有冠軍</span>'}
 // 連擊：連續答對 2 題以上跳出 🔥
-function cmb(M,ok){if(!ok){M.cb=0;return}M.cb=(M.cb||0)+1;M.cbMax=Math.max(M.cbMax||0,M.cb);if(M.cb>=2){cmbPop(M.cb);if(M.cb>=3)sfx('combo',M.cb)}}
-function cmbPop(n){const d=document.createElement('div');d.className='cmbp'+(n>=5?' hot':'');d.innerHTML=`連擊 ×${n} ${n>=8?'🔥🔥🔥':n>=5?'🔥🔥':'🔥'}`;document.body.appendChild(d);setTimeout(()=>d.remove(),1100)}
+function cmb(M,ok){if(!ok){M.cb=0;return}M.cb=(M.cb||0)+1;M.cbMax=Math.max(M.cbMax||0,M.cb);if(M.cb>=2)cmbPop(M.cb)}
+function cmbPop(n){$$('.cmbp').forEach(e=>e.remove());const d=document.createElement('div');d.className='cmbp'+(n>=5?' hot':'')+(n>=8?' max':'');d.innerHTML=`<i class="cmbr"></i><span class="cmbt">連擊</span><b>×${n}</b><span class="cmbf">${n>=8?'🔥🔥🔥':n>=5?'🔥🔥':'🔥'}</span>`;document.body.appendChild(d);setTimeout(()=>d.remove(),1300);
+  setTimeout(()=>{sfx('cmb',n);if(n>=5)sfx('fire',.35)},120);if(n>=5){const p=document.querySelector('.page.on');if(p){p.classList.remove('shk');void p.offsetWidth;p.classList.add('shk')}}}
 function cmbLine(g,mx){if(!(mx>=2))return '';let old=0;try{old=+localStorage.getItem('cmb:'+g)||0;if(mx>old)localStorage.setItem('cmb:'+g,mx)}catch(e){}
   return `<div class="mu" style="margin-top:4px">🔥 最高連擊 ×${mx}${mx>old?(old?'<b class="red">（新紀錄！）</b>':''):`（你的紀錄 ×${old}）`}</div>`}
 function resExtra(r){if(!r)return '';return `${r.stars?`<div style="margin:6px 0">${starRow(r.stars,1)}</div>${r.newStars?'<div class="mnew" style="font-size:16px">✨ 拿到新星星了！</div>':''}`:''}${r.chal?'<div class="chok">🎯 今日挑戰成功！金幣 ×2</div>':''}${r.weekBest&&!r.newBest?'<div class="mnew" style="font-size:16px">🏆 本週新紀錄！排行榜更新了</div>':''}`}
@@ -2163,31 +2188,48 @@ function swipe(el,cb){let sx=0,sy=0,st0=0;el.addEventListener('touchstart',e=>{c
   el.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
   el.addEventListener('touchend',e=>{const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(Math.max(Math.abs(dx),Math.abs(dy))<18)return cb('tap');cb(Math.abs(dx)>Math.abs(dy)?(dx>0?'R':'L'):(dy>0?'D':'U'))})}
 function arcKeys(fn){const h=e=>{if(!GM||GM.dead||GM.done){document.removeEventListener('keydown',h);return}const k={ArrowLeft:'L',ArrowRight:'R',ArrowUp:'U',ArrowDown:'D',' ':'drop'}[e.key];if(k){e.preventDefault();fn(k)}};document.addEventListener('keydown',h)}
-function arcHud(l,m,r){return `<div class="ahud"><button onclick="gmQuit()">‹ 離開</button><span id="ahM">${m}</span><span id="ahR">${r}</span></div>`}
+function arcHud(l,m,r){return `<div class="ahud"><button onclick="gmQuit()">‹ 離開</button><button onclick="arcPause()">⏸</button><button id="bgmB" onclick="bgmToggle()">${BGM_ON?'🎵':'🔇'}</button><span id="ahM">${m}</span><span id="ahR">${r}</span></div>`}
+function gbPad(right){return `<div class="gbp"><div class="dpad"><button data-k="U" class="du">▲</button><button data-k="L" class="dl">◀</button><span class="dc"></span><button data-k="R" class="dr">▶</button><button data-k="D" class="dd">▼</button></div><div class="abtn">${right}</div></div>`}
+function arcPause(){const M=GM;if(!M||M.over||M.done||!ARC[M.g])return;M.paused=!M.paused;sfx(M.paused?'tmove':'start');let o=$('#arcP');
+  if(M.paused){if(!o){o=document.createElement('div');o.id='arcP';o.innerHTML='<b>⏸ 暫停中</b><button onclick="arcPause()">▶ 繼續</button>';document.body.appendChild(o)}}else if(o)o.remove()}
+// 街機背景音樂：方塊用俄羅斯民謠「貨郎」（公共領域），貪吃鰻是自己寫的小曲
+let BGM_ON=true;try{BGM_ON=localStorage.getItem('arcBgm')!=='0'}catch(e){}
+const BGM_S={tetris:{bpm:144,lead:[659,0,494,523,587,0,523,494,440,0,440,523,659,0,587,523,494,0,0,523,587,0,659,0,523,0,440,0,440,0,0,0,0,587,0,698,880,0,784,698,659,0,0,523,659,0,587,523,494,0,494,523,587,0,659,0,523,0,440,0,440,0,0,0],
+  bass:[82,165,82,165,82,165,82,165,110,220,110,220,110,220,110,220,104,208,104,208,82,165,82,165,110,220,110,220,110,220,123,131,147,294,147,294,147,294,147,294,131,262,131,262,131,262,131,262,104,208,104,208,82,165,82,165,110,220,110,220,110,220,110,220]},
+ snake:{bpm:132,lead:[523,0,659,0,784,0,659,0,698,0,880,0,784,0,659,0,587,0,698,0,784,0,698,0,659,523,587,659,523,0,0,0,784,0,659,784,880,0,784,0,698,659,587,0,659,0,0,0,587,0,659,698,784,0,698,0,659,0,587,0,523,0,0,0],
+  bass:[131,0,196,0,131,0,196,0,175,0,262,0,175,0,262,0,147,0,220,0,196,0,247,0,131,0,196,0,131,0,196,0,131,0,196,0,175,0,262,0,175,0,262,0,196,0,247,0,147,0,220,0,196,0,247,0,131,0,196,0,131,0,0,0]}};
+let BG=0;
+function bgmStart(g){bgmStop();if(!PSOUND||!BGM_ON)return;try{pacInit();if(PAC.state==='suspended')PAC.resume()}catch(e){return}const S=BGM_S[g],M=GM;let i=0,next=PAC.currentTime+.15;
+  BG=setInterval(()=>{if(GM!==M||M.over||M.dead||M.done||!PSOUND||!BGM_ON)return bgmStop();if(M.paused){next=PAC.currentTime+.1;return}
+    const sp=60/S.bpm/2*(g==='tetris'?Math.max(.62,1-(M.lvl-1)*.05):M.boost?.7:1);
+    try{while(next<PAC.currentTime+.3){const L=S.lead[i%S.lead.length],B=S.bass[i%S.bass.length];if(L)tone(next,L,0,sp*.85,'square',.05);if(B)tone(next,B,0,sp*.9,'triangle',.11);next+=sp;i++}}catch(e){}},90)}
+function bgmStop(){clearInterval(BG);BG=0}
+function bgmToggle(){BGM_ON=!BGM_ON;try{localStorage.setItem('arcBgm',BGM_ON?'1':'0')}catch(e){}const b=$('#bgmB');if(b)b.textContent=BGM_ON?'🎵':'🔇';if(BGM_ON&&GM&&ARC[GM.g])bgmStart(GM.g);else bgmStop();toast(BGM_ON?'🎵 背景音樂打開':'🔇 背景音樂關掉')}
 function arcSz(n,maxH){const w=Math.min(window.innerWidth-24,420);return Math.floor(Math.min(w/n,maxH))}
 
 /* ---------- 海底貪吃鰻 ---------- */
-function snStart(){const N=15,S=arcSz(N,(window.innerHeight-330)/N),x0=GI(),best=(x0.best.snake||{})[1]||0;
+function snStart(){const N=15,S=arcSz(N,(window.innerHeight-300)/N),x0=GI(),best=(x0.best.snake||{})[1]||0;
   GM={g:'snake',lv:1,live:true,N,S,body:[[5,7],[4,7],[3,7]],dir:'R',q:[],grow:0,c:0,food:null,gold:null,tick:0,speed:210,best};
   $('#pg-gm').innerHTML=`${arcHud('',`🐍 長度 <b id="snL">3</b>`,`🏆 ${n(best)}`)}
    <canvas id="snC" width="${N*S*2}" height="${N*S*2}" style="width:${N*S}px;height:${N*S}px" class="acv"></canvas>
    <div class="atip">⭐ +1 節　🌟 +3 節（會消失）・也可以在海底滑動轉彎</div>
-   <div class="apad"><i></i><button data-d="U">▲</button><i></i><button data-d="L">◀</button><button data-d="D">▼</button><button data-d="R">▶</button></div>`;
+   ${gbPad('<button data-k="P" class="bb">⏸<small>暫停</small></button><button data-k="A" class="ba">💨<small>衝刺</small></button>')}`;
   const M=GM,cv=$('#snC'),cx=cv.getContext('2d');cx.scale(2,2);M.cx=cx;
-  $$('.apad button').forEach(b=>holdBtn(b,()=>snTurn(b.dataset.d)));swipe(cv,d=>{if(d!=='tap')snTurn(d)});arcKeys(d=>snTurn(d==='drop'?'':d));
-  snFood();snDraw();const loop=()=>{if(M.dead||M.done||M.over||GM!==M)return;snStep();if(!M.over)setTimeout(loop,M.speed)};setTimeout(loop,700)}
+  $$('.gbp .dpad button').forEach(b=>holdBtn(b,()=>snTurn(b.dataset.k)));const A=$('.gbp .ba');A.addEventListener('pointerdown',e=>{e.preventDefault();if(!M.boost)sfx('whoosh');M.boost=true});['pointerup','pointerleave','pointercancel'].forEach(k=>A.addEventListener(k,()=>{M.boost=false}));
+  holdBtn($('.gbp .bb'),()=>arcPause());swipe(cv,d=>{if(d!=='tap')snTurn(d)});arcKeys(d=>d==='drop'?arcPause():snTurn(d));
+  snFood();snDraw();sfx('start');bgmStart('snake');const loop=()=>{if(M.dead||M.done||M.over||GM!==M)return;if(!M.paused)snStep();if(!M.over)setTimeout(loop,M.paused?150:M.boost?Math.min(M.speed,75):M.speed)};setTimeout(loop,700)}
 function snTurn(d){const M=GM;if(!M||M.g!=='snake'||M.done||M.over||!d)return;const last=M.q.length?M.q[M.q.length-1]:M.dir,op={U:'D',D:'U',L:'R',R:'L'};if(d===last||op[d]===last||M.q.length>2)return;M.q.push(d)}
 function snFree(){const M=GM,occ=new Set(M.body.map(p=>p[0]+','+p[1]));[M.food,M.gold].forEach(f=>{if(f)occ.add(f[0]+','+f[1])});let p,k=0;do{p=[Math.floor(Math.random()*M.N),Math.floor(Math.random()*M.N)];k++}while(occ.has(p[0]+','+p[1])&&k<500);return p}
 function snFood(){GM.food=snFree()}
 function snStep(){const M=GM;if(M.q.length)M.dir=M.q.shift();const h=M.body[0],d={U:[0,-1],D:[0,1],L:[-1,0],R:[1,0]}[M.dir],nh=[h[0]+d[0],h[1]+d[1]];M.tick++;
   if(nh[0]<0||nh[1]<0||nh[0]>=M.N||nh[1]>=M.N||M.body.slice(0,M.grow?M.body.length:M.body.length-1).some(p=>p[0]===nh[0]&&p[1]===nh[1])){M.crash=nh;snDraw();sfx('boom');return snOver()}
   M.body.unshift(nh);let got=0;
-  if(M.food&&nh[0]===M.food[0]&&nh[1]===M.food[1]){got=1;snFood();sfx('chomp')}
-  if(M.gold&&nh[0]===M.gold[0]&&nh[1]===M.gold[1]){got=3;M.gold=null;sfx('coin')}
+  if(M.food&&nh[0]===M.food[0]&&nh[1]===M.food[1]){got=1;snFood();sfx('eat',M.c)}
+  if(M.gold&&nh[0]===M.gold[0]&&nh[1]===M.gold[1]){got=3;M.gold=null;sfx('gold')}
   if(got){M.grow+=got;M.c+=got;M.speed=Math.max(85,210-Math.floor(M.c/3)*6);const e=$('#snL');if(e)e.textContent=M.c+3}
   if(M.grow)M.grow--;else M.body.pop();
   if(M.gold&&--M.gold[2]<=0)M.gold=null;
-  if(!M.gold&&M.tick%45===0&&M.c>=2)M.gold=snFree().concat([28]);
+  if(!M.gold&&M.tick%45===0&&M.c>=2){M.gold=snFree().concat([28]);sfx('pill')}
   snDraw()}
 function snStar(cx,x,y,S,col,big){const c0=x*S+S/2,c1=y*S+S/2,r=S*(big?.46:.36);cx.fillStyle=col;cx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*.45:r;cx.lineTo(c0+Math.cos(a)*rr,c1+Math.sin(a)*rr)}cx.fill()}
 function snDraw(){const M=GM,cx=M.cx,S=M.S,N=M.N;
@@ -2200,39 +2242,39 @@ function snDraw(){const M=GM,cx=M.cx,S=M.S,N=M.N;
       cx.fillStyle='#fff';cx.fillRect(x*S+ex*S,y*S+ey*S,S*.3,S*.3);cx.fillRect(x*S+e2x*S,y*S+e2y*S,S*.3,S*.3);cx.fillStyle='#222';cx.fillRect(x*S+(ex+.1)*S,y*S+(ey+.1)*S,S*.13,S*.13);cx.fillRect(x*S+(e2x+.1)*S,y*S+(e2y+.1)*S,S*.13,S*.13);return}
     cx.fillStyle=k%2?'#ffd23f':'#ffb703';cx.fillRect(x*S+g,y*S+g,S-2*g,S-2*g);cx.fillStyle='#e09100';cx.fillRect(x*S+g,y*S+S-g*3,S-2*g,g*2)});
   if(M.crash){cx.fillStyle='#e5484dcc';const[x,y]=M.crash;cx.fillRect(Math.max(0,Math.min(N-1,x))*S,Math.max(0,Math.min(N-1,y))*S,S,S)}}
-function snOver(){const M=GM;M.live=false;M.over=true;setTimeout(()=>{document.body.classList.remove('arcfs');gmEnd('snake',1,M.c,0,0,`<div class="mbig">${M.c+3}<small> 節</small></div><div class="mu">長了 ${M.c} 節</div>`)},900)}
+function snOver(){const M=GM;M.live=false;M.over=true;bgmStop();setTimeout(()=>sfx('over'),450);setTimeout(()=>{document.body.classList.remove('arcfs');gmEnd('snake',1,M.c,0,0,`<div class="mbig">${M.c+3}<small> 節</small></div><div class="mu">長了 ${M.c} 節</div>`)},900)}
 
 /* ---------- 方塊堆堆樂 ---------- */
 const TT_P={I:[[0,1],[1,1],[2,1],[3,1]],O:[[1,0],[2,0],[1,1],[2,1]],T:[[1,0],[0,1],[1,1],[2,1]],S:[[1,0],[2,0],[0,1],[1,1]],Z:[[0,0],[1,0],[1,1],[2,1]],J:[[0,0],[0,1],[1,1],[2,1]],L:[[2,0],[0,1],[1,1],[2,1]]};
 const TT_TX={I:'d',O:'o',T:'r',S:'g',Z:'s',J:'l',L:'w'},TT_C={g:['#6cc23c','#8b5a2b'],s:['#8a8a8a','#6e6e6e'],w:['#b5823f','#8f6430'],d:['#4fe3d8','#2fb2aa'],o:['#f2c53d','#c99a1c'],l:['#4a6fe0','#3554b5'],r:['#d84a4a','#a83434']};
 function ttBag(M){if(!M.bag.length)M.bag=shuf(Object.keys(TT_P));return M.bag.pop()}
-function ttStart(){const W=10,H=18,S=arcSz(W+4.2,(window.innerHeight-300)/H),x0=GI(),best=(x0.best.tetris||{})[1]||0;
+function ttStart(){const W=10,H=18,S=arcSz(W+4.2,(window.innerHeight-290)/H),x0=GI(),best=(x0.best.tetris||{})[1]||0;
   GM={g:'tetris',lv:1,live:true,W,H,S,b:Array.from({length:H},()=>Array(W).fill(0)),bag:[],lines:0,score:0,lvl:1,best};
   GM.next=ttBag(GM);
   $('#pg-gm').innerHTML=`${arcHud('',`🧱 消了 <b id="ttL">0</b> 行`,`⭐ <b id="ttS">0</b>`)}
    <div style="display:flex;gap:8px;justify-content:center"><canvas id="ttC" width="${W*S*2}" height="${H*S*2}" style="width:${W*S}px;height:${H*S}px" class="acv"></canvas>
    <div class="aside" style="width:${Math.round(S*4)}px"><div>下一個<canvas id="ttN" width="${S*8}" height="${S*5}" style="width:${S*4}px;height:${S*2.5}px"></canvas></div><div>等級<b id="ttV">1</b></div><div>最佳<b>${n(best)}</b><small>行</small></div></div></div>
-   <div class="apad3"><button data-k="L">◀</button><button data-k="U">↻</button><button data-k="R">▶</button><button data-k="D" class="w">▼ 加速</button><button data-k="drop" class="w">⤓ 落下</button></div>`;
+   ${gbPad('<button data-k="drop" class="bb">⤓<small>落下</small></button><button data-k="U" class="ba">↻<small>旋轉</small></button>')}`;
   const M=GM;M.cx=$('#ttC').getContext('2d');M.cx.scale(2,2);M.nx=$('#ttN').getContext('2d');M.nx.scale(2,2);
-  $$('.apad3 button').forEach(b=>holdBtn(b,()=>ttKey(b.dataset.k),b.dataset.k==='L'||b.dataset.k==='R'?70:b.dataset.k==='D'?45:0));
+  $$('.gbp button').forEach(b=>holdBtn(b,()=>ttKey(b.dataset.k),b.dataset.k==='L'||b.dataset.k==='R'?70:b.dataset.k==='D'?45:0));
   swipe($('#ttC'),d=>ttKey(d==='tap'||d==='U'?'U':d==='D'?'drop':d));arcKeys(ttKey);
-  ttSpawn();const loop=()=>{if(M.dead||M.done||M.over||GM!==M)return;ttFall();if(!M.over)setTimeout(loop,Math.max(110,820-(M.lvl-1)*75))};setTimeout(loop,800)}
+  ttSpawn();sfx('start');bgmStart('tetris');const loop=()=>{if(M.dead||M.done||M.over||GM!==M)return;if(!M.paused)ttFall();if(!M.over)setTimeout(loop,M.paused?150:Math.max(110,820-(M.lvl-1)*75))};setTimeout(loop,800)}
 function ttCells(p){return p.s.map(([x,y])=>{for(let i=0;i<p.r;i++)[x,y]=p.k==='O'?[x,y]:p.k==='I'?[3-y,x]:[2-y,x];return [x+p.x,y+p.y]})}
 function ttOk(p){const M=GM;return ttCells(p).every(([x,y])=>x>=0&&x<M.W&&y<M.H&&(y<0||!M.b[y][x]))}
 function ttSpawn(){const M=GM,k=M.next;M.next=ttBag(M);M.p={k,s:TT_P[k],r:0,x:3,y:-1};if(!ttOk(M.p)){M.p.y=-2;if(!ttOk(M.p))return ttOver()}ttDraw()}
-function ttKey(k){const M=GM;if(!M||M.g!=='tetris'||M.done||M.over||!M.p)return;const p=Object.assign({},M.p);
-  if(k==='L'||k==='R'){p.x+=k==='L'?-1:1;if(ttOk(p)){M.p=p;sfx('click')}}
-  else if(k==='U'){p.r=(p.r+1)%4;for(const dx of [0,-1,1,-2,2]){const q=Object.assign({},p,{x:p.x+dx});if(ttOk(q)){M.p=q;sfx('click');break}}}
+function ttKey(k){const M=GM;if(!M||M.g!=='tetris'||M.done||M.over||M.paused||!M.p)return;const p=Object.assign({},M.p);
+  if(k==='L'||k==='R'){p.x+=k==='L'?-1:1;if(ttOk(p)){M.p=p;sfx('tmove')}}
+  else if(k==='U'){p.r=(p.r+1)%4;for(const dx of [0,-1,1,-2,2]){const q=Object.assign({},p,{x:p.x+dx});if(ttOk(q)){M.p=q;sfx('trot');break}}}
   else if(k==='D'){p.y++;if(ttOk(p)){M.p=p;M.score+=1}else return ttLock()}
-  else if(k==='drop'){let d=0;while(ttOk(Object.assign({},M.p,{y:M.p.y+1}))){M.p.y++;d++}M.score+=d*2;sfx('bounce');return ttLock()}
+  else if(k==='drop'){let d=0;while(ttOk(Object.assign({},M.p,{y:M.p.y+1}))){M.p.y++;d++}M.score+=d*2;sfx('tdrop');return ttLock()}
   ttDraw()}
 function ttFall(){const M=GM;if(!M.p)return;const p=Object.assign({},M.p,{y:M.p.y+1});if(ttOk(p)){M.p=p;ttDraw()}else ttLock()}
 function ttLock(){const M=GM;let top=false;ttCells(M.p).forEach(([x,y])=>{if(y<0)top=true;else M.b[y][x]=TT_TX[M.p.k]});M.p=null;
   if(top)return ttOver();
   const full=[];M.b.forEach((r,y)=>{if(r.every(v=>v))full.push(y)});
-  if(full.length){M.flash=full;ttDraw();sfx(full.length>=4?'levelup':'combo');setTimeout(()=>{if(M.over||M.dead)return;M.b=M.b.filter((r,y)=>full.indexOf(y)<0);while(M.b.length<M.H)M.b.unshift(Array(M.W).fill(0));
-    M.lines+=full.length;M.score+=[0,100,300,500,800][full.length]*M.lvl;const nl=1+Math.floor(M.lines/8);if(nl>M.lvl){M.lvl=nl;toast('⚡ 等級 '+nl+'！變快囉',0)}M.flash=null;ttHud();ttSpawn()},220)}
-  else{ttHud();ttSpawn()}}
+  if(full.length){M.flash=full;ttDraw();sfx('tline',full.length);setTimeout(()=>{if(M.over||M.dead)return;M.b=M.b.filter((r,y)=>full.indexOf(y)<0);while(M.b.length<M.H)M.b.unshift(Array(M.W).fill(0));
+    M.lines+=full.length;M.score+=[0,100,300,500,800][full.length]*M.lvl;const nl=1+Math.floor(M.lines/8);if(nl>M.lvl){M.lvl=nl;toast('⚡ 等級 '+nl+'！變快囉',0);setTimeout(()=>sfx('levelup'),350)}M.flash=null;ttHud();ttSpawn()},220)}
+  else{sfx('tland');ttHud();ttSpawn()}}
 function ttHud(){const M=GM,a=$('#ttL'),b=$('#ttS'),c=$('#ttV');if(a)a.textContent=M.lines;if(b)b.textContent=n(M.score);if(c)c.textContent=M.lvl}
 function ttBlk(cx,x,y,t,S){const [a,b]=TT_C[t];cx.fillStyle=a;cx.fillRect(x*S,y*S,S,S);cx.fillStyle=b;
   if(t==='g'){cx.fillRect(x*S,y*S+S*.35,S,S*.65);cx.fillStyle='#a06a35';cx.fillRect(x*S+S*.2,y*S+S*.6,S*.2,S*.2)}
@@ -2245,7 +2287,7 @@ function ttDraw(){const M=GM,cx=M.cx,S=M.S;cx.fillStyle='#1d2b3a';cx.fillRect(0,
   if(M.p){const g=Object.assign({},M.p);while(ttOk(Object.assign({},g,{y:g.y+1})))g.y++;cx.fillStyle='#ffffff30';ttCells(g).forEach(([x,y])=>{if(y>=0)cx.fillRect(x*S+2,y*S+2,S-4,S-4)});
     ttCells(M.p).forEach(([x,y])=>{if(y>=0)ttBlk(cx,x,y,TT_TX[M.p.k],S)})}
   const nx=M.nx,s=S*.8;nx.clearRect(0,0,S*4,S*2.5);TT_P[M.next].forEach(([x,y])=>ttBlk(nx,x+(M.next==='I'?0:M.next==='O'?-.5:.5)+.25,y+.4,TT_TX[M.next],s))}
-function ttOver(){const M=GM;if(M.over)return;M.live=false;M.over=true;sfx('boom');ttDraw();
+function ttOver(){const M=GM;if(M.over)return;M.live=false;M.over=true;bgmStop();sfx('boom');setTimeout(()=>sfx('over'),500);ttDraw();
   setTimeout(()=>{document.body.classList.remove('arcfs');gmEnd('tetris',1,M.lines,0,M.score,`<div class="mbig">${M.lines}<small> 行</small></div><div class="mu">${n(M.score)} 分・等級 ${M.lvl}</div>`)},900)}
 
 // ----- 小島數獨 -----
@@ -2591,13 +2633,23 @@ const SFX={
   thunder:t=>{noise(t,.08,.6,'highpass',2500,0,1);noise(t+.05,1.4,.75,'lowpass',600,60,1);tone(t+.05,70,35,1,'sine',.45)},
   water:t=>tone(t,900,300,.14,'sine',.75),
   laser:t=>{tone(t,2200,400,.6,'square',.3);tone(t,2205,410,.6,'sawtooth',.18)},
-  whoosh:t=>noise(t,.35,1,'bandpass',400,2000,.8)};
+  whoosh:t=>noise(t,.35,1,'bandpass',400,2000,.8),
+  cmb:(t,n)=>{const k=Math.min(n||2,10),b=523*Math.pow(1.0595,k);[1,1.26,1.5,2].forEach((m,i)=>tone(t+i*.055,b*m,0,.16,'square',.16));tone(t+.22,b*2,b*3,.25,'triangle',.22);if(k>=5)noise(t+.2,.3,.25,'highpass',3000,8000,1)},
+  start:t=>[523,659,784,1047,0,1047].forEach((f,i)=>f&&tone(t+i*.08,f,0,.14,'square',.16)),
+  eat:(t,n)=>tone(t,700+Math.min(n||0,30)*12,1600+Math.min(n||0,30)*20,.07,'square',.16),
+  gold:t=>{[1047,1319,1568,2093,2637].forEach((f,i)=>tone(t+i*.05,f,0,.12,'square',.14));noise(t+.2,.2,.2,'highpass',5000,9000,1)},
+  tmove:t=>tone(t,520,0,.03,'square',.07),
+  trot:t=>tone(t,700,1100,.06,'square',.1),
+  tland:t=>{tone(t,200,90,.07,'square',.16);noise(t,.05,.25,'lowpass',900,200,1)},
+  tdrop:t=>{noise(t,.12,.4,'bandpass',800,200,1);tone(t+.05,160,60,.12,'square',.25)},
+  tline:(t,n)=>{n=n||1;[523,659,784,1047,1319].slice(0,n+1).forEach((f,i)=>tone(t+i*.06,f,0,.18,'square',.18));noise(t,.35,.3,'highpass',2000,7000,1);if(n>=4)[1047,1319,1568,2093].forEach((f,i)=>tone(t+.35+i*.08,f,0,.25,'triangle',.22))},
+  over:t=>[784,659,523,392,262].forEach((f,i)=>tone(t+i*.15,f,f*.97,.2,'square',.16))};
 function sfx(name,arg){if(!PSOUND)return;try{pacInit();if(PAC.state==='suspended')PAC.resume();(SFX[name]||SFX.click)(PAC.currentTime+.01,arg)}catch(e){}}
 window.sfx=sfx;
 function psfx(n,a){if(!PK.quiet)sfx(n,a)}
 function sndToggle(){PSOUND=!PSOUND;try{localStorage.setItem('petSound',PSOUND?'1':'0')}catch(e){}const b=$('.psnd');if(b)b.textContent=PSOUND?'🔊':'🔇';const m=$('#sndT');if(m)m.textContent=PSOUND?'🔊 音效：開':'🔇 音效：關';if(PSOUND){sfx('ok')}toast(PSOUND?'🔊 音效打開了':'🔇 音效關掉了')}
 /* 按按鈕的輕輕一聲 */
-document.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest('button,#dock>div,.chip');if(b&&!b.disabled&&!b.classList.contains('psnd'))sfx('click')},true);
+document.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest('button,#dock>div,.chip');if(b&&!b.disabled&&!b.closest('.gbp')&&!b.classList.contains('psnd'))sfx('click')},true);
 
 const pbSleep=ms=>new Promise(r=>setTimeout(r,ms));
 const pbPick=a=>a[Math.floor(Math.random()*a.length)];
