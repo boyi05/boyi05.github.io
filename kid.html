@@ -52,6 +52,30 @@ h3{margin:0 0 8px;font-size:17px}
 .ma{text-align:center;font-size:36px;font-weight:900;height:52px;border-radius:14px;background:#fff;margin:0 24px 12px;line-height:52px;color:var(--blue)}.ma.ok{background:#d9f7dd;color:#2e7d32}.ma.ng{background:#ffe1dc;color:#d0432f;font-size:26px;animation:mshake .3s}
 @keyframes mshake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 .mkeys{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.mkeys button{border:0;border-radius:16px;background:#fff;box-shadow:0 4px 0 #d8c8b0;font-size:28px;font-weight:800;padding:12px 0;color:var(--ink);touch-action:manipulation;font-family:inherit}.mkeys button:active{transform:translateY(3px);box-shadow:0 1px 0 #d8c8b0}
+.btpk{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;margin-top:8px}
+.btpc{border:3px solid transparent;border-radius:16px;background:#fff;padding:6px 4px;font:inherit;display:flex;flex-direction:column;align-items:center;box-shadow:0 3px 0 #0002}
+.btpc b{font-size:13px;margin-top:2px}.btpc small{font-size:11px;color:var(--mu)}.btpc.on{border-color:#ff9500;background:#fff6d6;transform:scale(1.04)}.btpc.egg{opacity:.45}
+.btsk{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}.btsk span{background:#fff3d6;border-radius:99px;padding:4px 10px;font-weight:800;font-size:13px}.btsk span.lock{background:#eee;color:#aaa}
+.btar{position:relative;height:300px;margin:0 10px;border-radius:20px;overflow:hidden;background:linear-gradient(#1f4f9a,#3f86d4 62%,#e9d5a2 62%,#d9bf86);box-shadow:inset 0 0 0 3px #ffffff55}
+.btar.flash:after{content:'';position:absolute;inset:0;background:#fff;animation:btfl .35s forwards;pointer-events:none}@keyframes btfl{from{opacity:.85}to{opacity:0}}
+.bten{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;align-items:flex-end}.btem{font-size:92px;line-height:1;margin:6px 18px 0 0;animation:btbob 1.6s ease-in-out infinite;filter:drop-shadow(0 6px 0 #0003)}
+.btme{position:absolute;left:8px;bottom:8px;display:flex;align-items:flex-end;gap:6px}.btpet{animation:btbob 1.4s ease-in-out infinite}
+.btbox{background:#fffdf6;border-radius:12px;padding:5px 9px;width:150px;box-shadow:0 3px 0 #0003;font-size:13px}.btbox small{font-size:11px;color:var(--mu)}
+.btbox .hp{height:10px;border-radius:99px;background:#ddd;overflow:hidden;margin-top:3px}.btbox .hp i{display:block;height:100%;background:#e5484d;border-radius:99px;transition:width .4s}.btbox .hp i.me{background:#2fae6a}
+@keyframes btbob{50%{transform:translateY(-6px)}}
+.hit{animation:bthit .45s!important}@keyframes bthit{0%,100%{transform:none;filter:none}20%{transform:translateX(-10px);filter:brightness(3)}40%{transform:translateX(10px)}60%{transform:translateX(-6px);filter:brightness(2)}80%{transform:translateX(5px)}}
+.btpet.atk{animation:btatk .45s!important}@keyframes btatk{40%{transform:translate(40px,-20px) scale(1.1)}}
+.btem.lunge{animation:btlg .45s!important}@keyframes btlg{40%{transform:translate(-50px,30px) scale(1.1)}}
+.ko{animation:btko 1s forwards!important}@keyframes btko{to{transform:rotate(200deg) scale(.2);opacity:0}}
+.btfx{position:absolute;font-size:38px;z-index:5;pointer-events:none;transform:translate(-50%,-50%);animation:btfly .55s ease-in forwards}.btfx.t3{font-size:52px}.btfx.t4{font-size:64px}.btfx.en{font-size:40px}
+@keyframes btfly{0%{transform:translate(-50%,-50%) scale(.4)}80%{opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.3) rotate(30deg);opacity:0}}
+.btdm{position:absolute;z-index:6;transform:translateX(-50%);font-size:30px;font-weight:900;color:#fff;-webkit-text-stroke:2px #e5484d;paint-order:stroke fill;animation:btdm 1.1s ease-out forwards;white-space:nowrap;pointer-events:none}.btdm.crit{font-size:34px;color:#ffd60a;-webkit-text-stroke:2px #c2410c}.btdm.me{-webkit-text-stroke:2px #7a1d1d;color:#ffb4b4}
+@keyframes btdm{0%{transform:translate(-50%,10px) scale(.5);opacity:0}20%{transform:translate(-50%,-10px) scale(1.2);opacity:1}100%{transform:translate(-50%,-60px);opacity:0}}
+.btban{position:absolute;inset:0;z-index:7;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0007;color:#fff;font-size:34px;font-weight:900;text-align:center;animation:btban 1.3s forwards}.btban span{font-size:22px}
+@keyframes btban{0%{opacity:0;transform:scale(1.4)}15%{opacity:1;transform:none}85%{opacity:1}100%{opacity:0}}
+.btq{margin:10px}.btqq{text-align:center;font-size:38px;font-weight:900;margin:8px 0}.btbar{height:8px;border-radius:99px;background:#eee;overflow:hidden;margin-top:6px}.btbar i{display:block;height:100%;width:100%;background:#5cbf6a;border-radius:99px;transition:width .1s linear}.btbar i.low{background:#e5484d}
+.btans{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btans button{border:0;border-radius:14px;background:#fff;font:inherit;font-size:26px;font-weight:900;color:#2b7fc0;padding:12px 0;box-shadow:0 4px 0 #0002;touch-action:manipulation}
+.btans button.ok{background:#c8f0cf;color:#1f7a34}.btans button.no{background:#ffd0d0;color:#b42318}
 .zh{padding:10px 14px}
 .ptile{position:relative}.ptile .crn{font-size:11.5px;font-weight:800;color:#b8860b;margin-top:2px}.ptile .crn.none{color:#bbb;font-weight:400}.ptile .tstar{font-size:12px;font-weight:800;color:#e0a100}
 .ptile.chal{animation:chg 1.6s ease-in-out infinite;border-top-color:#ffcc00}@keyframes chg{0%,100%{box-shadow:0 5px 0 var(--c),0 0 0 0 #ffd84d00}50%{box-shadow:0 5px 0 var(--c),0 0 0 6px #ffd84daa}}
@@ -2103,8 +2127,9 @@ const GMS=[
  ['p24','🃏','24 點','用加減乘除算出 24','#e5484d'],
  ['pizza','🍕','分數披薩','看披薩學分數','#ff8a3c'],
  ['word','🔤','英文單字拼拼看','看圖拼出英文單字','#4d8de6'],
- ['cash','🧾','小島收銀員','當老闆找錢給客人','#f2a93b']];
-const GLV={sudoku:[['4×4 圖案','一年級起'],['6×6 數字','二年級起'],['6×6 挑戰','二年級起'],['9×9 入門','三年級起']],
+ ['cash','🧾','小島收銀員','當老闆找錢給客人','#f2a93b'],
+ ['battle','⚔️','寵物競技場','答數學題放技能打怪獸','#3f6fd8']];
+const GLV={battle:[['簡單','二年級：20 以內加減'],['普通','四年級：九九乘除、兩位數加減'],['困難','六年級：大數乘除、分數、小數']],sudoku:[['4×4 圖案','一年級起'],['6×6 數字','二年級起'],['6×6 挑戰','二年級起'],['9×9 入門','三年級起']],
  p24:[['入門・數字 1～6','二年級起'],['數字 1～9','三年級起'],['數字 1～13','高手']],
  pizza:[['認識分數','二年級起'],['比大小・等值分數','三年級起'],['分數加減','四年級起']],
  word:[['3 個字母','一年級起'],['4～5 個字母','二年級起'],['6 個字母以上','高年級']],
@@ -2147,11 +2172,11 @@ function cmbLine(g,mx){if(!(mx>=2))return '';let old=0;try{old=+localStorage.get
 function resExtra(r){if(!r)return '';return `${r.stars?`<div style="margin:6px 0">${starRow(r.stars,1)}</div>${r.newStars?'<div class="mnew" style="font-size:16px">✨ 拿到新星星了！</div>':''}`:''}${r.chal?'<div class="chok">🎯 今日挑戰成功！金幣 ×2</div>':''}${r.weekBest&&!r.newBest?'<div class="mnew" style="font-size:16px">🏆 本週新紀錄！排行榜更新了</div>':''}`}
 const backBtn=()=>`<button class="back" onclick="gmQuit()">‹ 遊樂區</button>`;
 async function gmQuit(){if(GM&&GM.live&&!await ask('<h3>要離開嗎？</h3>這一場不會算成績喔。','離開'))return;if(GM)GM.dead=true;GM=null;go('play')}
-function gmLevels(g){if(GM)GM.dead=true;GM=null;const info=GMS.find(x=>x[0]===g),x=GI(),b=x.best[g]||{};
+function gmLevels(g){if(g==='battle')return btIntro();if(GM)GM.dead=true;GM=null;const info=GMS.find(x=>x[0]===g),x=GI(),b=x.best[g]||{};
   $('#pg-gm').innerHTML=`${backBtn()}<div class="sign"><h3>${info[1]} ${info[2]}</h3></div><div class="card"><div class="mu">${GHELP[g]} 今天還有 <b class="gold">${x.left[g]==null?(x.dailyBy[g]||x.daily):x.left[g]}</b> 場有獎勵。</div>${g==='p24'?'<button class="go wide" style="margin-top:10px;background:#ffb347;box-shadow:0 4px 0 #c47a1a" onclick="p24Tips()">📖 24 點小技巧（先看這個！）</button>':''}</div>
   <div class="mlv">${GLV[g].map((l,i)=>`<button class="mlb" onclick="gmStart('${g}',${i+1})"><b>Lv${i+1} ${starRow(starOf(g,i+1))}</b><span>${l[0]}</span><small>${l[1]}${b[i+1]?'・最佳 '+(g==='sudoku'?fmtT(b[i+1]):b[i+1]+(g==='p24'?' / 5':g==='cash'?' / 7':' / 10')):''}</small></button>`).join('')}</div>`;
   if(st.tab!=='gm')go('gm');window.scrollTo(0,0)}
-function gmStart(g,lv){if(GM)GM.dead=true;({sudoku:sdStart,p24:p24Start,pizza:pzStart,word:wdStart,cash:csStart})[g](lv);window.scrollTo(0,0)}
+function gmStart(g,lv){if(GM)GM.dead=true;({sudoku:sdStart,p24:p24Start,pizza:pzStart,word:wdStart,cash:csStart,battle:btStart})[g](lv);window.scrollTo(0,0)}
 async function gmEnd(g,lv,c,w,t,line){if(!GM||GM.done)return;GM.done=true;GM.live=false;
   $('#pg-gm').innerHTML=`<div class="card" style="text-align:center"><div style="font-size:48px">⏳</div><h3>送出成績中…</h3></div>`;
   let r=null;try{r=await call('submitGame',{game:g,lv,correct:c,wrong:w,time:t})}catch(e){toast(errMsg(e),1)}
@@ -2159,8 +2184,87 @@ async function gmEnd(g,lv,c,w,t,line){if(!GM||GM.done)return;GM.done=true;GM.liv
   const AR=!!ARC[g],info=AR?arcInfo(g):GMS.find(z=>z[0]===g);if(r&&(r.coins||r.exp))setTimeout(()=>{sfx('win');if(r.coins)setTimeout(()=>sfx('coin'),700)},200);
   $('#pg-gm').innerHTML=`<div class="card" style="text-align:center;position:relative;overflow:hidden">${r&&r.newBest&&c?confetti():''}<div style="font-size:52px">${info[1]}</div><h3>${info[2]}${AR?'':' Lv'+lv}</h3>${line}
    ${AR?'':cmbLine(g,M0&&M0.cbMax)}${r?`${resExtra(r)}${r.newBest&&c?'<div class="mnew">🎉 破紀錄了！</div>':''}${r.coins||r.exp?`<div class="mrw">🪙 +${r.coins} 金幣　⭐ +${r.exp} 經驗</div>`:`<div class="mu" style="margin-top:6px">${AR?(r.left?'再試一次吧！':'今天的獎勵拿過了，可以繼續拚排行榜！'):c?(r.left?'今天的金幣上限到了，經驗也拿完囉':'今天這個遊戲的獎勵拿完了，明天再來喔！'):'再試一次吧！'}</div>`}`:''}
-   <button class="go wide" onclick="${AR?`arcStart('${g}')`:`gmStart('${g}',${lv})`}">再玩一次</button>${AR?'':`<button class="go wide" style="background:#9a8670;box-shadow:0 4px 0 #6f5f4f" onclick="gmLevels('${g}')">換等級</button>`}<button class="go wide" style="background:#4d8de6;box-shadow:0 4px 0 #2f6ab8" onclick="go('play')">回遊樂區</button></div>`;
+   <button class="go wide" onclick="${AR?`arcStart('${g}')`:`gmStart('${g}',${lv})`}">再玩一次</button>${AR?'':`<button class="go wide" style="background:#9a8670;box-shadow:0 4px 0 #6f5f4f" onclick="gmLevels('${g}')">${g==='battle'?'換寵物或難度':'換等級'}</button>`}<button class="go wide" style="background:#4d8de6;box-shadow:0 4px 0 #2f6ab8" onclick="go('play')">回遊樂區</button></div>`;
   if(r&&(r.coins||r.exp||r.weekBest||r.newStars))loadGame()}
+// ===== 寵物競技場：自己的寵物（成長中＋動物園）上場，答數學題放技能打 10 關海底怪獸 =====
+const BT_FX={claw:['🐾','slash'],bite:['🦷','chomp'],ram:['💥','bounce'],fireball:['🔥','fire'],spark:['⚡','zap'],water:['💧','water'],snowball:['❄️','snow'],woolball:['☁️','bubble'],bell:['🔔','bell'],breath:['🔥','fire'],bolt:['⚡','thunder'],laser:['🔆','laser'],blizzard:['🌨️','snow'],countsheep:['💤','bubble'],hellfire:['☄️','boom'],storm:['🌩️','thunder'],missile:['🚀','boom'],giftrain:['🎁','bell'],rainbow:['🌈','pill']};
+// 沒有技能資料的寵物：[招式, 圖案, 音效]×4
+const BT_DEF={star:[['星星撞擊','⭐','bounce'],['星光彈','✨','pill'],['流星雨','🌠','boom'],['銀河龍吼','🌌','thunder']],
+ sheep:[['頭槌','💥','bounce'],['毛球彈','☁️','bubble'],['數羊催眠','💤','bubble'],['彩虹棉花糖','🌈','pill']],
+ honeydog:[['撲撲','🐾','bounce'],['蜂蜜噴射','🍯','water'],['骨頭迴旋','🦴','whoosh'],['蜂群大進擊','🐝','sweep']],
+ fire:[['火花','🔥','fire'],['火焰拳','💥','boom'],['熔岩彈','☄️','fire'],['火山爆發','🌋','boom']],
+ water:[['泡泡','🫧','bubble'],['水槍','💧','water'],['漩渦','🌀','whoosh'],['大海嘯','🌊','water']],
+ leaf:[['葉刃','🍃','slash'],['種子彈','🌰','bounce'],['藤蔓鞭','🌿','slash'],['花瓣風暴','🌸','sweep']],
+ shiba:[['撲咬','🐾','chomp'],['汪汪吼','💢','boom'],['骨頭迴旋','🦴','whoosh'],['柴柴衝刺','💨','whoosh']],
+ corgi:[['撲咬','🐾','chomp'],['短腿踢','💥','bounce'],['骨頭迴旋','🦴','whoosh'],['柯基衝刺','💨','whoosh']],
+ bunny:[['兔兔踢','🐾','bounce'],['胡蘿蔔彈','🥕','bounce'],['月光跳','🌙','pill'],['滿月大爆發','🌕','boom']],
+ kitty:[['貓拳','🐾','slash'],['毛線球','🧶','bounce'],['鈴鐺響','🔔','bell'],['九命爆發','✨','boom']],
+ dino:[['尾巴甩','💥','bounce'],['背刺','🦴','slash'],['恐龍吼','💢','boom'],['隕石雨','☄️','boom']],
+ narwhal:[['角撞','💥','bounce'],['泡泡','🫧','bubble'],['星光角','✨','pill'],['星光海嘯','🌊','water']]};
+const BT_GEN=[['撞擊','💥','bounce'],['衝撞','💫','whoosh'],['必殺技','🌟','boom'],['超必殺','🌈','pill']];
+const BT_EN=[['🦀','小螃蟹',26,6],['🐡','河豚仔',32,7],['🦑','墨魚怪',38,8],['🐙','八爪章魚',44,9],['🦞','鐵甲龍蝦',52,10],['🐍','海蛇',58,11],['🦈','大白鯊',64,12],['🐊','沼澤鱷',70,13],['🐋','巨鯨',78,14],['🐉','海龍王',110,16]];
+const BT_DMG=[10,15,22,32],BT_TIME=[0,14,12,15],BT_STG=['蛋','寶寶','幼年','少年','成年','完全體'];
+let BT={pid:null};try{BT.pid=localStorage.getItem('btPet')}catch(e){}
+function btPets(){const B=G.bpets||{list:[]};try{cpReg(B.art)}catch(e){}return B.list||[]}
+// 這隻寵物的 4 招；maxT＝現在能用到第幾招（寶寶、幼年 1 招，少年 2，成年 3，完全體 4）
+function btSkills(p){const S=((G.bpets||{}).sk||{})[p.species];let L;
+  if(S&&S.length)L=[2,3,4,5].map((i,k)=>{const x=S[i];if(!x)return BT_GEN[k];const f=BT_FX[x.fx]||['💥','boom'];return [x.n,f[0],f[1]]});
+  else L=BT_DEF[p.species]||BT_GEN;return L}
+function btMaxT(p){return Math.max(1,Math.min(4,p.stage-1))}
+function btIntro(){if(GM)GM.dead=true;GM=null;const L=btPets(),x=GI(),b=x.best.battle||{},ok=L.filter(p=>p.stage>0);
+  if(!ok.find(p=>p.id===BT.pid))BT.pid=ok[0]&&ok[0].id;
+  $('#pg-gm').innerHTML=`${backBtn()}<div class="sign"><h3>⚔️ 寵物競技場</h3></div>
+  <div class="card"><div class="mu">帶你的寵物去打 10 關海底怪獸！每回合答一題數學：<b>答對</b>寵物放技能攻擊，<b>答錯或太慢</b>就換怪獸打你。連續答對招式會升級，寵物越大能學越強的招式。今天還有 <b class="gold">${x.left.battle==null?1:x.left.battle}</b> 場有獎勵。</div></div>
+  <div class="card"><h3>1️⃣ 選一隻寵物上場</h3>${ok.length?`<div class="btpk">${L.map(p=>{const on=p.id===BT.pid,eg=!p.stage;return `<button class="btpc${on?' on':''}${eg?' egg':''}" ${eg?'disabled':''} onclick="BT.pid='${p.id}';try{localStorage.setItem('btPet','${p.id}')}catch(e){}btIntro()">${petSvg(p.species,p.stage,{shiny:p.shiny},62)}<b>${esc(p.name)}</b><small>${eg?'🥚 還是蛋':p.zoo?'🏞️ 動物園':BT_STG[p.stage]}</small></button>`}).join('')}</div>
+   ${(()=>{const p=ok.find(q=>q.id===BT.pid);if(!p)return '';const S=btSkills(p),m=btMaxT(p);return `<div class="btsk">${S.map((s,i)=>`<span class="${i<m?'':'lock'}">${s[1]} ${s[0]}${i<m?'':' 🔒'}</span>`).join('')}</div><div class="mu" style="font-size:12px">連續答對 2、4、6 題會升級到下一招${m<4?'；🔒 的招式要寵物長大才會':''}</div>`})()}`
+   :'<div class="empty">還沒有可以上場的寵物，先去「寵物」領養一隻，孵出來就能來打怪獸！</div>'}</div>
+  ${ok.length?`<div class="card"><h3>2️⃣ 選題目難度開打</h3></div><div class="mlv">${GLV.battle.map((l,i)=>`<button class="mlb" onclick="btStart(${i+1})"><b>Lv${i+1} ${starRow(starOf('battle',i+1))}</b><span>${l[0]}</span><small>${l[1]}${b[i+1]?'・最佳 '+(b[i+1]>=10?'全破 🏆':'第 '+b[i+1]+' 關'):''}</small></button>`).join('')}</div>`:''}`;
+  if(st.tab!=='gm')go('gm');window.scrollTo(0,0)}
+// 出題：lv1 二年級加減、lv2 四年級乘除和兩位數加減、lv3 六年級
+function btQ(lv){const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));let q,a,dec=0;
+  if(lv===1){if(Math.random()<.5){const x=R(1,12),y=R(1,20-x);q=`${x} + ${y}`;a=x+y}else{const x=R(5,20),y=R(1,x);q=`${x} − ${y}`;a=x-y}if(Math.random()<.2){const x=R(1,9)*10,y=R(1,9)*10;if(x+y<=100){q=`${x} + ${y}`;a=x+y}}}
+  else if(lv===2){const k=R(1,4);if(k===1){const x=R(2,9),y=R(2,9);q=`${x} × ${y}`;a=x*y}else if(k===2){const y=R(2,9),z=R(2,9);q=`${y*z} ÷ ${y}`;a=z}else if(k===3){const x=R(12,79),y=R(11,99-x);q=`${x} + ${y}`;a=x+y}else{const x=R(30,99),y=R(11,x-5);q=`${x} − ${y}`;a=x-y}}
+  else{const k=R(1,5);if(k===1){const x=R(12,49),y=R(3,9);q=`${x} × ${y}`;a=x*y}else if(k===2){const d=R(3,9),z=R(11,30);q=`${d*z} ÷ ${d}`;a=z}else if(k===3){const x=R(120,699),y=R(101,299);if(Math.random()<.5){q=`${x} + ${y}`;a=x+y}else{q=`${x+y} − ${x}`;a=y}}
+   else if(k===4){const dn=[2,3,4,5,10][R(0,4)],nm=R(1,dn-1),w=dn*R(2,9);q=`${w} 的 ${nm}/${dn}`;a=w/dn*nm}else{const x=R(5,49)/10,y=R(5,49)/10;q=`${x} + ${y}`;a=Math.round((x+y)*10)/10;dec=1}}
+  const S=new Set([a]),dd=dec?[.1,-.1,1,-1,.2,-.2,.5,-.5]:[1,-1,2,-2,10,-10,3,-3,5,-5];
+  for(const d of shuf(dd)){if(S.size>=4)break;const v=dec?Math.round((a+d)*10)/10:a+d;if(v>=0)S.add(v)}
+  while(S.size<4)S.add(a+S.size*7);return {q,a,opts:shuf([...S])}}
+function btStart(lv){const p=btPets().find(x=>x.id===BT.pid&&x.stage>0);if(!p)return btIntro();if(GM)GM.dead=true;document.body.classList.add('arcfs');
+  const hp=60+p.stage*6;GM={g:'battle',lv,live:true,p,S:btSkills(p),mt:btMaxT(p),hp,hpMax:hp,st:0,c:0,w:0,cb:0,cbMax:0};btEnemy();window.scrollTo(0,0)}
+function btEnemy(){const M=GM,E=BT_EN[M.st];M.e={ic:E[0],n:E[1],hp:E[2],max:E[2],atk:E[3]};
+  $('#pg-gm').innerHTML=`<div class="ahud"><button onclick="gmQuit()">‹ 離開</button><span>⚔️ 第 <b>${M.st+1}</b> 關 / 10</span><span id="btCb">🔥 連對 ${M.cb}</span></div>
+  <div class="btar" id="btAr"><div class="bten"><div class="btbox"><b>${M.st===9?'👑 ':''}${E[1]}</b><div class="hp"><i id="btEh" style="width:100%"></i></div><small id="btEt">HP ${E[2]} / ${E[2]}</small></div><div class="btem" id="btE">${E[0]}</div></div>
+   <div class="btme"><div class="btpet" id="btP">${petSvg(M.p.species,M.p.stage,{shiny:M.p.shiny},120)}</div><div class="btbox"><b>${esc(M.p.name)}</b><div class="hp"><i id="btMh" class="me" style="width:${M.hp/M.hpMax*100}%"></i></div><small id="btMt">HP ${M.hp} / ${M.hpMax}</small></div></div></div>
+  <div class="card btq"><div class="row"><span id="btSk"></span><span id="btTm" class="red"></span></div><div class="btbar"><i id="btTb"></i></div><div class="btqq" id="btQ"></div><div class="btans" id="btA"></div></div>`;
+  const ban=document.createElement('div');ban.className='btban';ban.innerHTML=M.st===9?`⚠️ BOSS ⚠️<br><span>${E[0]} ${E[1]} 出現了！</span>`:`第 ${M.st+1} 關<br><span>${E[0]} ${E[1]}</span>`;$('#btAr').appendChild(ban);sfx(M.st===9?'thunder':'start');
+  setTimeout(()=>{ban.remove();if(GM===M&&!M.done)btNext()},1300)}
+function btTier(){const M=GM;return Math.min(M.mt,1+Math.floor(M.cb/2))}
+function btNext(){const M=GM;if(!M||M.done||M.over)return;const Q=btQ(M.lv);M.Q=Q;M.lock=false;const t=btTier(),s=M.S[t-1],nx=t<M.mt?2-(M.cb%2):0;
+  $('#btSk').innerHTML=`答對放 <b>${s[1]} ${s[0]}</b>${nx?`<small class="mu">（再連對 ${nx} 題升級）</small>`:''}`;$('#btQ').textContent=Q.q+' = ?';
+  $('#btA').innerHTML=Q.opts.map((v,i)=>`<button onclick="btAns(${i})">${v}</button>`).join('');
+  const T=BT_TIME[M.lv]*1000,t0=Date.now();clearInterval(M.ti);const tb=$('#btTb'),tm=$('#btTm');
+  M.ti=setInterval(()=>{if(GM!==M||M.done){clearInterval(M.ti);return}const l=Math.max(0,T-(Date.now()-t0));if(tb){tb.style.width=(l/T*100)+'%';tb.classList.toggle('low',l<4000)}if(tm)tm.textContent='⏱ '+Math.ceil(l/1000);if(!l){clearInterval(M.ti);btAns(-1)}},100)}
+function btFly(ic,from,to,n,cls){const ar=$('#btAr');if(!ar)return;const a=ar.getBoundingClientRect(),f=from.getBoundingClientRect(),t=to.getBoundingClientRect();
+  for(let i=0;i<n;i++){const d=document.createElement('div');d.className='btfx '+(cls||'');d.textContent=ic;const x0=f.left-a.left+f.width/2,y0=f.top-a.top+f.height/2,x1=t.left-a.left+t.width/2+(Math.random()-.5)*40*(n>1),y1=t.top-a.top+t.height/2+(Math.random()-.5)*40*(n>1);
+    d.style.left=x0+'px';d.style.top=y0+'px';d.style.setProperty('--dx',(x1-x0)+'px');d.style.setProperty('--dy',(y1-y0)+'px');d.style.animationDelay=(i*.09)+'s';ar.appendChild(d);setTimeout(()=>d.remove(),900+i*90)}}
+function btDmg(el,v,cls){const ar=$('#btAr');if(!ar||!el)return;const a=ar.getBoundingClientRect(),r=el.getBoundingClientRect(),d=document.createElement('div');d.className='btdm '+(cls||'');d.textContent=v;d.style.left=(r.left-a.left+r.width/2)+'px';d.style.top=(r.top-a.top)+'px';ar.appendChild(d);setTimeout(()=>d.remove(),1100)}
+function btHit(el){if(!el)return;el.classList.remove('hit');void el.offsetWidth;el.classList.add('hit')}
+function btBars(){const M=GM,e=$('#btEh'),m=$('#btMh');if(e)e.style.width=Math.max(0,M.e.hp/M.e.max*100)+'%';if(m)m.style.width=Math.max(0,M.hp/M.hpMax*100)+'%';const et=$('#btEt'),mt=$('#btMt');if(et)et.textContent=`HP ${Math.max(0,M.e.hp)} / ${M.e.max}`;if(mt)mt.textContent=`HP ${Math.max(0,M.hp)} / ${M.hpMax}`;const c=$('#btCb');if(c)c.textContent='🔥 連對 '+M.cb}
+function btAns(i){const M=GM;if(!M||M.g!=='battle'||M.lock||M.done)return;M.lock=true;clearInterval(M.ti);const Q=M.Q,ok=i>=0&&Q.opts[i]===Q.a,B=$$('#btA button');
+  B.forEach((b,k)=>{if(Q.opts[k]===Q.a)b.classList.add('ok');else if(k===i)b.classList.add('no')});
+  const P=$('#btP'),E=$('#btE');
+  if(ok){const t=btTier(),s=M.S[t-1];M.c0=(M.c0||0)+1;cmb(M,1);sfx('ok');P.classList.add('atk');setTimeout(()=>P.classList.remove('atk'),450);
+    setTimeout(()=>{btFly(s[1],P,E,[1,2,3,5][t-1],'t'+t);sfx(s[2])},180);
+    let d=BT_DMG[t-1],crit=Math.random()<.12;if(crit)d=Math.round(d*1.5);
+    setTimeout(()=>{if(GM!==M)return;M.e.hp-=d;btHit(E);btDmg(E,(crit?'會心一擊！':'')+'-'+d,crit?'crit':'');if(t>=3){const a=$('#btAr');if(a){a.classList.remove('flash');void a.offsetWidth;a.classList.add('flash')}}btBars();
+      if(M.e.hp<=0){E.classList.add('ko');sfx('win');M.c++;setTimeout(()=>{if(GM!==M)return;if(M.c>=10)return btEnd(true);M.hp=Math.min(M.hpMax,M.hp+Math.round(M.hpMax*.25));M.st++;toast('💚 休息一下，回復一點體力',0);btEnemy()},1200)}
+      else setTimeout(btNext,700)},700)}
+  else{M.w++;cmb(M,0);sfx('bad');if(i<0)toast('⏰ 時間到！正確答案是 '+Q.a,1);
+    setTimeout(()=>{if(GM!==M)return;E.classList.add('lunge');setTimeout(()=>E.classList.remove('lunge'),450);btFly('💢',E,P,1,'en');sfx('slash')},500);
+    setTimeout(()=>{if(GM!==M)return;const d=M.e.atk+Math.floor(Math.random()*4);M.hp-=d;btHit(P);btDmg(P,'-'+d,'me');btBars();if(M.hp<=0){P.classList.add('ko');sfx('boom');setTimeout(()=>btEnd(false),1200)}else setTimeout(btNext,900)},1000)}
+  btBars()}
+function btEnd(win){const M=GM;if(!M||M.over)return;M.over=true;M.live=false;clearInterval(M.ti);document.body.classList.remove('arcfs');if(win)sfx('levelup');
+  gmEnd('battle',M.lv,M.c,M.w,0,`<div style="margin:6px 0">${petSvg(M.p.species,M.p.stage,{shiny:M.p.shiny},90)}</div><div class="mbig">${win?'全破 🏆':M.c+'<small> 關</small>'}</div><div class="mu">${esc(M.p.name)} ${win?'打敗了海龍王！':'打倒了 '+M.c+' 隻怪獸'}・答錯 ${M.w} 題</div>`)}
 // ===== 街機區：海底貪吃鰻、方塊堆堆樂（每天第 1 場有金幣，之後玩排行榜） =====
 const ARC={snake:['🐍','海底貪吃鰻','吃星星越長越厲害','#2fae6a','節'],tetris:['🧱','方塊堆堆樂','排滿一行就消掉','#8a5cd8','行']};
 const ARC_HELP={snake:'小鰻魚吃 ⭐ 小星星長 1 節，吃 🌟 金星星長 3 節（金星星一下子就會消失，要快！）。撞到牆或咬到自己就結束，越長跑越快。用下面的方向鍵，或在海底畫面上滑動轉彎。',
